@@ -144,5 +144,4 @@ public class RequestTests {
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }
-
 }
