@@ -8,37 +8,64 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 /**
  * Created by George on 2016-10-12.
  */
 
 public class RequestTests {
-    private User user;
+    private User rider;
+    private User driver;
+    private IEmailService emailService;
     private IRequestStore requestStore;
     private CreateRequest createRequest;
+    private AcceptRequest acceptRequest;
+
+    private Request request1;
+    private Request request2;
+    private Request acceptedRequest1;
 
     @Before
     public void set_up() {
-        user = new User("janedoedoe");
+        rider = new User("janedoedoe");
+        driver = new User("driverdood");
         createRequest = new CreateRequest(requestStore);
+        acceptRequest = new AcceptRequest(requestStore);
+
+        Point startingPoint = new Point(48.1472373, 11.5673969);
+        Point endingPoint = new Point(48.1258551, 11.5121003);
+
+        Route route = new Route();
+        route.addPoint(startingPoint);
+        route.addPoint(endingPoint);
+
+        request1 = new PendingRequest();
+        request1.setId("request-1");
+        request1.setRider(rider);
+        request1.setRoute(route);
+
+        request2 = new PendingRequest();
+        request2.setId("request-2");
+        request2.setRider(rider);
+        request2.setRoute(route);
+
+        acceptedRequest1 = new AcceptedRequest();
+        acceptedRequest1.setId("request-1");
+        acceptedRequest1.setRider(rider);
+        acceptedRequest1.setDriver(driver);
+        acceptedRequest1.setRoute(route);
+
     }
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        Point startingPoint = new Point(48.1472373, 11.5673969);
-        Point endingPoint = new Point(48.1258551, 11.5121003);
+        Point startingPoint = request1.getRoute().getStartingPoint();
+        Point endingPoint = request1.getRoute().getEndingPoint();
 
         createRequest.create(startingPoint, endingPoint);
 
-        Route expectedRoute = new Route();
-        expectedRoute.addPoint(startingPoint);
-        expectedRoute.addPoint(endingPoint);
-
-        Request expectedRequest = new PendingRequest();
-        expectedRequest.setUser(user);
-        expectedRequest.setRoute(expectedRoute);
-
-        assertTrue(requestStore.contains(expectedRequest));
+        assertTrue(requestStore.contains(request1));
     }
 
     @Test
@@ -50,25 +77,33 @@ public class RequestTests {
 
     @Test
     public void test_getCurrentRequests_ifUserHasRequests_thenReturnsUsersRequests() {
-        Point startingPoint = new Point(48.1472373, 11.5673969);
-        Point endingPoint = new Point(48.1258551, 11.5121003);
-
-        Route route = new Route();
-        route.addPoint(startingPoint);
-        route.addPoint(endingPoint);
-
-        Request request1 = new PendingRequest();
-        request1.setUser(user);
-        request1.setRoute(route);
-
-        Request request2 = new PendingRequest();
-        request2.setUser(user);
-        request2.setRoute(route);
-
         List<Request> expectedRequests = Arrays.asList(request1, request2);
         List<Request> actualRequests = requestStore.getRequests();
 
         assertEquals(expectedRequests, actualRequests);
+    }
+
+    @Test
+    public void test_acceptRequest_sendsEmailToIntendedUser() {
+        EmailMessage expectedMessage = new EmailMessage();
+        expectedMessage.setTo(rider.getEmail());
+        expectedMessage.setFrom(rider.getEmail());
+        expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
+
+        when(requestStore.getRequest("request-1")).thenReturns(request1);
+
+        acceptRequest.accept("request-1");
+
+        verify(emailService).sendEmail(expectedMessage);
+    }
+
+    @Test
+    public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
+        when(requestStore.getRequest("request-1")).thenReturns(request1);
+
+        acceptRequest.accept("request-1");
+
+        verify(requestStore).updateRequest(acceptedRequest1);
     }
 
 }
