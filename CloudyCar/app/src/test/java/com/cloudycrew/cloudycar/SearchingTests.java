@@ -81,7 +81,7 @@ public class SearchingTests {
         String keyword = "west edmonton mall";
 
         List<Request> expectedSearchResults = Arrays.asList(request2);
-        List<Request> actualSearchResults = searchService.searchWithKeyword(pointFarFromAllRequests);
+        List<Request> actualSearchResults = searchService.searchWithKeyword(keyword);
 
         assertEquals(expectedSearchResults, actualSearchResults);
     }
