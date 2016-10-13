@@ -122,7 +122,7 @@ public class RequestTests {
     }
 
     @Test
-    public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExceptedCompletedRequest() {
+    public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
         when(requestStore.getRequest("request-1")).thenReturns(request1);
         completeRequest.complete("request-1");
 
@@ -130,7 +130,7 @@ public class RequestTests {
     }
 
     @Test
-    public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExceptedConfirmedRequest() {
+    public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
         when(requestStore.getRequest("request-1")).thenReturns(request1);
         confirmRequest.confirm("request-1");
 
