@@ -19,12 +19,18 @@ public class RequestTests {
     private User driver;
     private IEmailService emailService;
     private IRequestStore requestStore;
+
     private CreateRequest createRequest;
     private AcceptRequest acceptRequest;
+    private CancelRequest cancelRequest;
+    private CompleteRequest completeRequest;
+    private ConfirmRequest confirmRequest;
 
     private Request request1;
     private Request request2;
     private Request acceptedRequest1;
+    private Request confirmedRequest1;
+    private Request completedRequest1;
 
     @Before
     public void set_up() {
@@ -56,6 +62,17 @@ public class RequestTests {
         acceptedRequest1.setDriver(driver);
         acceptedRequest1.setRoute(route);
 
+        confirmedRequest1 = new ConfirmedRequest();
+        confirmedRequest1.setId("request-1");
+        confirmedRequest1.setRider(rider);
+        confirmedRequest1.setDriver(driver);
+        confirmedRequest1.setRoute(route);
+
+        completedRequest1 = new CompletedRequest();
+        completedRequest1.setId("request-1");
+        completedRequest1.setRider(rider);
+        completedRequest1.setDriver(driver);
+        completedRequest1.setRoute(route);
     }
 
     @Test
@@ -91,16 +108,38 @@ public class RequestTests {
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
         when(requestStore.getRequest("request-1")).thenReturns(request1);
-
         acceptRequest.accept("request-1");
 
         verify(emailService).sendEmail(expectedMessage);
     }
 
     @Test
+    public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
+        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        cancelRequest.cancel("request-1");
+
+        verify(requestStore).deleteRequest("request-1");
+    }
+
+    @Test
+    public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExceptedCompletedRequest() {
+        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        completeRequest.complete("request-1");
+
+        verify(requestStore).updateRequest(completedRequest1);
+    }
+
+    @Test
+    public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExceptedConfirmedRequest() {
+        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        confirmRequest.confirm("request-1");
+
+        verify(requestStore).updateRequest(confirmedRequest1);
+    }
+
+    @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
         when(requestStore.getRequest("request-1")).thenReturns(request1);
-
         acceptRequest.accept("request-1");
 
         verify(requestStore).updateRequest(acceptedRequest1);
