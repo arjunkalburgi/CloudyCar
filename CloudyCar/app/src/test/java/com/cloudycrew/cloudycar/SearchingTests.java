@@ -4,9 +4,15 @@ package com.cloudycrew.cloudycar;
  * Created by George on 2016-10-12.
  */
 
+import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.search.ISearchService;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.Request;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +45,7 @@ public class SearchingTests {
 
         request1 = new PendingRequest();
         request1.setId("request-1");
-        request1.setRoute(route);
+        request1.setRoute(route1);
 
         request2 = new PendingRequest();
         request2.setId("request-2");

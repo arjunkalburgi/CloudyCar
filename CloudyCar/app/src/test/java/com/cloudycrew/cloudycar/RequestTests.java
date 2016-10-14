@@ -1,8 +1,24 @@
 package com.cloudycrew.cloudycar;
 
+import com.cloudycrew.cloudycar.email.EmailMessage;
+import com.cloudycrew.cloudycar.email.IEmailService;
+import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requestinteractions.AcceptRequest;
+import com.cloudycrew.cloudycar.requestinteractions.CancelRequest;
+import com.cloudycrew.cloudycar.requestinteractions.CompleteRequest;
+import com.cloudycrew.cloudycar.requestinteractions.ConfirmRequest;
+import com.cloudycrew.cloudycar.requestinteractions.CreateRequest;
+import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.Request;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,16 +44,14 @@ public class RequestTests {
 
     private Request request1;
     private Request request2;
-    private Request acceptedRequest1;
-    private Request confirmedRequest1;
-    private Request completedRequest1;
+    private AcceptedRequest acceptedRequest1;
+    private ConfirmedRequest confirmedRequest1;
+    private CompletedRequest completedRequest1;
 
     @Before
     public void set_up() {
         rider = new User("janedoedoe");
         driver = new User("driverdood");
-        createRequest = new CreateRequest(requestStore);
-        acceptRequest = new AcceptRequest(requestStore);
 
         Point startingPoint = new Point(48.1472373, 11.5673969);
         Point endingPoint = new Point(48.1258551, 11.5121003);
@@ -107,7 +121,7 @@ public class RequestTests {
         expectedMessage.setFrom(rider.getEmail());
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
-        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        when(requestStore.getRequest("request-1")).thenReturn(request1);
         acceptRequest.accept("request-1");
 
         verify(emailService).sendEmail(expectedMessage);
@@ -115,7 +129,7 @@ public class RequestTests {
 
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
-        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        when(requestStore.getRequest("request-1")).thenReturn(request1);
         cancelRequest.cancel("request-1");
 
         verify(requestStore).deleteRequest("request-1");
@@ -123,7 +137,7 @@ public class RequestTests {
 
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        when(requestStore.getRequest("request-1")).thenReturn(request1);
         completeRequest.complete("request-1");
 
         verify(requestStore).updateRequest(completedRequest1);
@@ -131,7 +145,8 @@ public class RequestTests {
 
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        when(requestStore.getRequest("request-1")).thenReturn(request1);
+
         confirmRequest.confirm("request-1");
 
         verify(requestStore).updateRequest(confirmedRequest1);
@@ -139,7 +154,7 @@ public class RequestTests {
 
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturns(request1);
+        when(requestStore.getRequest("request-1")).thenReturn(request1);
         acceptRequest.accept("request-1");
 
         verify(requestStore).updateRequest(acceptedRequest1);

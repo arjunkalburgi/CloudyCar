@@ -1,6 +1,14 @@
 package com.cloudycrew.cloudycar;
 
 import android.provider.ContactsContract;
+
+import com.cloudycrew.cloudycar.email.Email;
+import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.users.DuplicateUserException;
+import com.cloudycrew.cloudycar.users.IUserService;
+import com.cloudycrew.cloudycar.users.IncompleteUserException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Request;
@@ -28,7 +36,6 @@ public class UserProfileTests
     public void set_up() {
         phoneNumber = new PhoneNumber("780-2676-364"); //Corndog
         email = new Email("wapoz@george.moe");
-        contactInfo = new contactInfo(phoneNumber, email);
         completeUser = new User("janedoedoe");
         completeUser.setEmail(email);
         completeUser.setPhoneNumber(phoneNumber);
@@ -38,7 +45,7 @@ public class UserProfileTests
     @Test
     public void test_addNewUser_withAnUnusedUserName_andTestGettingUserFromUsernameOnly() {
         userService.add(completeUser);
-        assertTrue(completeUser, userService.getUser("janedoedoe"));
+        assertEquals(completeUser, userService.getUser("janedoedoe"));
     }
 
     @Test(expected=DuplicateUserException.class)
@@ -52,12 +59,12 @@ public class UserProfileTests
         userService.add(incompleteUser);
     }
 
-    @Test(expected=InvalidEmailException.class)
+    @Test(expected=Email.InvalidEmailException.class)
     public void test_EditingUserEmailWithInvalidEmail_throwingInvalidEmailException() {
         completeUser.setEmail(new Email("notarealemail"));
     }
 
-    @Test(expected=InvalidPhoneNumberException.class)
+    @Test(expected=PhoneNumber.InvalidPhoneNumberException.class)
     public void test_EditingUserPhoneNumber_throwingInvalidPhoneNumberException() {
         completeUser.setPhoneNumber(new PhoneNumber("corndog")); //Corndog
     }
@@ -76,9 +83,8 @@ public class UserProfileTests
         assertEquals(email, completeUser.getEmail());
     }
 
-    @Test(expected=UserDoesNotExistException.class)
-    public void test_GettingANonExistentUser_throwingUserDoesNotExistException() {
-        userService.get("I don't exist");
+    public void test_GettingANonExistentUser_returnsNull() {
+        assertNull(userService.getUser("I don't exist"));
     }
 
 }
