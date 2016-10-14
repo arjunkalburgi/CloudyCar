@@ -19,6 +19,9 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,11 +32,11 @@ import static org.mockito.Mockito.*;
 /**
  * Created by George on 2016-10-12.
  */
-
+@RunWith(MockitoJUnitRunner.class)
 public class RequestTests {
-    private User rider;
-    private User driver;
+    @Mock
     private IEmailService emailService;
+    @Mock
     private IRequestStore requestStore;
 
     private CreateRequest createRequest;
@@ -41,6 +44,9 @@ public class RequestTests {
     private CancelRequest cancelRequest;
     private CompleteRequest completeRequest;
     private ConfirmRequest confirmRequest;
+
+    private User rider;
+    private User driver;
 
     private Request request1;
     private Request request2;
@@ -50,6 +56,12 @@ public class RequestTests {
 
     @Before
     public void set_up() {
+        createRequest = new CreateRequest();
+        completeRequest = new CompleteRequest();
+        acceptRequest = new AcceptRequest();
+        cancelRequest = new CancelRequest();
+        confirmRequest = new ConfirmRequest();
+
         rider = new User("janedoedoe");
         driver = new User("driverdood");
 
