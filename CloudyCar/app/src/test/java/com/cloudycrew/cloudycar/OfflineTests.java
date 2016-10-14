@@ -12,6 +12,9 @@ import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,11 +26,15 @@ import static org.mockito.Mockito.*;
  * Created by George on 2016-10-12.
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class OfflineTests {
+    @Mock
     private LocalRequestService localRequestService;
+    @Mock
     private CloudRequestService cloudRequestService;
+    @Mock
     private IRequestService requestService;
-
+    @Mock
     private InternetConnectivityProvider internetConnectivityProvider;
 
     private User rider;
