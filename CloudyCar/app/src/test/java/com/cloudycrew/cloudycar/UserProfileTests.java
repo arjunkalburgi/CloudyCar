@@ -12,6 +12,9 @@ import com.cloudycrew.cloudycar.users.IncompleteUserException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Request;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 
@@ -23,10 +26,11 @@ import static org.mockito.Mockito.*;
 /**
  * Created by Ryan on 2016-10-12.
  */
-
-public class UserProfileTests
-{
+@RunWith(MockitoJUnitRunner.class)
+public class UserProfileTests {
+    @Mock
     private IUserService userService;
+
     private User completeUser;
     private User incompleteUser;
     private PhoneNumber phoneNumber;
