@@ -1,7 +1,20 @@
 package com.cloudycrew.cloudycar;
 
+import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.CloudRequestService;
+import com.cloudycrew.cloudycar.requeststorage.IRequestService;
+import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,11 +26,15 @@ import static org.mockito.Mockito.*;
  * Created by George on 2016-10-12.
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class OfflineTests {
+    @Mock
     private LocalRequestService localRequestService;
+    @Mock
     private CloudRequestService cloudRequestService;
+    @Mock
     private IRequestService requestService;
-
+    @Mock
     private InternetConnectivityProvider internetConnectivityProvider;
 
     private User rider;
@@ -25,18 +42,16 @@ public class OfflineTests {
     private Request request1;
     private Request request2;
     private Request newRequest;
-    private Request acceptedRequest1;
-    private Request newAcceptedRequest;
+    private AcceptedRequest acceptedRequest1;
+    private AcceptedRequest newAcceptedRequest;
 
 
     @Before
     public void set_up() {
         set_up_requests();
 
-        when(localRequestService.getRequests()).thenReturns(Arrays.asList(request1, request2));
-        when(localRequestService.getAcceptedRequests()).thenReturns(Arrays.asList(acceptedRequest1));
-
-        requestService = new RequestService(localRequestService, cloudRequestService, internetConnectivityProvider);
+        when(localRequestService.getRequests()).thenReturn(Arrays.asList(request1, request2));
+        when(localRequestService.getAcceptedRequests()).thenReturn(Arrays.asList(acceptedRequest1));
     }
 
     private void set_up_requests() {
@@ -104,8 +119,8 @@ public class OfflineTests {
     public void test_getAcceptedRequests_ifTheDeviceIsOffline_getsLocalAcceptedRequests() {
         internetConnectivityProvider.setInternetAvailable(false);
 
-        List<Request> expectedRequests = Arrays.asList(acceptedRequest1);
-        List<Request> actualRequests = requestService.getAcceptedRequests();
+        List<AcceptedRequest> expectedRequests = Arrays.asList(acceptedRequest1);
+        List<AcceptedRequest> actualRequests = requestService.getAcceptedRequests();
 
         assertEquals(expectedRequests, actualRequests);
     }

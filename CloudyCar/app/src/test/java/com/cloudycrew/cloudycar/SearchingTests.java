@@ -4,9 +4,18 @@ package com.cloudycrew.cloudycar;
  * Created by George on 2016-10-12.
  */
 
+import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.search.ISearchService;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.Request;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +23,11 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SearchingTests {
+    @Mock
     private IRequestStore requestStore;
+    @Mock
     private ISearchService searchService;
 
     private Request request1;
@@ -39,7 +51,7 @@ public class SearchingTests {
 
         request1 = new PendingRequest();
         request1.setId("request-1");
-        request1.setRoute(route);
+        request1.setRoute(route1);
 
         request2 = new PendingRequest();
         request2.setId("request-2");
