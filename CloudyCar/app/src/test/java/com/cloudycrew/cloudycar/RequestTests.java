@@ -68,9 +68,7 @@ public class RequestTests {
         Point startingPoint = new Point(48.1472373, 11.5673969);
         Point endingPoint = new Point(48.1258551, 11.5121003);
 
-        Route route = new Route();
-        route.addPoint(startingPoint);
-        route.addPoint(endingPoint);
+        Route route = new Route(startingPoint,endingPoint);
 
         request1 = new PendingRequest();
         request1.setId("request-1");
@@ -106,7 +104,7 @@ public class RequestTests {
         Point startingPoint = request1.getRoute().getStartingPoint();
         Point endingPoint = request1.getRoute().getEndingPoint();
 
-        createRequest.create(startingPoint, endingPoint);
+        createRequest.create(startingPoint, endingPoint,rider);
 
         assertTrue(requestStore.contains(request1));
     }

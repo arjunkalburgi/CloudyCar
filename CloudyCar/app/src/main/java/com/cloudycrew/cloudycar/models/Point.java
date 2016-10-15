@@ -5,7 +5,18 @@ package com.cloudycrew.cloudycar.models;
  */
 
 public class Point {
-    public Point(double x, double y) {
+    public double getLongitude() {
+        return longitude;
+    }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    private double longitude;
+    private double latitude;
+    public Point(double longitude, double latitude) {
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
 }

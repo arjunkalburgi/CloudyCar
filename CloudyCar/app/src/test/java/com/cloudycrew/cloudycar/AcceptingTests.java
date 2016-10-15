@@ -53,10 +53,8 @@ public class AcceptingTests {
         Point startingPoint = new Point(48.1472373, 11.5673969);
         Point endingPoint = new Point(48.1258551, 11.5121003);
 
-        Route route = new Route();
-        route.addPoint(startingPoint);
-        route.addPoint(endingPoint);
-
+        Route route = new Route(startingPoint,endingPoint);
+        
         request1 = new PendingRequest();
         request1.setId("request-1");
         request1.setRider(rider);
