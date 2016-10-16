@@ -6,8 +6,6 @@ import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
-import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
-import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestinteractions.AcceptRequest;
@@ -23,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,11 +47,11 @@ public class RequestTests {
     private User rider;
     private User driver;
 
-    private Request request1;
-    private Request request2;
+    private PendingRequest request1;
+    private PendingRequest request2;
+    private AcceptedRequest confirmedRequest1;
     private AcceptedRequest acceptedRequest1;
-    private ConfirmedRequest confirmedRequest1;
-    private CompletedRequest completedRequest1;
+    private AcceptedRequest completedRequest1;
 
     @Before
     public void set_up() {
@@ -70,33 +69,15 @@ public class RequestTests {
 
         Route route = new Route(startingPoint,endingPoint);
 
-        request1 = new PendingRequest();
-        request1.setId("request-1");
-        request1.setRider(rider);
-        request1.setRoute(route);
+        request1 = new PendingRequest(rider,route);
 
-        request2 = new PendingRequest();
-        request2.setId("request-2");
-        request2.setRider(rider);
-        request2.setRoute(route);
+        request2 = new PendingRequest(rider,route);
 
-        acceptedRequest1 = new AcceptedRequest();
-        acceptedRequest1.setId("request-1");
-        acceptedRequest1.setRider(rider);
-        acceptedRequest1.setDriver(driver);
-        acceptedRequest1.setRoute(route);
+        acceptedRequest1 = request1.acceptRequest(driver);
 
-        confirmedRequest1 = new ConfirmedRequest();
-        confirmedRequest1.setId("request-1");
-        confirmedRequest1.setRider(rider);
-        confirmedRequest1.setDriver(driver);
-        confirmedRequest1.setRoute(route);
+        confirmedRequest1 = acceptedRequest1.setConfirmed();
 
-        completedRequest1 = new CompletedRequest();
-        completedRequest1.setId("request-1");
-        completedRequest1.setRider(rider);
-        completedRequest1.setDriver(driver);
-        completedRequest1.setRoute(route);
+        completedRequest1 =acceptedRequest1.setConfirmed().setCompleted();
     }
 
     @Test
@@ -118,7 +99,7 @@ public class RequestTests {
 
     @Test
     public void test_getCurrentRequests_ifUserHasRequests_thenReturnsUsersRequests() {
-        List<Request> expectedRequests = Arrays.asList(request1, request2);
+        List<Request> expectedRequests= Arrays.<Request>asList(request1,request2);
         List<Request> actualRequests = requestStore.getRequests();
 
         assertEquals(expectedRequests, actualRequests);
@@ -131,41 +112,41 @@ public class RequestTests {
         expectedMessage.setFrom(rider.getEmail());
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
-        when(requestStore.getRequest("request-1")).thenReturn(request1);
-        acceptRequest.accept("request-1");
+        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        acceptRequest.accept(request1.getId());
 
         verify(emailService).sendEmail(expectedMessage);
     }
 
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
-        when(requestStore.getRequest("request-1")).thenReturn(request1);
-        cancelRequest.cancel("request-1");
+        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        cancelRequest.cancel(request1.getId());
 
-        verify(requestStore).deleteRequest("request-1");
+        verify(requestStore).deleteRequest(request1.getId());
     }
 
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturn(request1);
-        completeRequest.complete("request-1");
+        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        completeRequest.complete(request1.getId());
 
         verify(requestStore).updateRequest(completedRequest1);
     }
 
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturn(request1);
+        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
 
-        confirmRequest.confirm("request-1");
+        confirmRequest.confirm(request1.getId());
 
         verify(requestStore).updateRequest(confirmedRequest1);
     }
 
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturn(request1);
-        acceptRequest.accept("request-1");
+        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        acceptRequest.accept(request1.getId());
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }

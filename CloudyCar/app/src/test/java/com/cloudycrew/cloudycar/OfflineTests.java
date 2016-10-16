@@ -39,9 +39,9 @@ public class OfflineTests {
 
     private User rider;
     private User driver;
-    private Request request1;
-    private Request request2;
-    private Request newRequest;
+    private PendingRequest request1;
+    private PendingRequest request2;
+    private PendingRequest newRequest;
     private AcceptedRequest acceptedRequest1;
     private AcceptedRequest newAcceptedRequest;
 
@@ -50,7 +50,7 @@ public class OfflineTests {
     public void set_up() {
         set_up_requests();
 
-        when(localRequestService.getRequests()).thenReturn(Arrays.asList(request1, request2));
+        when(localRequestService.getRequests()).thenReturn(Arrays.<Request>asList(request1, request2));
         when(localRequestService.getAcceptedRequests()).thenReturn(Arrays.asList(acceptedRequest1));
     }
 
@@ -63,39 +63,22 @@ public class OfflineTests {
 
         Route route = new Route(startingPoint,endingPoint);
 
-        request1 = new PendingRequest();
-        request1.setId("request-1");
-        request1.setRider(rider);
-        request1.setRoute(route);
+        request1 = new PendingRequest(rider,route);
 
-        request2 = new PendingRequest();
-        request2.setId("request-2");
-        request2.setRider(rider);
-        request2.setRoute(route);
+        request2 = new PendingRequest(rider,route);
 
-        newRequest = new PendingRequest();
-        newRequest.setId("request-2");
-        newRequest.setRider(rider);
-        newRequest.setRoute(route);
+        newRequest = new PendingRequest(rider,route);
 
-        acceptedRequest1 = new AcceptedRequest();
-        acceptedRequest1.setId("request-1");
-        acceptedRequest1.setRider(rider);
-        acceptedRequest1.setDriver(driver);
-        acceptedRequest1.setRoute(route);
+        acceptedRequest1 = request1.acceptRequest(driver);
 
-        newAcceptedRequest = new AcceptedRequest();
-        newAcceptedRequest.setId("request-2");
-        newAcceptedRequest.setRider(rider);
-        newAcceptedRequest.setDriver(driver);
-        newAcceptedRequest.setRoute(route);
+        newAcceptedRequest = newRequest.acceptRequest(driver);
     }
 
     @Test
     public void test_getPendingRequests_ifTheDeviceIsOffline_getsLocalRequests() {
         internetConnectivityProvider.setInternetAvailable(false);
 
-        List<Request> expectedRequests = Arrays.asList(request1, request2);
+        List<Request> expectedRequests = Arrays.<Request>asList(request1, request2);
         List<Request> actualRequests = requestService.getRequests();
 
         assertEquals(expectedRequests, actualRequests);
