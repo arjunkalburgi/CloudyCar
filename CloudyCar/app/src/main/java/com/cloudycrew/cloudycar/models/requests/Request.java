@@ -10,13 +10,19 @@ import java.util.UUID;
  */
 
 public abstract class Request {
+    private String requestType;
     private String riderUsername;
     private Route route;
     protected UUID id;
 
-    public Request(String riderUsername, Route route){
+    public Request(String type, String riderUsername, Route route) {
+        this.requestType = type;
         this.riderUsername = riderUsername;
         this.route = route;
+    }
+
+    public String getRequestType() {
+        return requestType;
     }
 
     public String getRider() {

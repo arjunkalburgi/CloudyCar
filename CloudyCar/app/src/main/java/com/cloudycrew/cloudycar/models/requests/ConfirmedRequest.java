@@ -8,7 +8,7 @@ public class ConfirmedRequest extends Request {
     private String driverUsername;
 
     public ConfirmedRequest(AcceptedRequest acceptedRequest) {
-        super(acceptedRequest.getRider(), acceptedRequest.getRoute());
+        super("confirmed", acceptedRequest.getRider(), acceptedRequest.getRoute());
         this.id = acceptedRequest.getId();
         this.driverUsername = acceptedRequest.getDriverUsername();
     }

@@ -8,7 +8,7 @@ public class AcceptedRequest extends Request {
     private String driverUsername;
 
     public AcceptedRequest(PendingRequest request, String driverUsername) {
-        super(request.getRider(), request.getRoute());
+        super("accepted", request.getRider(), request.getRoute());
         this.driverUsername = driverUsername;
         this.id = request.getId();
     }

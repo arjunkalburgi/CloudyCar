@@ -9,7 +9,7 @@ public class CompletedRequest extends Request {
     private String driverUsername;
 
     public CompletedRequest(ConfirmedRequest confirmedRequest) {
-        super(confirmedRequest.getRider(), confirmedRequest.getRoute());
+        super("completed", confirmedRequest.getRider(), confirmedRequest.getRoute());
         this.id = confirmedRequest.getId();
         this.driverUsername = confirmedRequest.getDriverUsername();
     }

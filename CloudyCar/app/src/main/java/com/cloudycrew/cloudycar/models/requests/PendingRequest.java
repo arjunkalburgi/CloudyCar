@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class PendingRequest extends Request {
     public PendingRequest(String riderUsername, Route route) {
-        super(riderUsername, route);
+        super("pending", riderUsername, route);
         this.id = UUID.randomUUID();
     }
 
