@@ -14,7 +14,7 @@ public abstract class Request implements Identifiable {
     private String requestType;
     private String riderUsername;
     private Route route;
-    protected UUID id;
+    protected String id;
 
     public Request(String type, String riderUsername, Route route) {
         this.requestType = type;

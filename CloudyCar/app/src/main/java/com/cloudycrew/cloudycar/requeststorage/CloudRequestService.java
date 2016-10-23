@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.requeststorage;
 
 import android.util.Log;
 
+import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
@@ -28,42 +29,15 @@ import io.searchbox.core.Update;
  */
 
 public class CloudRequestService implements IRequestService {
-    private final String ELASTIC_SEARCH_INDEX = "cmput301f16t12";
-    private final String ELASTIC_SEARCH_TYPE = "request";
+    IElasticSearchService<Request> elasticSearchService;
 
-    private JestClient jestClient;
-
-    public CloudRequestService(JestClient jestClient) {
-        this.jestClient = jestClient;
+    public CloudRequestService(IElasticSearchService<Request> elasticSearchService) {
+        this.elasticSearchService = elasticSearchService;
     }
 
     @Override
     public List<Request> getRequests() {
-        Search search = new Search.Builder("")
-                .addIndex(ELASTIC_SEARCH_INDEX)
-                .addType(ELASTIC_SEARCH_TYPE)
-                .build();
-
-        try {
-            SearchResult result = jestClient.execute(search);
-
-            if (result.isSucceeded()) {
-                return extractRequestsFromSearchHits(result.getHits(Request.class));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return new ArrayList<>();
-    }
-
-    private List<Request> extractRequestsFromSearchHits(List<SearchResult.Hit<Request, Void>> searchHits) {
-        List<Request> out = new ArrayList<>();
-        for(SearchResult.Hit<Request, Void> hit : searchHits) {
-            out.add(hit.source);
-        }
-
-        return out;
+        return elasticSearchService.getAll();
     }
 
     @Override
@@ -73,39 +47,16 @@ public class CloudRequestService implements IRequestService {
 
     @Override
     public void createRequest(Request request) {
-        upsertRequest(request);
+        elasticSearchService.create(request);
     }
 
     @Override
     public void updateRequest(Request request) {
-        upsertRequest(request);
-    }
-
-    private void upsertRequest(Request request) {
-        Index index = new Index.Builder(request)
-                .index(ELASTIC_SEARCH_INDEX)
-                .type(ELASTIC_SEARCH_TYPE)
-                .id(request.getId().toString())
-                .build();
-
-        try {
-            jestClient.execute(index);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        elasticSearchService.update(request);
     }
 
     @Override
     public void deleteRequest(String requestId) {
-        Delete delete = new Delete.Builder(requestId)
-                .index(ELASTIC_SEARCH_INDEX)
-                .type(ELASTIC_SEARCH_TYPE)
-                .build();
-
-        try {
-            jestClient.execute(delete);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        elasticSearchService.delete(requestId);
     }
 }
