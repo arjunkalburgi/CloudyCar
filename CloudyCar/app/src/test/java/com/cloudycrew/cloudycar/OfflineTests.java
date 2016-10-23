@@ -63,15 +63,12 @@ public class OfflineTests {
 
         Route route = new Route(startingPoint,endingPoint);
 
-        request1 = new PendingRequest(rider,route);
+        request1 = new PendingRequest(rider.getUsername(), route);
+        request2 = new PendingRequest(rider.getUsername(), route);
 
-        request2 = new PendingRequest(rider,route);
-
-        newRequest = new PendingRequest(rider,route);
-
-        acceptedRequest1 = request1.acceptRequest(driver);
-
-        newAcceptedRequest = newRequest.acceptRequest(driver);
+        newRequest = new PendingRequest(rider.getUsername(), route);
+        acceptedRequest1 = request1.acceptRequest(driver.getUsername());
+        newAcceptedRequest = newRequest.acceptRequest(driver.getUsername());
     }
 
     @Test

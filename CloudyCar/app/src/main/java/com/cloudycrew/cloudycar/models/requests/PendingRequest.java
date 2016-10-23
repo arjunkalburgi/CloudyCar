@@ -1,7 +1,6 @@
 package com.cloudycrew.cloudycar.models.requests;
 
 import com.cloudycrew.cloudycar.models.Route;
-import com.cloudycrew.cloudycar.models.User;
 
 import java.util.UUID;
 
@@ -10,11 +9,12 @@ import java.util.UUID;
  */
 
 public class PendingRequest extends Request {
-    public PendingRequest(User rider, Route route) {
-        super(rider, route);
+    public PendingRequest(String riderUsername, Route route) {
+        super(riderUsername, route);
         this.id = UUID.randomUUID();
     }
-    public AcceptedRequest acceptRequest(User driver){
-        return new AcceptedRequest(this,driver);
+
+    public AcceptedRequest acceptRequest(String driverUsername){
+        return new AcceptedRequest(this, driverUsername);
     }
 }

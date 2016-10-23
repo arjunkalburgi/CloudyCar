@@ -4,6 +4,8 @@ import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestinteractions.AcceptRequest;
@@ -37,8 +39,8 @@ public class AcceptingTests {
     private PendingRequest pendingRequest2;
 
     private AcceptedRequest acceptedRequest1;
-    private AcceptedRequest confirmedRequest1;
-    private AcceptedRequest completedRequest1;
+    private ConfirmedRequest confirmedRequest1;
+    private CompletedRequest completedRequest1;
     private AcceptRequest acceptRequest;
 
     @Before
@@ -51,17 +53,14 @@ public class AcceptingTests {
 
         Route route = new Route(startingPoint,endingPoint);
         
-        pendingRequest1 = new PendingRequest(rider,route);
-        pendingRequest2 = new PendingRequest(rider,route);
+        pendingRequest1 = new PendingRequest(rider.getUsername(), route);
+        pendingRequest2 = new PendingRequest(rider.getUsername(), route);
 
-        acceptedRequest1 = pendingRequest1.acceptRequest(driver);
+        acceptedRequest1 = pendingRequest1.acceptRequest(driver.getUsername());
 
-        confirmedRequest1 = new AcceptedRequest(pendingRequest1, driver);
-        confirmedRequest1.setConfirmed();
+        confirmedRequest1 = acceptedRequest1.confirmRequest();
 
-        completedRequest1 = new AcceptedRequest(pendingRequest1, driver);
-        completedRequest1.setConfirmed();
-        completedRequest1.setCompleted();
+        completedRequest1 = confirmedRequest1.completeRequest();
     }
 
     @Test

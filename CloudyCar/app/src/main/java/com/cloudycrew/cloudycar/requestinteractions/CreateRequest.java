@@ -13,8 +13,9 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 
 public class CreateRequest {
     private IRequestService cloudRequestService = new CloudRequestService();
+
     public void create(Point startingPoint, Point endingPoint, User rider) {
         Route route= new Route(startingPoint,endingPoint);
-        cloudRequestService.addRequest(new PendingRequest(rider,route));
+        //cloudRequestService.addRequest(new PendingRequest(rider,route));
     }
 }

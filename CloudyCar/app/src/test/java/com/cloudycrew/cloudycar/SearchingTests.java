@@ -48,8 +48,8 @@ public class SearchingTests {
 
         User user= new User("SomeUser");
 
-        request1 = new PendingRequest(user,route1);
-        request2 = new PendingRequest(user,route2);
+        request1 = new PendingRequest(user.getUsername(), route1);
+        request2 = new PendingRequest(user.getUsername(), route2);
 
         when(requestStore.getRequests()).thenReturn(Arrays.asList(request1, request2));
     }
