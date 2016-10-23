@@ -73,6 +73,15 @@ public class CloudRequestService implements IRequestService {
 
     @Override
     public void createRequest(Request request) {
+        upsertRequest(request);
+    }
+
+    @Override
+    public void updateRequest(Request request) {
+        upsertRequest(request);
+    }
+
+    private void upsertRequest(Request request) {
         Index index = new Index.Builder(request)
                 .index(ELASTIC_SEARCH_INDEX)
                 .type(ELASTIC_SEARCH_TYPE)
@@ -80,29 +89,7 @@ public class CloudRequestService implements IRequestService {
                 .build();
 
         try {
-            DocumentResult result = jestClient.execute(index);
-
-            if (result.isSucceeded()) {
-                Log.i("Good", "We made the thing");
-            }
-            else {
-                Log.i("Error", "Elastic search was not able to add the tweet.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void updateRequest(Request request) {
-        Update update = new Update.Builder(request)
-                .index(ELASTIC_SEARCH_INDEX)
-                .type(ELASTIC_SEARCH_TYPE)
-                .id(request.getId().toString())
-                .build();
-
-        try {
-            jestClient.execute(update);
+            jestClient.execute(index);
         } catch (Exception e) {
             e.printStackTrace();
         }
