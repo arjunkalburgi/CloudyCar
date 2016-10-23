@@ -21,7 +21,7 @@ public class RequestDeserializer implements JsonDeserializer<Request> {
     private Map<String, Class<? extends Request>> requestTypes = new HashMap<>();
 
     private RequestDeserializer(Map<String, Class<? extends Request>> requestTypes) {
-        requestTypes.putAll(requestTypes);
+        this.requestTypes.putAll(requestTypes);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class RequestDeserializer implements JsonDeserializer<Request> {
 
         JsonObject object = jsonElement.getAsJsonObject();
         JsonElement requestTypeElement = object.get(requestTypeFieldName);
-        Class<? extends Request> requestClass = requestTypes.get(requestTypeElement);
+        Class<? extends Request> requestClass = requestTypes.get(requestTypeElement.getAsString());
 
         return new Gson().fromJson(object, requestClass);
     }
