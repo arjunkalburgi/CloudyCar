@@ -85,12 +85,12 @@ public class OfflineTests {
     public void test_createRequest_ifTheDeviceIsOffline_thenSendsRequestWhenDeviceRegainsConnectivity() {
         internetConnectivityProvider.setInternetAvailable(false);
 
-        requestService.addRequest(newRequest);
-        verify(cloudRequestService, never()).addRequest(newRequest);
+        requestService.createRequest(newRequest);
+        verify(cloudRequestService, never()).createRequest(newRequest);
 
         internetConnectivityProvider.setInternetAvailable(true);
 
-        verify(cloudRequestService).addRequest(newRequest);
+        verify(cloudRequestService).createRequest(newRequest);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class OfflineTests {
     public void test_acceptRequest_ifTheDeviceIsOffline_thenSendsAcceptedRequestWhenDeviceRegainsConnectivity() {
         internetConnectivityProvider.setInternetAvailable(false);
 
-        requestService.addRequest(newAcceptedRequest);
+        requestService.createRequest(newAcceptedRequest);
         verify(cloudRequestService, never()).updateRequest(newAcceptedRequest);
 
         internetConnectivityProvider.setInternetAvailable(true);

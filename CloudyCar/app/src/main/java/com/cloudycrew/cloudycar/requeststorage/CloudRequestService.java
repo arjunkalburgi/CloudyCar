@@ -22,7 +22,7 @@ public class CloudRequestService implements IRequestService {
     }
 
     @Override
-    public void addRequest(Request request) {
+    public void createRequest(Request request) {
 
     }
 
@@ -30,4 +30,10 @@ public class CloudRequestService implements IRequestService {
     public void updateRequest(Request request) {
 
     }
+
+    @Override
+    public void deleteRequest(String requestId) {
+
+    }
+
 }
