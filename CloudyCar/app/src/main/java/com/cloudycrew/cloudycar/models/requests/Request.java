@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.models.requests;
 
+import com.cloudycrew.cloudycar.Identifiable;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  * Created by George on 2016-10-13.
  */
 
-public abstract class Request {
+public abstract class Request implements Identifiable {
     private String requestType;
     private String riderUsername;
     private Route route;
@@ -33,7 +34,7 @@ public abstract class Request {
         return route;
     }
 
-    public UUID getId(){
-        return this.id;
+    public String getId(){
+        return this.id.toString();
     }
 }
