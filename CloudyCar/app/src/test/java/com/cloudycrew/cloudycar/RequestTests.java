@@ -10,11 +10,6 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
-import com.cloudycrew.cloudycar.requestinteractions.AcceptRequest;
-import com.cloudycrew.cloudycar.requestinteractions.CancelRequest;
-import com.cloudycrew.cloudycar.requestinteractions.CompleteRequest;
-import com.cloudycrew.cloudycar.requestinteractions.ConfirmRequest;
-import com.cloudycrew.cloudycar.requestinteractions.CreateRequest;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
 import org.junit.Before;
@@ -40,11 +35,7 @@ public class RequestTests {
     @Mock
     private IRequestStore requestStore;
 
-    private CreateRequest createRequest;
-    private AcceptRequest acceptRequest;
-    private CancelRequest cancelRequest;
-    private CompleteRequest completeRequest;
-    private ConfirmRequest confirmRequest;
+    private RequestController requestController;
 
     private User rider;
     private User driver;
@@ -57,12 +48,6 @@ public class RequestTests {
 
     @Before
     public void set_up() {
-        createRequest = new CreateRequest();
-        completeRequest = new CompleteRequest();
-        acceptRequest = new AcceptRequest();
-        cancelRequest = new CancelRequest();
-        confirmRequest = new ConfirmRequest();
-
         rider = new User("janedoedoe");
         driver = new User("driverdood");
 
@@ -86,8 +71,9 @@ public class RequestTests {
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
         Point startingPoint = request1.getRoute().getStartingPoint();
         Point endingPoint = request1.getRoute().getEndingPoint();
+        Route route = new Route(startingPoint, endingPoint);
 
-        createRequest.create(startingPoint, endingPoint,rider);
+        requestController.createRequest(route);
 
         assertTrue(requestStore.contains(request1));
     }
@@ -115,7 +101,7 @@ public class RequestTests {
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        acceptRequest.accept(request1.getId());
+        requestController.acceptRequest(request1);
 
         verify(emailService).sendEmail(expectedMessage);
     }
@@ -123,24 +109,23 @@ public class RequestTests {
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        cancelRequest.cancel(request1.getId());
+        requestController.cancelRequest(request1);
 
         verify(requestStore).deleteRequest(request1.getId());
     }
 
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
-        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        completeRequest.complete(request1.getId());
+        when(requestStore.getRequest(confirmedRequest1.getId())).thenReturn(confirmedRequest1);
+        requestController.completeRequest(confirmedRequest1);
 
-        verify(requestStore).updateRequest(completedRequest1);
+        verify(requestStore).updateRequest(confirmedRequest1);
     }
 
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
-        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-
-        confirmRequest.confirm(request1.getId());
+        when(requestStore.getRequest(acceptedRequest1.getId())).thenReturn(acceptedRequest1);
+        requestController.confirmRequest(acceptedRequest1);
 
         verify(requestStore).updateRequest(confirmedRequest1);
     }
@@ -148,7 +133,7 @@ public class RequestTests {
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        acceptRequest.accept(request1.getId());
+        requestController.acceptRequest(request1);
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }

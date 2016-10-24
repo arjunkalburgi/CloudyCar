@@ -13,9 +13,9 @@ public interface IRequestStore {
     List<Request> getRequests();
     List<Request> getAcceptedRequests();
 
-    Request getRequest(UUID id);
+    Request getRequest(String id);
 
-    void deleteRequest(UUID id);
+    void deleteRequest(String id);
     void updateRequest(Request request);
 
     boolean contains(Request request);

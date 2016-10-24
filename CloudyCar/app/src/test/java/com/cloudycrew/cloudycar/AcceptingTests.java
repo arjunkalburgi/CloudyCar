@@ -8,7 +8,6 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
-import com.cloudycrew.cloudycar.requestinteractions.AcceptRequest;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
 import org.junit.Before;
@@ -41,7 +40,8 @@ public class AcceptingTests {
     private AcceptedRequest acceptedRequest1;
     private ConfirmedRequest confirmedRequest1;
     private CompletedRequest completedRequest1;
-    private AcceptRequest acceptRequest;
+
+    private RequestController requestController;
 
     @Before
     public void set_up() {
@@ -65,8 +65,8 @@ public class AcceptingTests {
 
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
-        when(requestStore.getRequest(acceptedRequest1.getId())).thenReturn(acceptedRequest1);
-        acceptRequest.accept(acceptedRequest1.getId());
+        when(requestStore.getRequest(pendingRequest1.getId())).thenReturn(pendingRequest1);
+        requestController.acceptRequest(pendingRequest1);
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }
