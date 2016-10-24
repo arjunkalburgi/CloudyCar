@@ -66,7 +66,7 @@ public class AcceptingTests {
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
         when(requestStore.getRequest(pendingRequest1.getId())).thenReturn(pendingRequest1);
-        requestController.acceptRequest(pendingRequest1);
+        requestController.acceptRequest(pendingRequest1.getId());
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }

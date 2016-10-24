@@ -101,7 +101,7 @@ public class RequestTests {
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        requestController.acceptRequest(request1);
+        requestController.acceptRequest(request1.getId());
 
         verify(emailService).sendEmail(expectedMessage);
     }
@@ -109,7 +109,7 @@ public class RequestTests {
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        requestController.cancelRequest(request1);
+        requestController.cancelRequest(request1.getId());
 
         verify(requestStore).deleteRequest(request1.getId());
     }
@@ -117,7 +117,7 @@ public class RequestTests {
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
         when(requestStore.getRequest(confirmedRequest1.getId())).thenReturn(confirmedRequest1);
-        requestController.completeRequest(confirmedRequest1);
+        requestController.completeRequest(confirmedRequest1.getId());
 
         verify(requestStore).updateRequest(confirmedRequest1);
     }
@@ -125,7 +125,7 @@ public class RequestTests {
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
         when(requestStore.getRequest(acceptedRequest1.getId())).thenReturn(acceptedRequest1);
-        requestController.confirmRequest(acceptedRequest1);
+        requestController.confirmRequest(acceptedRequest1.getId());
 
         verify(requestStore).updateRequest(confirmedRequest1);
     }
@@ -133,7 +133,7 @@ public class RequestTests {
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        requestController.acceptRequest(request1);
+        requestController.acceptRequest(request1.getId());
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }
