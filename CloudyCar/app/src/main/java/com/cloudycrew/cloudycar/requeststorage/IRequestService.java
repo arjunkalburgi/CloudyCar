@@ -13,6 +13,7 @@ public interface IRequestService {
     List<Request> getRequests();
     List<AcceptedRequest> getAcceptedRequests();
 
-    void addRequest(Request request);
+    void createRequest(Request request);
     void updateRequest(Request request);
+    void deleteRequest(String requestId);
 }

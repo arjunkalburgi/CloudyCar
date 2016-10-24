@@ -11,7 +11,7 @@ import java.util.UUID;
 public class PendingRequest extends Request {
     public PendingRequest(String riderUsername, Route route) {
         super("pending", riderUsername, route);
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
     }
 
     public AcceptedRequest acceptRequest(String driverUsername){
