@@ -24,11 +24,6 @@ public class CloudRequestService implements IRequestService {
     }
 
     @Override
-    public List<AcceptedRequest> getAcceptedRequests() {
-        return new ArrayList<>();
-    }
-
-    @Override
     public void createRequest(Request request) {
         elasticSearchService.create(request);
     }

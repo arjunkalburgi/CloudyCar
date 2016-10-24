@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface IRequestService {
     List<Request> getRequests();
-    List<AcceptedRequest> getAcceptedRequests();
-
     void createRequest(Request request);
     void updateRequest(Request request);
     void deleteRequest(String requestId);

@@ -34,11 +34,6 @@ public class LocalRequestService implements IRequestService {
     }
 
     @Override
-    public List<AcceptedRequest> getAcceptedRequests() {
-        return new ArrayList<>();
-    }
-
-    @Override
     public void createRequest(Request request) {
         Map<String, Request> requests = loadRequests();
 
