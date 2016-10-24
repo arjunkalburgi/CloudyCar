@@ -44,7 +44,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
             SearchResult result = jestClient.execute(search);
 
             if (result.isSucceeded()) {
-                return extractRequestsFromSearchHits(result.getHits(typeClass));
+                return extractItemsFromHits(result.getHits(typeClass));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,7 +77,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
         }
     }
 
-    private List<T> extractRequestsFromSearchHits(List<SearchResult.Hit<T, Void>> searchHits) {
+    private List<T> extractItemsFromHits(List<SearchResult.Hit<T, Void>> searchHits) {
         List<T> out = new ArrayList<>();
         for(SearchResult.Hit<T, Void> hit : searchHits) {
             out.add(hit.source);
