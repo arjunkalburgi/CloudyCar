@@ -1,0 +1,46 @@
+package com.cloudycrew.cloudycar.requeststorage;
+
+import com.cloudycrew.cloudycar.models.requests.Request;
+
+import java.util.List;
+
+/**
+ * Created by George on 2016-10-24.
+ */
+
+public class CompositeRequestService implements IRequestService {
+    private IRequestService cloudRequestService;
+    private IRequestService localRequestService;
+
+    public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService) {
+        this.cloudRequestService = cloudRequestService;
+        this.localRequestService = localRequestService;
+    }
+
+    @Override
+    public List<Request> getRequests() {
+        try {
+            return cloudRequestService.getRequests();
+        } catch (Exception e) {
+            return localRequestService.getRequests();
+        }
+    }
+
+    @Override
+    public void createRequest(Request request) {
+        cloudRequestService.createRequest(request);
+        localRequestService.createRequest(request);
+    }
+
+    @Override
+    public void updateRequest(Request request) {
+        cloudRequestService.updateRequest(request);
+        localRequestService.updateRequest(request);
+    }
+
+    @Override
+    public void deleteRequest(String requestId) {
+        cloudRequestService.deleteRequest(requestId);
+        localRequestService.deleteRequest(requestId);
+    }
+}
