@@ -14,9 +14,7 @@ public interface IRequestStore {
     List<Request> getAcceptedRequests();
 
     Request getRequest(String id);
-
     void deleteRequest(String id);
     void updateRequest(Request request);
-
     boolean contains(Request request);
 }

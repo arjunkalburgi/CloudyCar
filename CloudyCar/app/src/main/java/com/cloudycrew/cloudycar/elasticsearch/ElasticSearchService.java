@@ -53,15 +53,6 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
         return new ArrayList<>();
     }
 
-    private List<T> extractRequestsFromSearchHits(List<SearchResult.Hit<T, Void>> searchHits) {
-        List<T> out = new ArrayList<>();
-        for(SearchResult.Hit<T, Void> hit : searchHits) {
-            out.add(hit.source);
-        }
-
-        return out;
-    }
-
     @Override
     public void create(T item) {
         upsertItem(item);
@@ -84,6 +75,15 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private List<T> extractRequestsFromSearchHits(List<SearchResult.Hit<T, Void>> searchHits) {
+        List<T> out = new ArrayList<>();
+        for(SearchResult.Hit<T, Void> hit : searchHits) {
+            out.add(hit.source);
+        }
+
+        return out;
     }
 
     private void upsertItem(T item) {

@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar;
 
+import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.email.EmailMessage;
 import com.cloudycrew.cloudycar.email.IEmailService;
 import com.cloudycrew.cloudycar.models.Point;
@@ -18,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

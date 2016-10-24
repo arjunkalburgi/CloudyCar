@@ -1,4 +1,4 @@
-package com.cloudycrew.cloudycar;
+package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.Route;
 
