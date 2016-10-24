@@ -35,61 +35,38 @@ public class AcceptingTests {
     private User rider;
     private User driver;
 
-    private AcceptRequest acceptRequest;
+    private PendingRequest pendingRequest1;
+    private PendingRequest pendingRequest2;
 
-    private Request request1;
-    private Request request2;
     private AcceptedRequest acceptedRequest1;
     private ConfirmedRequest confirmedRequest1;
     private CompletedRequest completedRequest1;
+    private AcceptRequest acceptRequest;
 
     @Before
     public void set_up() {
-        acceptRequest = new AcceptRequest();
-
         rider = new User("janedoedoe");
         driver = new User("driverdood");
 
         Point startingPoint = new Point(48.1472373, 11.5673969);
         Point endingPoint = new Point(48.1258551, 11.5121003);
 
-        Route route = new Route();
-        route.addPoint(startingPoint);
-        route.addPoint(endingPoint);
+        Route route = new Route(startingPoint,endingPoint);
+        
+        pendingRequest1 = new PendingRequest(rider.getUsername(), route);
+        pendingRequest2 = new PendingRequest(rider.getUsername(), route);
 
-        request1 = new PendingRequest();
-        request1.setId("request-1");
-        request1.setRider(rider);
-        request1.setRoute(route);
+        acceptedRequest1 = pendingRequest1.acceptRequest(driver.getUsername());
 
-        request2 = new PendingRequest();
-        request2.setId("request-2");
-        request2.setRider(rider);
-        request2.setRoute(route);
+        confirmedRequest1 = acceptedRequest1.confirmRequest();
 
-        acceptedRequest1 = new AcceptedRequest();
-        acceptedRequest1.setId("request-1");
-        acceptedRequest1.setRider(rider);
-        acceptedRequest1.setDriver(driver);
-        acceptedRequest1.setRoute(route);
-
-        confirmedRequest1 = new ConfirmedRequest();
-        confirmedRequest1.setId("request-1");
-        confirmedRequest1.setRider(rider);
-        confirmedRequest1.setDriver(driver);
-        confirmedRequest1.setRoute(route);
-
-        completedRequest1 = new CompletedRequest();
-        completedRequest1.setId("request-1");
-        completedRequest1.setRider(rider);
-        completedRequest1.setDriver(driver);
-        completedRequest1.setRoute(route);
+        completedRequest1 = confirmedRequest1.completeRequest();
     }
 
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
-        when(requestStore.getRequest("request-1")).thenReturn(request1);
-        acceptRequest.accept("request-1");
+        when(requestStore.getRequest(acceptedRequest1.getId())).thenReturn(acceptedRequest1);
+        acceptRequest.accept(acceptedRequest1.getId());
 
         verify(requestStore).updateRequest(acceptedRequest1);
     }

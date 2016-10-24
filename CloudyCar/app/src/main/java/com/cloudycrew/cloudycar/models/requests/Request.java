@@ -3,36 +3,37 @@ package com.cloudycrew.cloudycar.models.requests;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 
+import java.util.UUID;
+
 /**
  * Created by George on 2016-10-13.
  */
 
-public class Request {
-    private String id;
-    private User rider;
+public abstract class Request {
+    private String requestType;
+    private String riderUsername;
     private Route route;
+    protected UUID id;
 
-    public String getId() {
-        return id;
+    public Request(String type, String riderUsername, Route route) {
+        this.requestType = type;
+        this.riderUsername = riderUsername;
+        this.route = route;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getRequestType() {
+        return requestType;
     }
 
-    public User getRider() {
-        return rider;
-    }
-
-    public void setRider(User rider) {
-        this.rider = rider;
+    public String getRider() {
+        return riderUsername;
     }
 
     public Route getRoute() {
         return route;
     }
 
-    public void setRoute(Route route) {
-        this.route = route;
+    public UUID getId(){
+        return this.id;
     }
 }

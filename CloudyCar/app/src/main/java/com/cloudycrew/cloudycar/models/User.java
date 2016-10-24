@@ -7,12 +7,21 @@ import com.cloudycrew.cloudycar.email.Email;
  */
 
 public class User {
+    private String username;
     private Email email;
     private PhoneNumber phoneNumber;
     private String firstName;
 
     public User(String username) {
+        this.username = username;
+    }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Email getEmail() {

@@ -6,6 +6,7 @@ package com.cloudycrew.cloudycar;
 
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
@@ -38,24 +39,17 @@ public class SearchingTests {
         Point startingPoint1 = new Point(48.1472373, 11.5673969);
         Point endingPoint1 = new Point(48.1258551, 11.5121003);
 
-        Route route1 = new Route();
-        route1.addPoint(startingPoint1);
-        route1.addPoint(endingPoint1);
+        Route route1 = new Route(startingPoint1,endingPoint1);
 
         Point startingPoint2 = new Point(53.5225, 113.6242);
         Point endingPoint2 = new Point(53.5232, 113.5263);
 
-        Route route2 = new Route();
-        route2.addPoint(startingPoint2);
-        route2.addPoint(endingPoint2);
+        Route route2 = new Route(startingPoint2,endingPoint2);
 
-        request1 = new PendingRequest();
-        request1.setId("request-1");
-        request1.setRoute(route1);
+        User user= new User("SomeUser");
 
-        request2 = new PendingRequest();
-        request2.setId("request-2");
-        request2.setRoute(route2);
+        request1 = new PendingRequest(user.getUsername(), route1);
+        request2 = new PendingRequest(user.getUsername(), route2);
 
         when(requestStore.getRequests()).thenReturn(Arrays.asList(request1, request2));
     }

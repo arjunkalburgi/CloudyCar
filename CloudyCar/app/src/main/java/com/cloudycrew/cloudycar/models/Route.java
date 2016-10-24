@@ -5,15 +5,18 @@ package com.cloudycrew.cloudycar.models;
  */
 
 public class Route {
-    public void addPoint(Point point) {
-
+    private Point start;
+    private Point end;
+    public Route(Point start,Point end){
+        this.start=start;
+        this.end=end;
     }
 
     public Point getStartingPoint() {
-        return null;
+        return this.start;
     }
 
     public Point getEndingPoint() {
-        return null;
+        return this.end;
     }
 }
