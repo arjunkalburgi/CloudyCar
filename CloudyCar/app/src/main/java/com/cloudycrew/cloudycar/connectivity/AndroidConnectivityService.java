@@ -42,7 +42,7 @@ public class AndroidConnectivityService implements IConnectivityService {
 
     private void dispatchConnectivityChange() {
         if (onConnectivityChangedListener != null) {
-            onConnectivityChangedListener.onConectivityChanged(isInternetAvailable());
+            onConnectivityChangedListener.onConnectivityChanged(isInternetAvailable());
         }
     }
 

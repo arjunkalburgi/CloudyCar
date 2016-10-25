@@ -9,6 +9,6 @@ public interface IConnectivityService {
     void setOnConnectivityChangedListener(OnConnectivityChangedListener onConnectivityChangedListener);
 
     interface OnConnectivityChangedListener {
-        void onConectivityChanged(boolean isConnected);
+        void onConnectivityChanged(boolean isConnected);
     }
 }
