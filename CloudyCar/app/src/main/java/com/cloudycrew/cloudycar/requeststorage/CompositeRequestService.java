@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
+import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;
@@ -11,10 +12,21 @@ import java.util.List;
 public class CompositeRequestService implements IRequestService {
     private IRequestService cloudRequestService;
     private IRequestService localRequestService;
+    private IConnectivityService connectivityService;
 
-    public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService) {
+    public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService, IConnectivityService connectivityService) {
         this.cloudRequestService = cloudRequestService;
         this.localRequestService = localRequestService;
+        this.connectivityService = connectivityService;
+
+        connectivityService.setOnConnectivityChangedListener(new IConnectivityService.OnConnectivityChangedListener() {
+            @Override
+            public void onConnectivityChanged(boolean isConnected) {
+                if (isConnected) {
+                    syncLocalState();
+                }
+            }
+        });
     }
 
     @Override
@@ -42,5 +54,9 @@ public class CompositeRequestService implements IRequestService {
     public void deleteRequest(String requestId) {
         cloudRequestService.deleteRequest(requestId);
         localRequestService.deleteRequest(requestId);
+    }
+
+    private void syncLocalState() {
+
     }
 }
