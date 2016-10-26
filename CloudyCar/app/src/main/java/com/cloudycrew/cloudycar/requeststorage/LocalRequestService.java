@@ -7,6 +7,7 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.cloudycrew.cloudycar.utils.StringUtils;
 import com.cloudycrew.cloudycar.utils.SubclassDeserializer;
 import com.google.gson.Gson;
@@ -80,14 +81,6 @@ public class LocalRequestService implements IRequestService {
     }
 
     private Gson getGson() {
-        SubclassDeserializer<Request> requestDeserializer = new SubclassDeserializer.Builder<Request>()
-                .setTypeFieldName("requestType")
-                .registerType("pending", PendingRequest.class)
-                .registerType("accepted", AcceptedRequest.class)
-                .registerType("confirmed", ConfirmedRequest.class)
-                .registerType("completed", CompletedRequest.class)
-                .build();
-
-        return new GsonBuilder().registerTypeAdapter(Request.class, requestDeserializer).create();
+        return RequestUtils.getGson();
     }
 }
