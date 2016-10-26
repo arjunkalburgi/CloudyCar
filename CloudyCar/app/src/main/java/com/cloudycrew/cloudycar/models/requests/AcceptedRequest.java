@@ -5,10 +5,12 @@ package com.cloudycrew.cloudycar.models.requests;
  */
 
 public class AcceptedRequest extends Request {
+    public static final String TYPE_NAME = "accepted";
+
     private String driverUsername;
 
     public AcceptedRequest(PendingRequest request, String driverUsername) {
-        super("accepted", request.getRider(), request.getRoute());
+        super(TYPE_NAME, request.getRider(), request.getRoute());
         this.driverUsername = driverUsername;
         this.id = request.getId();
     }
