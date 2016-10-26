@@ -17,11 +17,11 @@ import java.util.Map;
 
 public class SubclassDeserializer<T> implements JsonDeserializer<T> {
     private String typeFieldName;
-    private Map<String, Class<? extends T>> requestTypes = new HashMap<>();
+    private Map<String, Class<? extends T>> typesMap = new HashMap<>();
 
-    private SubclassDeserializer(String typeFieldName, Map<String, Class<? extends T>> requestTypes) {
+    private SubclassDeserializer(String typeFieldName, Map<String, Class<? extends T>> typesMap) {
         this.typeFieldName = typeFieldName;
-        this.requestTypes.putAll(requestTypes);
+        this.typesMap.putAll(typesMap);
     }
 
     @Override
@@ -30,22 +30,22 @@ public class SubclassDeserializer<T> implements JsonDeserializer<T> {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonElement typeElement = jsonObject.get(typeFieldName);
-        Class<? extends T> typeClass = requestTypes.get(typeElement.getAsString());
+        Class<? extends T> typeClass = typesMap.get(typeElement.getAsString());
 
         return new Gson().fromJson(jsonObject, typeClass);
     }
 
     public static class Builder<T> {
         private String typeFieldName;
-        private Map<String, Class<? extends T>> requestTypes = new HashMap<>();
+        private Map<String, Class<? extends T>> typesMap = new HashMap<>();
 
         public Builder<T> setTypeFieldName(String typeFieldName) {
             this.typeFieldName = typeFieldName;
             return this;
         }
 
-        public Builder<T> registerRequestType(String type, Class<? extends T> requestClass) {
-            requestTypes.put(type, requestClass);
+        public Builder<T> registerType(String type, Class<? extends T> typeClass) {
+            typesMap.put(type, typeClass);
             return this;
         }
 
@@ -53,7 +53,7 @@ public class SubclassDeserializer<T> implements JsonDeserializer<T> {
             if (typeFieldName == null) {
                 throw new NullPointerException("typeFieldName is null");
             }
-            return new SubclassDeserializer<>(typeFieldName, requestTypes);
+            return new SubclassDeserializer<>(typeFieldName, typesMap);
         }
     }
 }

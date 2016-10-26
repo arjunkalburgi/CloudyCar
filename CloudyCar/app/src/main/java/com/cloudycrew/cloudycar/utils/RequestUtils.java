@@ -17,10 +17,10 @@ public class RequestUtils {
     private static JsonDeserializer<Request> getRequestDeserializer() {
         return new SubclassDeserializer.Builder<Request>()
                 .setTypeFieldName("requestType")
-                .registerRequestType(PendingRequest.TYPE_NAME, PendingRequest.class)
-                .registerRequestType(AcceptedRequest.TYPE_NAME, AcceptedRequest.class)
-                .registerRequestType(ConfirmedRequest.TYPE_NAME, ConfirmedRequest.class)
-                .registerRequestType(CompletedRequest.TYPE_NAME, CompletedRequest.class)
+                .registerType(PendingRequest.TYPE_NAME, PendingRequest.class)
+                .registerType(AcceptedRequest.TYPE_NAME, AcceptedRequest.class)
+                .registerType(ConfirmedRequest.TYPE_NAME, ConfirmedRequest.class)
+                .registerType(CompletedRequest.TYPE_NAME, CompletedRequest.class)
                 .build();
     }
 

@@ -82,10 +82,10 @@ public class LocalRequestService implements IRequestService {
     private Gson getGson() {
         SubclassDeserializer<Request> requestDeserializer = new SubclassDeserializer.Builder<Request>()
                 .setTypeFieldName("requestType")
-                .registerRequestType("pending", PendingRequest.class)
-                .registerRequestType("accepted", AcceptedRequest.class)
-                .registerRequestType("confirmed", ConfirmedRequest.class)
-                .registerRequestType("completed", CompletedRequest.class)
+                .registerType("pending", PendingRequest.class)
+                .registerType("accepted", AcceptedRequest.class)
+                .registerType("confirmed", ConfirmedRequest.class)
+                .registerType("completed", CompletedRequest.class)
                 .build();
 
         return new GsonBuilder().registerTypeAdapter(Request.class, requestDeserializer).create();
