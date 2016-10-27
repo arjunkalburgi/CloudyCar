@@ -15,7 +15,7 @@ public class AndroidConnectivityService implements IConnectivityService {
     private Context context;
     private OnConnectivityChangedListener onConnectivityChangedListener;
 
-    private AndroidConnectivityService(Context context) {
+    public AndroidConnectivityService(Context context) {
         this.context = context;
         registerConnectivityListener();
     }
