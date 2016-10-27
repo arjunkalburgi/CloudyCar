@@ -9,8 +9,10 @@ import java.util.UUID;
  */
 
 public class PendingRequest extends Request {
+    public static final String TYPE_NAME = "pending";
+
     public PendingRequest(String riderUsername, Route route) {
-        super("pending", riderUsername, route);
+        super(TYPE_NAME, riderUsername, route);
         this.id = UUID.randomUUID().toString();
     }
 

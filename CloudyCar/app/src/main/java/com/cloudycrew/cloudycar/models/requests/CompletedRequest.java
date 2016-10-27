@@ -6,10 +6,12 @@ package com.cloudycrew.cloudycar.models.requests;
  */
 
 public class CompletedRequest extends Request {
+    public static final String TYPE_NAME = "completed";
+
     private String driverUsername;
 
     public CompletedRequest(ConfirmedRequest confirmedRequest) {
-        super("completed", confirmedRequest.getRider(), confirmedRequest.getRoute());
+        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute());
         this.id = confirmedRequest.getId();
         this.driverUsername = confirmedRequest.getDriverUsername();
     }
