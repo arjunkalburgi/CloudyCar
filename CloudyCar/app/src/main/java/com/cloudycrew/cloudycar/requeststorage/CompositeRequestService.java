@@ -18,15 +18,6 @@ public class CompositeRequestService implements IRequestService {
         this.cloudRequestService = cloudRequestService;
         this.localRequestService = localRequestService;
         this.connectivityService = connectivityService;
-
-        connectivityService.setOnConnectivityChangedListener(new IConnectivityService.OnConnectivityChangedListener() {
-            @Override
-            public void onConnectivityChanged(boolean isConnected) {
-                if (isConnected) {
-                    syncLocalState();
-                }
-            }
-        });
     }
 
     @Override
