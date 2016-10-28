@@ -17,13 +17,11 @@ public class SplashScreen extends Activity {
             public void run(){
                 try{
                     sleep(3000);
-                    Intent main = new Intent(SplashScreen.this, Activity.class);
-                    startActivity(main);
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    Intent intent = new Intent();
-                    startActivity(intent);
+                    Intent main = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(main);
                 }
             }
         };
