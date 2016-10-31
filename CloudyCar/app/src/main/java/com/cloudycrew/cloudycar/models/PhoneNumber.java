@@ -7,8 +7,9 @@ package com.cloudycrew.cloudycar.models;
 public class PhoneNumber {
 
     private String phoneNumber;
-    public PhoneNumber(String number) {
 
+    public PhoneNumber(String number) {
+        this.setPhoneNumber(number);
     }
 
     public String getPhoneNumber()
