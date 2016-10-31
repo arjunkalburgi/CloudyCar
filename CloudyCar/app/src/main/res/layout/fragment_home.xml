@@ -78,7 +78,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:text="Be A Rider"
+                    android:text="Be A Driver"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey_700"
@@ -88,7 +88,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Pick a price, get a ride"
+                    android:text="Choose from a list of rides"
                     android:textColor="@color/grey_500"
                     android:textSize="14sp" />
             </LinearLayout>
