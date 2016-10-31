@@ -1,12 +1,13 @@
 package com.cloudycrew.cloudycar.models;
 
+import com.cloudycrew.cloudycar.Identifiable;
 import com.cloudycrew.cloudycar.email.Email;
 
 /**
  * Created by George on 2016-10-13.
  */
 
-public class User {
+public class User implements Identifiable {
     private String username;
     private Email email;
     private PhoneNumber phoneNumber;
@@ -48,4 +49,8 @@ public class User {
         this.firstName = firstName;
     }
 
+    @Override
+    public String getId() {
+        return getUsername();
+    }
 }
