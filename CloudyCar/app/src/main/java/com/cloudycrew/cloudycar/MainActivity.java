@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,9 +22,13 @@ public class MainActivity extends AppCompatActivity {
         lessgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                selectRiderOrDriver();
             }
         });
     }
 
+    private void selectRiderOrDriver() {
+        Intent intent = new Intent(this, SignUpCompleteActivity.class);
+        startActivity(intent);
+    }
 }
