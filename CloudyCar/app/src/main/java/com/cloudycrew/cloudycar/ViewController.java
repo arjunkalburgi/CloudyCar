@@ -7,6 +7,10 @@ package com.cloudycrew.cloudycar;
 public class ViewController<T> {
     private T view;
 
+    public T getView() {
+        return view;
+    }
+    
     public void attachView(T view) {
         this.view = view;
     }
