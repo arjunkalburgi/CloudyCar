@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '25'
+    buildToolsVersion '23.0.1'
     defaultConfig {
         applicationId "com.cloudycrew.cloudycar"
         minSdkVersion 18
@@ -34,7 +34,6 @@ dependencies {
     compile 'io.searchbox:jest-droid:2.0.1'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.google.android.gms:play-services:9.8.00'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.+'
     compile 'com.makeramen:roundedimageview:2.2.1'
