@@ -10,11 +10,29 @@ import com.cloudycrew.cloudycar.models.User;
  */
 
 public class UserProfileActivity extends BaseActivity implements IUserProfileView {
+    private UserProfileController userProfileController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView
+        // TODO: setContentView
+
+        resolveDependencies();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userProfileController.attachView(this);
+    }
+
+    @Override
+    protected void onPause() {
+        userProfileController.detachView();
+    }
+
+    private void resolveDependencies() {
+        this.userProfileController = getCloudyCarApplication().getUserProfileController();
     }
 
     @Override

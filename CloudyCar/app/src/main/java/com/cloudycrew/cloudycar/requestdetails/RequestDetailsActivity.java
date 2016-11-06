@@ -10,12 +10,32 @@ import com.cloudycrew.cloudycar.models.requests.Request;
  */
 
 public class RequestDetailsActivity extends BaseActivity implements IRequestDetailsView {
+    private RequestDetailsController requestDetailsController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView
+        // TODO: setContentView
+
+        resolveDependencies();
     }
-    
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        requestDetailsController.attachView(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestDetailsController.detachView();
+    }
+
+    private void resolveDependencies() {
+        this.requestDetailsController = getCloudyCarApplication().getRequestDetailsController();
+    }
+
     @Override
     public void displayRequest(Request request) {
 
