@@ -52,10 +52,10 @@
         <item name="cardUseCompatPadding">true</item>
         <item name="android:layout_height">160dp</item>
         <item name="android:scaleType">centerCrop</item>
-        <item name="app:riv_corner_radius_bottom_left">0dp</item>
-        <item name="app:riv_corner_radius_bottom_right">0dp</item>
-        <item name="app:riv_corner_radius_top_left">@dimen/card_corner_radius</item>
-        <item name="app:riv_corner_radius_top_right">@dimen/card_corner_radius</item>
+        <item name="riv_corner_radius_bottom_left">0dp</item>
+        <item name="riv_corner_radius_bottom_right">0dp</item>
+        <item name="riv_corner_radius_top_left">@dimen/card_corner_radius</item>
+        <item name="riv_corner_radius_top_right">@dimen/card_corner_radius</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
