@@ -17,6 +17,10 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     private RequestController requestController;
     private IRequestStore requestStore;
 
+    public RiderSummaryController(RequestController requestController, IRequestStore requestStore) {
+        this.requestController = requestController;
+        this.requestStore = requestStore;
+    }
     public void refreshRequests() {
         dispatchShowLoading();
         // need to do this on a new thread

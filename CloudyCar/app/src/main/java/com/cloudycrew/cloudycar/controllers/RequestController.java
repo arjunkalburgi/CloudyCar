@@ -7,7 +7,7 @@ import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
-import com.cloudycrew.cloudycar.requeststorage.RequestStore;
+import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
 import java.util.List;
 
@@ -17,11 +17,13 @@ import java.util.List;
 
 public class RequestController {
     private IRequestService requestService;
-    private RequestStore requestStore;
+    private IRequestStore requestStore;
     private String currentUser;
 
-    public RequestController(String currentUser) {
+    public RequestController(String currentUser, IRequestStore requestStore, IRequestService requestService) {
         this.currentUser = currentUser;
+        this.requestStore = requestStore;
+        this.requestService = requestService;
     }
 
     public void refreshRequests() {
