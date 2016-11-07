@@ -29,6 +29,10 @@ public class Store<T extends Identifiable> implements IObservable<Store<T>> {
         return new ArrayList<>(itemsMap.values());
     }
 
+    public T getItem(String itemId) {
+        return itemsMap.get(itemId);
+    }
+
     public void setAll(Collection<? extends T> items) {
         items.clear();
         for (T item: items) {
@@ -54,6 +58,10 @@ public class Store<T extends Identifiable> implements IObservable<Store<T>> {
             itemsMap.remove(itemId);
             notifyObservers();
         }
+    }
+
+    public boolean isEmpty() {
+        return itemsMap.isEmpty();
     }
 
     protected void notifyObservers() {
