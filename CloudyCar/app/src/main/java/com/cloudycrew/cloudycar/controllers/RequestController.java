@@ -32,12 +32,12 @@ public class RequestController {
     public void createRequest(Route route) {
         PendingRequest pendingRequest = new PendingRequest(currentUser, route);
         requestService.createRequest(pendingRequest);
-        requestStore.addItem(pendingRequest);
+        requestStore.addRequest(pendingRequest);
     }
 
     public void cancelRequest(String requestId) {
         requestService.deleteRequest(requestId);
-        requestStore.deleteItem(requestId);
+        requestStore.deleteRequest(requestId);
     }
 
     public void acceptRequest(String requestId) {
@@ -46,7 +46,7 @@ public class RequestController {
         if (pendingRequest != null) {
             AcceptedRequest acceptedRequest = pendingRequest.acceptRequest(currentUser);
             requestService.createRequest(acceptedRequest);
-            requestStore.addItem(acceptedRequest);
+            requestStore.addRequest(acceptedRequest);
         }
 
     }
@@ -57,7 +57,7 @@ public class RequestController {
         if (acceptedRequest != null) {
             ConfirmedRequest confirmedRequest = acceptedRequest.confirmRequest();
             requestService.updateRequest(confirmedRequest);
-            requestStore.updateItem(confirmedRequest);
+            requestStore.updateRequest(confirmedRequest);
         }
     }
 
@@ -67,7 +67,7 @@ public class RequestController {
         if (confirmedRequest != null) {
             CompletedRequest completedRequest = confirmedRequest.completeRequest();
             requestService.updateRequest(completedRequest);
-            requestStore.updateItem(completedRequest);
+            requestStore.updateRequest(completedRequest);
         }
     }
 }
