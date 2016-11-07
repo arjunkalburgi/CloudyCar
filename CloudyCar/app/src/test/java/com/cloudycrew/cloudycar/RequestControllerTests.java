@@ -11,6 +11,7 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
 import org.junit.Before;
@@ -29,13 +30,18 @@ import static org.mockito.Mockito.*;
  * Created by George on 2016-10-12.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RequestTests {
+public class RequestControllerTests {
     @Mock
     private IEmailService emailService;
     @Mock
     private IRequestStore requestStore;
+    @Mock
+    private IRequestService requestService;
 
     private RequestController requestController;
+
+    private String riderUsername;
+    private String driverUsername;
 
     private User rider;
     private User driver;
@@ -48,34 +54,32 @@ public class RequestTests {
 
     @Before
     public void set_up() {
-        rider = new User("janedoedoe");
-        driver = new User("driverdood");
+        riderUsername = "janedoedoe";
+        driverUsername = "driverdood";
+
+        rider = new User(riderUsername);
+        driver = new User(driverUsername);
 
         Point startingPoint = new Point(48.1472373, 11.5673969);
         Point endingPoint = new Point(48.1258551, 11.5121003);
 
         Route route = new Route(startingPoint,endingPoint);
 
-        request1 = new PendingRequest(rider.getUsername(), route);
+        request1 = new PendingRequest(riderUsername, route);
+        request2 = new PendingRequest(riderUsername, route);
 
-        request2 = new PendingRequest(rider.getUsername(), route);
-
-        acceptedRequest1 = request1.acceptRequest(driver.getUsername());
-
+        acceptedRequest1 = request1.acceptRequest(driverUsername);
         confirmedRequest1 = acceptedRequest1.confirmRequest();
-
         completedRequest1 = confirmedRequest1.completeRequest();
     }
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        Point startingPoint = request1.getRoute().getStartingPoint();
-        Point endingPoint = request1.getRoute().getEndingPoint();
-        Route route = new Route(startingPoint, endingPoint);
+        requestController = new RequestController(riderUsername, requestStore, requestService);
+        requestController.createRequest(request1.getRoute());
 
-        requestController.createRequest(route);
-
-        assertTrue(requestStore.contains(request1));
+        verify(requestStore).addRequest(request1);
+        verify(requestService).createRequest(request1);
     }
 
     @Test
@@ -101,6 +105,8 @@ public class RequestTests {
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+
+        requestController = new RequestController(driverUsername, requestStore, requestService);
         requestController.acceptRequest(request1.getId());
 
         verify(emailService).sendEmail(expectedMessage);
@@ -109,32 +115,44 @@ public class RequestTests {
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+
+        requestController = new RequestController(riderUsername, requestStore, requestService);
         requestController.cancelRequest(request1.getId());
 
         verify(requestStore).deleteRequest(request1.getId());
+        verify(requestService).deleteRequest(request1.getId());
     }
 
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
-        when(requestStore.getRequest(confirmedRequest1.getId())).thenReturn(confirmedRequest1);
+        when(requestStore.getRequest(confirmedRequest1.getId(), ConfirmedRequest.class)).thenReturn(confirmedRequest1);
+
+        requestController = new RequestController(riderUsername, requestStore, requestService);
         requestController.completeRequest(confirmedRequest1.getId());
 
-        verify(requestStore).updateRequest(confirmedRequest1);
+        verify(requestStore).updateRequest(completedRequest1);
+        verify(requestService).updateRequest(completedRequest1);
     }
 
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
-        when(requestStore.getRequest(acceptedRequest1.getId())).thenReturn(acceptedRequest1);
+        when(requestStore.getRequest(acceptedRequest1.getId(), AcceptedRequest.class)).thenReturn(acceptedRequest1);
+
+        requestController = new RequestController(riderUsername, requestStore, requestService);
         requestController.confirmRequest(acceptedRequest1.getId());
 
         verify(requestStore).updateRequest(confirmedRequest1);
+        verify(requestService).updateRequest(confirmedRequest1);
     }
 
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
-        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        when(requestStore.getRequest(request1.getId(), PendingRequest.class)).thenReturn(request1);
+
+        requestController = new RequestController(driverUsername, requestStore, requestService);
         requestController.acceptRequest(request1.getId());
 
-        verify(requestStore).updateRequest(acceptedRequest1);
+        verify(requestStore).addRequest(acceptedRequest1);
+        verify(requestService).createRequest(acceptedRequest1);
     }
 }
