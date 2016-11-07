@@ -124,6 +124,15 @@ public class RequestControllerTests {
     }
 
     @Test
+    public void test_completeRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
+        requestController = new RequestController(riderUsername, requestStore, requestService);
+        requestController.completeRequest(confirmedRequest1.getId());
+
+        verify(requestStore, never()).updateRequest(anyObject());
+        verify(requestService, never()).updateRequest(anyObject());
+    }
+
+    @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
         when(requestStore.getRequest(confirmedRequest1.getId(), ConfirmedRequest.class)).thenReturn(confirmedRequest1);
 
@@ -135,6 +144,15 @@ public class RequestControllerTests {
     }
 
     @Test
+    public void test_confirmRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
+        requestController = new RequestController(riderUsername, requestStore, requestService);
+        requestController.confirmRequest(acceptedRequest1.getId());
+
+        verify(requestStore, never()).updateRequest(anyObject());
+        verify(requestService, never()).updateRequest(anyObject());
+    }
+
+    @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
         when(requestStore.getRequest(acceptedRequest1.getId(), AcceptedRequest.class)).thenReturn(acceptedRequest1);
 
@@ -143,6 +161,15 @@ public class RequestControllerTests {
 
         verify(requestStore).updateRequest(confirmedRequest1);
         verify(requestService).updateRequest(confirmedRequest1);
+    }
+
+    @Test
+    public void test_acceptRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
+        requestController = new RequestController(riderUsername, requestStore, requestService);
+        requestController.acceptRequest(acceptedRequest1.getId());
+
+        verify(requestStore, never()).addRequest(anyObject());
+        verify(requestService, never()).createRequest(anyObject());
     }
 
     @Test
