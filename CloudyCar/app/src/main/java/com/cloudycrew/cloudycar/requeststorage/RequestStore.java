@@ -26,6 +26,11 @@ public class RequestStore implements IRequestStore {
         this.observers = new HashSet<>();
     }
 
+    @Override
+    public Request getRequest(String id) {
+        return getRequest(id, Request.class);
+    }
+
     public <T extends Request> T getRequest(String requestId, Class<T> requestClass) {
         return Observable.from(requestMap.values())
                          .filter(r -> r.getId().equals(requestId))
@@ -33,6 +38,11 @@ public class RequestStore implements IRequestStore {
                          .cast(requestClass)
                          .toBlocking()
                          .firstOrDefault(null);
+    }
+
+    @Override
+    public List<Request> getRequests() {
+        return getRequests(Request.class);
     }
 
     public <T extends Request> List<T> getRequests(Class<T> requestClass) {

@@ -11,7 +11,10 @@ import java.util.List;
  */
 
 public interface IRequestStore extends IObservable<IRequestStore> {
+    Request getRequest(String id);
     <T extends Request> T getRequest(String id, Class<T> requestClass);
+
+    List<Request> getRequests();
     <T extends Request> List<T> getRequests(Class<T> requestClass);
 
     void setAll(Collection<? extends Request> requests);

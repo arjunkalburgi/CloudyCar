@@ -74,19 +74,19 @@ public class AcceptingTests {
 
     @Test
     public void test_getAcceptedRequests_ifDriverHasNoAcceptedRequests_thenReturnsAnEmptyList() {
-        when(requestStore.getRequests()).thenReturn(new ArrayList<Request>(Arrays.asList(acceptedRequest1)));
+        when(requestStore.getRequests()).thenReturn(new ArrayList<>(Arrays.asList(acceptedRequest1)));
 
-        List<Request> acceptedRequests = requestStore.getAcceptedRequests();
+        List<AcceptedRequest> acceptedRequests = requestStore.getRequests(AcceptedRequest.class);
 
         assertTrue(acceptedRequests.isEmpty());
     }
 
     @Test
     public void test_getAcceptedRequests_ifDriverHasAcceptedRequests_thenReturnsAcceptedRequests() {
-        when(requestStore.getRequests()).thenReturn(new ArrayList<Request>(Arrays.asList(acceptedRequest1)));
+        when(requestStore.getRequests()).thenReturn(new ArrayList<>(Arrays.asList(acceptedRequest1)));
 
-        List<Request> expectedAcceptedRequests = new ArrayList<Request>(Arrays.asList(acceptedRequest1));
-        List<Request> actualAcceptedRequests = requestStore.getAcceptedRequests();
+        List<AcceptedRequest> expectedAcceptedRequests = new ArrayList<>(Arrays.asList(acceptedRequest1));
+        List<AcceptedRequest> actualAcceptedRequests = requestStore.getRequests(AcceptedRequest.class);
 
         assertEquals(expectedAcceptedRequests, actualAcceptedRequests);
     }
