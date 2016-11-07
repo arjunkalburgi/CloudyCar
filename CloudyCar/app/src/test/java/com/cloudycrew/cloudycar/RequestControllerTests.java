@@ -10,7 +10,6 @@ import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
@@ -20,10 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -80,36 +75,6 @@ public class RequestControllerTests {
 
         verify(requestStore).addRequest(request1);
         verify(requestService).createRequest(request1);
-    }
-
-    @Test
-    public void test_getCurrentRequests_ifUserHasNoRequests_thenReturnsAnEmptyList() {
-        List<Request> requests = requestStore.getRequests();
-
-        assertTrue(requests.isEmpty());
-    }
-
-    @Test
-    public void test_getCurrentRequests_ifUserHasRequests_thenReturnsUsersRequests() {
-        List<Request> expectedRequests= Arrays.<Request>asList(request1,request2);
-        List<Request> actualRequests = requestStore.getRequests();
-
-        assertEquals(expectedRequests, actualRequests);
-    }
-
-    @Test
-    public void test_acceptRequest_sendsEmailToIntendedUser() {
-        EmailMessage expectedMessage = new EmailMessage();
-        expectedMessage.setTo(rider.getEmail());
-        expectedMessage.setFrom(rider.getEmail());
-        expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
-
-        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-
-        requestController = new RequestController(driverUsername, requestStore, requestService);
-        requestController.acceptRequest(request1.getId());
-
-        verify(emailService).sendEmail(expectedMessage);
     }
 
     @Test
@@ -182,4 +147,20 @@ public class RequestControllerTests {
         verify(requestStore).addRequest(acceptedRequest1);
         verify(requestService).createRequest(acceptedRequest1);
     }
+
+    @Test
+    public void test_acceptRequest_sendsEmailToIntendedUser() {
+        EmailMessage expectedMessage = new EmailMessage();
+        expectedMessage.setTo(rider.getEmail());
+        expectedMessage.setFrom(rider.getEmail());
+        expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
+
+        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+
+        requestController = new RequestController(driverUsername, requestStore, requestService);
+        requestController.acceptRequest(request1.getId());
+
+        verify(emailService).sendEmail(expectedMessage);
+    }
+
 }
