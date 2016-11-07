@@ -60,6 +60,7 @@ public class RequestStore implements IRequestStore {
         for (Request request: requests) {
             requestMap.put(request.getId(), request);
         }
+        notifyObservers();
     }
 
     @Override
