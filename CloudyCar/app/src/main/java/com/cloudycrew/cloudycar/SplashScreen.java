@@ -1,16 +1,13 @@
 package com.cloudycrew.cloudycar;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Window;
 
 public class SplashScreen extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
         Thread timerThread = new Thread(){
@@ -20,19 +17,17 @@ public class SplashScreen extends Activity {
                 } catch(InterruptedException e){
                     e.printStackTrace();
                 } finally {
-                    Intent signup = new Intent(SplashScreen.this, SignUpActivity.class);
-                    startActivity(signup);
+                    navigateToMainActivity();
                 }
             }
         };
+
         timerThread.start();
     }
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
+    private void navigateToMainActivity() {
+        Intent main = new Intent(SplashScreen.this, MainActivity.class);
+        startActivity(main);
         finish();
     }
-
 }
