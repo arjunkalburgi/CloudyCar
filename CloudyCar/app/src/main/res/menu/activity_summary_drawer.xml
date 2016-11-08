@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:title="My Profile" />
+    </group>
+
+    <item android:title="What are you up to today?">
+        <menu>
+            <item
+                android:id="@+id/nav_rider"
+                android:title="Be a Rider" />
+            <item
+                android:id="@+id/nav_driver"
+                android:title="Be a Driver" />
+        </menu>
+    </item>
+
+</menu>
