@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,9 @@ import java.util.List;
 
 public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryView {
     private RiderSummaryController riderSummaryController;
+    private RecyclerView requestListView;
+    private RecyclerView.Adapter requestToListViewAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +42,10 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             }
         });
 
+        requestListView = (RecyclerView) getActivity().findViewById(R.id.rider_requests);
+        requestListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
         return view;
     }
 
@@ -48,7 +57,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Be a Rider");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.rider_summary_header);
     }
 
     @Override

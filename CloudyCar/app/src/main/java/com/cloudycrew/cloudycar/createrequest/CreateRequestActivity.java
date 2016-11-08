@@ -2,6 +2,8 @@ package com.cloudycrew.cloudycar.createrequest;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
@@ -19,6 +21,14 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         setContentView(R.layout.activity_create_request);
         this.getSupportActionBar().setTitle(R.string.request_create_header);
         resolveDependencies();
+
+        TextView submit = (TextView)this.findViewById(R.id.submit_ride_request);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Submit request to server
+            }
+        });
     }
 
     @Override
