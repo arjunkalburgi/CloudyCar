@@ -42,8 +42,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             }
         });
 
-        requestListView = (RecyclerView) getActivity().findViewById(R.id.rider_requests);
-        requestListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        requestListView = (RecyclerView) getActivity().findViewById(R.id.rider_requests);
+//        requestListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
         return view;
