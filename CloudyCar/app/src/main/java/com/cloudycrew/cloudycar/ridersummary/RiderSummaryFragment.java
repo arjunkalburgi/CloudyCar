@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.ridersummary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
@@ -31,12 +33,16 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startRequestActivity(view);
             }
         });
 
         return view;
+    }
+
+    private void startRequestActivity(View view) {
+        Intent intent = new Intent(getActivity(), CreateRequestActivity.class);
+        startActivity(intent);
     }
 
     @Override
