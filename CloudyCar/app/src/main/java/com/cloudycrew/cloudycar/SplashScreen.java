@@ -26,7 +26,7 @@ public class SplashScreen extends Activity {
     }
 
     private void navigateToMainActivity() {
-        Intent main = new Intent(SplashScreen.this, MainActivity.class);
+        Intent main = new Intent(SplashScreen.this, SignUpActivity.class);
         startActivity(main);
         finish();
     }
