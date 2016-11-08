@@ -1,11 +1,15 @@
 package com.cloudycrew.cloudycar.driversummary;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cloudycrew.cloudycar.BaseFragment;
+import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 
@@ -20,11 +24,16 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: STUBBED IN: Replace with actual layout and return inflated view
-        // View view = inflater.inflate(R.layout.FRAGMENT_LAYOUT, container, false);
+        View view = inflater.inflate(R.layout.fragment_driver_summary, container, false);
         resolveDependencies();
 
-        return null;
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Be a Driver");
     }
 
     @Override
