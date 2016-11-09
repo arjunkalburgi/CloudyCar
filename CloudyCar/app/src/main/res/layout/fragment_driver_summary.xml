@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundGrey">
+
+    <!-- Card that's optional -->
+
+    <!-- Text -->
+    <TextView
+        android:id="@+id/acceptedOffersLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/blueSubtitle"
+        android:text="Offers you've accepted"/>
+
+    <!-- List -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/acceptedOffersList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
