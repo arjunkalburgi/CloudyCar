@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@color/backgroundBlue"
-    tools:context="com.cloudycrew.cloudycar.MainActivity">
+    tools:context="com.cloudycrew.cloudycar.SignUpActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
         android:src="@drawable/splash_screen"/>
 
     <EditText
-        android:id="@+id/login_username"
+        android:id="@+id/signup_username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -32,8 +32,8 @@
         android:textColor="@color/colorPrimary"/>
 
     <EditText
-        android:id="@+id/login_password"
-        android:layout_below="@id/login_username"
+        android:id="@+id/signup_email"
+        android:layout_below="@id/signup_username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -41,15 +41,15 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="0dp"
         android:ems="15"
-        android:hint="Password"
+        android:hint="Email"
         android:textColorHint="@color/colorPrimary"
         android:background="@android:drawable/edit_text"
         android:textColor="@color/colorPrimary"
-        android:inputType="text" />
+        android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/login_phone"
-        android:layout_below="@id/login_password"
+        android:id="@+id/signup_phone"
+        android:layout_below="@id/signup_email"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -61,18 +61,18 @@
         android:textColorHint="@color/colorPrimary"
         android:background="@android:drawable/edit_text"
         android:textColor="@color/colorPrimary"
-        android:inputType="text" />
+        android:inputType="phone" />
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/login_phone"
+        android:layout_below="@id/signup_phone"
         android:text="LET'S GO"
         android:layout_centerInParent="true"
         android:theme="@style/Button"/>
 
-    <include layout="@layout/content_main"
+    <include layout="@layout/content_sign_up"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
