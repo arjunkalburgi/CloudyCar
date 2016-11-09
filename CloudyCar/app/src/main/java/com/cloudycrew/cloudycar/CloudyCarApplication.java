@@ -20,6 +20,8 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
 import com.cloudycrew.cloudycar.requeststorage.RequestStore;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryController;
+import com.cloudycrew.cloudycar.scheduling.AndroidSchedulerProvider;
+import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.SearchController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
@@ -85,8 +87,12 @@ public class CloudyCarApplication extends Application {
                 getConnectivityService());
     }
 
+    private ISchedulerProvider getSchedulerProvider() {
+        return new AndroidSchedulerProvider();
+    }
+
     private RequestController requestController() {
-        return new RequestController("gerg", getRequestStore(), getRequestService());
+        return new RequestController("gerg", getRequestStore(), getRequestService(), getSchedulerProvider());
     }
 
     public DriverSummaryController getDriverSummaryController() {
