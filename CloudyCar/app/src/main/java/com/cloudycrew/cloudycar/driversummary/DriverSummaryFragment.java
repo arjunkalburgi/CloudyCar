@@ -33,13 +33,13 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         resolveDependencies();
 
         // Lookup the recyclerview in activity layout
-        RecyclerView acceptedRequests = (RecyclerView) findViewById(R.id.acceptedOffersList);
+        RecyclerView acceptedRequests = (RecyclerView) view.findViewById(R.id.acceptedOffersList);
 
         // Initialize contacts
         requestList = new ArrayList<AcceptedRequest>(); //AcceptedRequest.createContactsList(20);
-        AcceptedRequestsAdapter adapter = new AcceptedRequestsAdapter(this, requestList); // Create adapter passing in the sample user data
+        AcceptedRequestsAdapter adapter = new AcceptedRequestsAdapter(getActivity(), requestList); // Create adapter passing in the sample user data
         acceptedRequests.setAdapter(adapter); // Attach the adapter to the recyclerview to populate items
-        acceptedRequests.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager to position the items
+        acceptedRequests.setLayoutManager(new LinearLayoutManager(getActivity())); // Set layout manager to position the items
 
         return view;
     }
