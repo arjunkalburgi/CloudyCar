@@ -42,6 +42,34 @@
         <item name="android:paddingStart">16dp</item>
     </style>
 
+    <style name="CardLayoutStyle" parent="android:Widget.TextView">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+    </style>
+
+    <style name="CardTitleText" parent="android:Widget.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CardDetailsText" parent="android:Widget.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">10dp</item>
+    </style>
+
+    <style name="CardActionButton">
+        <item name="android:textSize">16dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start|center</item>
+        <item name="android:paddingLeft">16.0dip</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:drawablePadding">4.0dip</item>
+    </style>
+
     <style name="Button" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
@@ -49,7 +77,7 @@
     </style>
 
     <style name="blueSubtitle" parent="android:Widget.TextView">
-        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:textColor">@color/colorPrimary</item>

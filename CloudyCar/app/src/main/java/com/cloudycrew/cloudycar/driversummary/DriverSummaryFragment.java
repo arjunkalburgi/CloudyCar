@@ -1,8 +1,6 @@
 package com.cloudycrew.cloudycar.driversummary;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cloudycrew.cloudycar.AcceptedRequestsAdapter;
+import com.cloudycrew.cloudycar.ConfirmedRequestAdapter;
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
@@ -25,7 +23,7 @@ import java.util.List;
 
 public class DriverSummaryFragment extends BaseFragment implements IDriverSummaryView {
     private DriverSummaryController driverSummaryController;
-    ArrayList<AcceptedRequest> requestList;
+    ArrayList<ConfirmedRequest> requestList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,13 +31,13 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         resolveDependencies();
 
         // Lookup the recyclerview in activity layout
-        RecyclerView acceptedRequests = (RecyclerView) view.findViewById(R.id.acceptedOffersList);
+        RecyclerView confirmedRequests = (RecyclerView) view.findViewById(R.id.acceptedOffersList);
 
         // Initialize contacts
-        requestList = new ArrayList<AcceptedRequest>(); //AcceptedRequest.createContactsList(20);
-        AcceptedRequestsAdapter adapter = new AcceptedRequestsAdapter(getActivity(), requestList); // Create adapter passing in the sample user data
-        acceptedRequests.setAdapter(adapter); // Attach the adapter to the recyclerview to populate items
-        acceptedRequests.setLayoutManager(new LinearLayoutManager(getActivity())); // Set layout manager to position the items
+        requestList = new ArrayList<ConfirmedRequest>(); //AcceptedRequest.createContactsList(20);
+        ConfirmedRequestAdapter adapter = new ConfirmedRequestAdapter(getActivity(), requestList); // Create adapter passing in the sample user data
+        confirmedRequests.setAdapter(adapter); // Attach the adapter to the recyclerview to populate items
+        confirmedRequests.setLayoutManager(new LinearLayoutManager(getActivity())); // Set layout manager to position the items
 
         return view;
     }

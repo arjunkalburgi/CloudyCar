@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:fitsSystemWindows="true">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/backgroundGrey">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rider_requests"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Accepted Offers subtitle -->
+        <TextView
+            android:id="@+id/acceptedOffersLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/blueSubtitle"
+            android:text="Accepted Offers"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/accepted_requests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Pending Offers subtitle -->
+        <TextView
+            android:id="@+id/pendingOffersLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/blueSubtitle"
+            android:text="Pending Offers"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pending_requests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

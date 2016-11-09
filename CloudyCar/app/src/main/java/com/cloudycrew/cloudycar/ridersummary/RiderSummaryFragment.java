@@ -11,12 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cloudycrew.cloudycar.AcceptedRequestAdapter;
 import com.cloudycrew.cloudycar.BaseFragment;
+import com.cloudycrew.cloudycar.ConfirmedRequestAdapter;
+import com.cloudycrew.cloudycar.PendingRequestsAdapter;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +33,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private RecyclerView requestListView;
     private RecyclerView.Adapter requestToListViewAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    ArrayList<AcceptedRequest> accRequestList;
+    ArrayList<PendingRequest> penRequestList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +49,17 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             }
         });
 
-//        requestListView = (RecyclerView) getActivity().findViewById(R.id.rider_requests);
-//        requestListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerView acceptedRequests = (RecyclerView) view.findViewById(R.id.accepted_requests);
+        accRequestList = new ArrayList<AcceptedRequest>(); //AcceptedRequest.createContactsList(20);
+        AcceptedRequestAdapter adapter = new AcceptedRequestAdapter(getActivity(), accRequestList); // Create adapter passing in the sample user data
+        acceptedRequests.setAdapter(adapter); // Attach the adapter to the recyclerview to populate items
+        acceptedRequests.setLayoutManager(new LinearLayoutManager(getActivity())); // Set layout manager to position the items
+
+        RecyclerView pendingRequests = (RecyclerView) view.findViewById(R.id.pending_requests);
+        penRequestList = new ArrayList<PendingRequest>(); //PendingRequest.createContactsList(20);
+        PendingRequestsAdapter padapter = new PendingRequestsAdapter(getActivity(), penRequestList); // Create adapter passing in the sample user data
+        pendingRequests.setAdapter(padapter); // Attach the adapter to the recyclerview to populate items
+        pendingRequests.setLayoutManager(new LinearLayoutManager(getActivity())); // Set layout manager to position the items
 
 
         return view;
