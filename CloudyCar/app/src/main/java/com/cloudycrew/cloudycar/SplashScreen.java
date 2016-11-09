@@ -17,17 +17,13 @@ public class SplashScreen extends Activity {
                 } catch(InterruptedException e){
                     e.printStackTrace();
                 } finally {
-                    navigateToMainActivity();
+                    Intent main = new Intent(SplashScreen.this, SignUpActivity.class);
+                    startActivity(main);
+                    finish();
                 }
             }
         };
 
         timerThread.start();
-    }
-
-    private void navigateToMainActivity() {
-        Intent main = new Intent(SplashScreen.this, SignUpActivity.class);
-        startActivity(main);
-        finish();
     }
 }

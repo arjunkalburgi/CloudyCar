@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
+
     defaultConfig {
         applicationId "com.cloudycrew.cloudycar"
         minSdkVersion 18
@@ -14,6 +16,12 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -37,4 +45,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.+'
     compile 'com.makeramen:roundedimageview:2.2.1'
+
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
 }

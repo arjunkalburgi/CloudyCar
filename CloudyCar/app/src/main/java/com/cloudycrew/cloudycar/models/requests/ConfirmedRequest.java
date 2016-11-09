@@ -26,4 +26,22 @@ public class ConfirmedRequest extends Request {
     public void setDriverUsername(String driverUsername) {
         this.driverUsername = driverUsername;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !getClass().equals(obj.getClass())) return false;
+
+        ConfirmedRequest otherConfirmedRequest = (ConfirmedRequest) obj;
+
+        return getId().equals(otherConfirmedRequest.getId()) &&
+                getDriverUsername().equals(otherConfirmedRequest.getDriverUsername()) &
+                getRider().equals(otherConfirmedRequest.getRider()) &&
+                getRoute().equals(otherConfirmedRequest.getRoute());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }
