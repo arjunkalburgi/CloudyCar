@@ -8,5 +8,7 @@ import com.cloudycrew.cloudycar.models.User;
 
 public interface IUserService {
     User getUser(String username);
-    void add(User user);
+    void createUser(User user);
+    User getCurrentUser();
+    void updateUser(User user);
 }
