@@ -1,6 +1,6 @@
 package com.cloudycrew.cloudycar;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 /**
  * Created by George on 2016-11-05.

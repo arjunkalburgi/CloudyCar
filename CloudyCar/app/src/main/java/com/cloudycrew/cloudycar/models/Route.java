@@ -19,4 +19,23 @@ public class Route {
     public Point getEndingPoint() {
         return this.end;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Route route = (Route) o;
+
+        if (start != null ? !start.equals(route.start) : route.start != null) return false;
+        return end != null ? end.equals(route.end) : route.end == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = start != null ? start.hashCode() : 0;
+        result = 31 * result + (end != null ? end.hashCode() : 0);
+        return result;
+    }
 }
