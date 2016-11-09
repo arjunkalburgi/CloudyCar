@@ -1,26 +1,33 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by George on 2016-10-13.
  */
 
 public class CloudRequestService implements IRequestService {
-    IElasticSearchService<Request> elasticSearchService;
+    private String username;
+    private IElasticSearchService<Request> elasticSearchService;
 
-    public CloudRequestService(IElasticSearchService<Request> elasticSearchService) {
+    public CloudRequestService(String username, IElasticSearchService<Request> elasticSearchService) {
+        this.username = username;
         this.elasticSearchService = elasticSearchService;
     }
 
     @Override
     public List<Request> getRequests() {
-        return elasticSearchService.getAll();
+        return Observable.from(elasticSearchService.getAll())
+                         .filter(r -> r.getRider().equals(username))
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 
     @Override

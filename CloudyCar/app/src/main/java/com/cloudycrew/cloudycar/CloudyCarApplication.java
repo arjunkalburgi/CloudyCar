@@ -5,6 +5,7 @@ import android.app.Application;
 import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestController;
 import com.cloudycrew.cloudycar.driversummary.DriverSummaryController;
 import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchService;
@@ -27,7 +28,6 @@ import com.cloudycrew.cloudycar.userprofile.UserProfileController;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.searchly.jestdroid.DroidClientConfig;
 import com.searchly.jestdroid.JestClientFactory;
-import com.searchly.jestdroid.JestDroidClient;
 
 import io.searchbox.client.JestClient;
 
@@ -74,7 +74,7 @@ public class CloudyCarApplication extends Application {
     }
 
     private IRequestService getCloudRequestService() {
-        return new CloudRequestService(getRequestElasticSearchService());
+        return new CloudRequestService("gerg", getRequestElasticSearchService());
     }
 
     private IConnectivityService getConnectivityService() {
@@ -91,16 +91,20 @@ public class CloudyCarApplication extends Application {
         return new AndroidSchedulerProvider();
     }
 
-    private RequestController requestController() {
+    private RequestController getRequestController() {
         return new RequestController("gerg", getRequestStore(), getRequestService(), getSchedulerProvider());
     }
 
+    private UserController getUserController() {
+        return new UserController();
+    }
+
     public DriverSummaryController getDriverSummaryController() {
-        return new DriverSummaryController();
+        return new DriverSummaryController(getRequestController(), getRequestStore());
     }
 
     public RiderSummaryController getRiderSummaryController() {
-        return new RiderSummaryController(requestController(), getRequestStore());
+        return new RiderSummaryController(getRequestController(), getRequestStore());
     }
 
     public RequestDetailsController getRequestDetailsController() {
@@ -108,7 +112,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public UserProfileController getUserProfileController() {
-        return new UserProfileController();
+        return new UserProfileController(getUserController());
     }
 
     public SearchController getSearchController() {
