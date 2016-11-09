@@ -112,7 +112,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public UserProfileController getUserProfileController() {
-        return new UserProfileController(getUserController());
+        return new UserProfileController(getUserController(), getSchedulerProvider());
     }
 
     public SearchController getSearchController() {
