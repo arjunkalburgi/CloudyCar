@@ -25,10 +25,4 @@ public class SplashScreen extends Activity {
 
         timerThread.start();
     }
-
-    private void navigateToMainActivity() {
-        Intent main = new Intent(SplashScreen.this, MainActivity.class);
-        startActivity(main);
-        finish();
-    }
 }
