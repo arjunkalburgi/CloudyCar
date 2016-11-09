@@ -19,4 +19,21 @@ public class PendingRequest extends Request {
     public AcceptedRequest acceptRequest(String driverUsername){
         return new AcceptedRequest(this, driverUsername);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !getClass().equals(obj.getClass())) return false;
+
+        PendingRequest otherPendingRequest = (PendingRequest) obj;
+
+        return getId().equals(otherPendingRequest.getId()) &&
+                getRider().equals(otherPendingRequest.getRider()) &&
+                getRoute().equals(otherPendingRequest.getRoute());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

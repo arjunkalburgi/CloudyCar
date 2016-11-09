@@ -23,4 +23,22 @@ public class CompletedRequest extends Request {
     public void setDriverUsername(String driverUsername) {
         this.driverUsername = driverUsername;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !getClass().equals(obj.getClass())) return false;
+
+        CompletedRequest otherCompletedRequest = (CompletedRequest) obj;
+
+        return getId().equals(otherCompletedRequest.getId()) &&
+                getDriverUsername().equals(otherCompletedRequest.getDriverUsername()) &
+                getRider().equals(otherCompletedRequest.getRider()) &&
+                getRoute().equals(otherCompletedRequest.getRoute());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

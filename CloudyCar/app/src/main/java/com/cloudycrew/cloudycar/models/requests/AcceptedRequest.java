@@ -26,4 +26,22 @@ public class AcceptedRequest extends Request {
     public void setDriverUsername(String driverUsername) {
         this.driverUsername = driverUsername;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || !getClass().equals(obj.getClass())) return false;
+
+        AcceptedRequest otherAcceptedRequest = (AcceptedRequest) obj;
+
+        return getId().equals(otherAcceptedRequest.getId()) &&
+                getDriverUsername().equals(otherAcceptedRequest.getDriverUsername()) &
+                getRider().equals(otherAcceptedRequest.getRider()) &&
+                getRoute().equals(otherAcceptedRequest.getRoute());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }
