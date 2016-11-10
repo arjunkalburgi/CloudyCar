@@ -2,12 +2,12 @@ package com.cloudycrew.cloudycar.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.widget.EditText;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.SignUpCompleteActivity;
-import com.cloudycrew.cloudycar.models.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,8 +27,7 @@ public class SignUpActivity extends BaseActivity implements ISignUpView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+
         ButterKnife.bind(this);
         resolveDependencies();
     }
@@ -59,13 +58,14 @@ public class SignUpActivity extends BaseActivity implements ISignUpView {
 
     @Override
     public void onMalformedUserFailure() {
-
+        Snackbar.make(phoneEditText, R.string.sign_up_malformed_user_message, Snackbar.LENGTH_LONG)
+                .show();
     }
-
 
     @Override
     public void onDuplicateUsernameFailure() {
-
+        Snackbar.make(phoneEditText, R.string.sign_up_duplicate_user_message, Snackbar.LENGTH_LONG)
+                .show();
     }
 
     @Override
