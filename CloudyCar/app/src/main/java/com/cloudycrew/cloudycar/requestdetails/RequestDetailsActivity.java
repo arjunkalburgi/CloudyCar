@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
+import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 /**
@@ -16,7 +17,7 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: setContentView
+        setContentView(R.layout.activity_request_details);
 
         resolveDependencies();
     }
