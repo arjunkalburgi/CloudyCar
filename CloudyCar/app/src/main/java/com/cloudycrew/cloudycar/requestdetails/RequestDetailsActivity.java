@@ -35,13 +35,13 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
     }
 
     @Override
-    protected void onPause() {
+    protected void onResume() {
         super.onPause();
         requestDetailsController.attachView(this);
     }
 
     @Override
-    protected void onResume() {
+    protected void onPause() {
         super.onResume();
         requestDetailsController.detachView();
     }
