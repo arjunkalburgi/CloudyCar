@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_request_details"
@@ -13,6 +13,7 @@
     android:background="@color/backgroundGrey">
 
     <TextView
+        android:id="@+id/ride_details_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ride Details"
@@ -24,9 +25,11 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ride_details_header"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,10 +117,44 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:text="Status"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/request_details_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.75"
+                    android:layout_marginStart="4dp"
+                    android:text="Waiting for a driver"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
+    <Button
+        android:id="@+id/request_details_update_button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Accept Request"
+        android:background="@color/white" />
 
-
-</LinearLayout>
+</RelativeLayout>
