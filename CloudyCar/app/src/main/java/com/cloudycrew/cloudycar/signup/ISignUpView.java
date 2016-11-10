@@ -5,6 +5,7 @@ package com.cloudycrew.cloudycar.signup;
  */
 
 public interface ISignUpView {
+    void onMalformedUserFailure();
     void onDuplicateUsernameFailure();
     void onSuccessfulRegistration();
 }
