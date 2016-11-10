@@ -41,4 +41,18 @@ public class Email {
     public static class InvalidEmailException extends RuntimeException {
 
     }
+
+    @Override
+    public boolean equals(Object e) {
+        if(e == null || e.getClass() != this.getClass()) {
+            return false;
+        }
+
+        if(this.email.equals(((Email)e).getEmail())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

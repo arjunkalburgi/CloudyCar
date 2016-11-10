@@ -49,6 +49,10 @@ public class User implements Identifiable {
         this.firstName = firstName;
     }
 
+    public boolean verifyContactInformation() {
+        return this.email != null && this.phoneNumber != null;
+    }
+
     @Override
     public String getId() {
         return getUsername();

@@ -8,8 +8,18 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
+import com.cloudycrew.cloudycar.utils.Utils;
 
 import java.util.List;
+
+import rx.Observable;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by George on 2016-10-23.
@@ -18,58 +28,71 @@ import java.util.List;
 public class RequestController {
     private IRequestService requestService;
     private IRequestStore requestStore;
+    private ISchedulerProvider schedulerProvider;
     private String currentUser;
 
-    public RequestController(String currentUser, IRequestStore requestStore, IRequestService requestService) {
+    public RequestController(String currentUser, IRequestStore requestStore, IRequestService requestService, ISchedulerProvider schedulerProvider) {
         this.currentUser = currentUser;
         this.requestStore = requestStore;
         this.requestService = requestService;
+        this.schedulerProvider = schedulerProvider;
     }
 
     public void refreshRequests() {
-        List<Request> requests = requestService.getRequests();
-        requestStore.setAll(requests);
+        Observable.just(null)
+                  .observeOn(schedulerProvider.ioScheduler())
+                  .map(nothing -> requestService.getRequests())
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(requestStore::setAll);
     }
 
     public void createRequest(Route route) {
-        PendingRequest pendingRequest = new PendingRequest(currentUser, route);
-        requestService.createRequest(pendingRequest);
-        requestStore.addRequest(pendingRequest);
+        Observable.just(route)
+                  .map(r -> new PendingRequest(currentUser, r))
+                  .observeOn(schedulerProvider.ioScheduler())
+                  .doOnNext(requestService::createRequest)
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(requestStore::addRequest);
     }
 
     public void cancelRequest(String requestId) {
-        requestService.deleteRequest(requestId);
-        requestStore.deleteRequest(requestId);
+        Observable.just(requestId)
+                  .observeOn(schedulerProvider.ioScheduler())
+                  .doOnNext(requestService::deleteRequest)
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(requestStore::deleteRequest);
     }
 
     public void acceptRequest(String requestId) {
-        PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
-
-        if (pendingRequest != null) {
-            AcceptedRequest acceptedRequest = pendingRequest.acceptRequest(currentUser);
-            requestService.createRequest(acceptedRequest);
-            requestStore.addRequest(acceptedRequest);
-        }
-
+        Observable.just(requestId)
+                  .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
+                  .filter(Utils::isNotNull)
+                  .map(r -> r.acceptRequest(currentUser))
+                  .observeOn(schedulerProvider.ioScheduler())
+                  .doOnNext(requestService::createRequest)
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(requestStore::addRequest);
     }
 
     public void confirmRequest(String requestId) {
-        AcceptedRequest acceptedRequest = requestStore.getRequest(requestId, AcceptedRequest.class);
-
-        if (acceptedRequest != null) {
-            ConfirmedRequest confirmedRequest = acceptedRequest.confirmRequest();
-            requestService.updateRequest(confirmedRequest);
-            requestStore.updateRequest(confirmedRequest);
-        }
+        Observable.just(requestId)
+                  .map(id -> requestStore.getRequest(requestId, AcceptedRequest.class))
+                  .filter(Utils::isNotNull)
+                  .map(AcceptedRequest::confirmRequest)
+                  .observeOn(schedulerProvider.ioScheduler())
+                  .doOnNext(requestService::updateRequest)
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(requestStore::updateRequest);
     }
 
     public void completeRequest(String requestId) {
-        ConfirmedRequest confirmedRequest = requestStore.getRequest(requestId, ConfirmedRequest.class);
-
-        if (confirmedRequest != null) {
-            CompletedRequest completedRequest = confirmedRequest.completeRequest();
-            requestService.updateRequest(completedRequest);
-            requestStore.updateRequest(completedRequest);
-        }
+        Observable.just(requestId)
+                  .map(id -> requestStore.getRequest(requestId, ConfirmedRequest.class))
+                  .filter(Utils::isNotNull)
+                  .map(ConfirmedRequest::completeRequest)
+                  .observeOn(schedulerProvider.ioScheduler())
+                  .doOnNext(requestService::updateRequest)
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(requestStore::updateRequest);
     }
 }
