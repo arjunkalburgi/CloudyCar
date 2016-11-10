@@ -1,15 +1,16 @@
 package com.cloudycrew.cloudycar.driversummary;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 
@@ -21,11 +22,22 @@ import java.util.List;
 
 public class DriverSummaryFragment extends BaseFragment implements IDriverSummaryView {
     private DriverSummaryController driverSummaryController;
+    private RecyclerView requestView;
+    private RecyclerView.Adapter requestAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_summary, container, false);
         resolveDependencies();
+
+        // Lookup the recyclerview in activity layout
+        layoutManager = new LinearLayoutManager(getActivity());
+
+        requestView = (RecyclerView) view.findViewById(R.id.accepted_offers_list);
+        requestAdapter = new RequestAdapter(); // Create adapter
+        requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
+        requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
 
         return view;
     }
