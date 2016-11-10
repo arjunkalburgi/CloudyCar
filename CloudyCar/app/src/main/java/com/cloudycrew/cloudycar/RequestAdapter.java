@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by insanekillah on 2016-11-08.
@@ -20,7 +22,9 @@ import java.util.ArrayList;
 public class RequestAdapter extends
         RecyclerView.Adapter<RequestAdapter.ViewHolder> {
 
-    private ArrayList<Request> requestList;
+    private List<Request> requestList;
+    private List<PendingRequest> pendingRequests;
+    private List<AcceptedRequest> acceptedRequests;
 
     private final int PENDING_REQUEST = 0;
     private final int ACCEPTED_REQUEST = 1;
@@ -40,6 +44,8 @@ public class RequestAdapter extends
 
     public RequestAdapter() {
         requestList = new ArrayList<>();
+        pendingRequests = new ArrayList<>();
+        acceptedRequests = new ArrayList<>();
     }
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder {
@@ -145,6 +151,14 @@ public class RequestAdapter extends
         // change these to get actual place names later
         habitDestView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
         habitSrcView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
+
+        if (request instanceof AcceptedRequest) {
+            TextView habitAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;
+            habitAcceptedView.setText("Accepted by " + ((AcceptedRequest) request).getDriverUsername());
+        } else if (request instanceof ConfirmedRequest) {
+            TextView habitConfirmedView = ((ConfirmedViewHolder) viewHolder).requestAcceptedBy;
+            habitConfirmedView.setText("Accepted by " + ((ConfirmedRequest) request).getDriverUsername());
+        }
     }
 
     @Override
@@ -152,9 +166,23 @@ public class RequestAdapter extends
         return requestList.size();
     }
 
-    // update the list of habits, then notify about the change
-    public void setRequests(ArrayList<Request> requests) {
-        requestList = requests;
+    public void setPendingRequests(List<PendingRequest> requests) {
+        pendingRequests = requests;
+        requestList = mergeLists();
         this.notifyDataSetChanged();
+    }
+
+    public void setAcceptedRequests(List<AcceptedRequest> requests) {
+        acceptedRequests = requests;
+        requestList = mergeLists();
+        this.notifyDataSetChanged();
+    }
+
+    // our full list will be both pending and accepted put together
+    public List<Request> mergeLists() {
+        List<Request> requests = new ArrayList<>();
+        requests.addAll(pendingRequests);
+        requests.addAll(acceptedRequests);
+        return requests;
     }
 }
