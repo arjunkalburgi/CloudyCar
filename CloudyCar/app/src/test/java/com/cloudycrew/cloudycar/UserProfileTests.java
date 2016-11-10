@@ -2,12 +2,14 @@ package com.cloudycrew.cloudycar;
 
 import android.provider.ContactsContract;
 
+import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchService;
 import com.cloudycrew.cloudycar.email.Email;
 import com.cloudycrew.cloudycar.models.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.users.DuplicateUserException;
 import com.cloudycrew.cloudycar.users.IUserService;
 import com.cloudycrew.cloudycar.users.IncompleteUserException;
+import com.cloudycrew.cloudycar.users.UserService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.List;
@@ -29,6 +32,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UserProfileTests {
     @Mock
+    private ElasticSearchService<User> muhservice;
     private IUserService userService;
 
     private User completeUser;
@@ -44,23 +48,24 @@ public class UserProfileTests {
         completeUser.setEmail(email);
         completeUser.setPhoneNumber(phoneNumber);
         incompleteUser = new User("I'm sad and have no contact info");
+        userService = new UserService(muhservice);
     }
 
     @Test
     public void test_addNewUser_withAnUnusedUserName_andTestGettingUserFromUsernameOnly() {
-        userService.add(completeUser);
-        assertEquals(completeUser, userService.getUser("janedoedoe"));
+        userService.createUser(completeUser);
+        verify(muhservice).create(completeUser);
     }
 
     @Test(expected=DuplicateUserException.class)
     public void test_addNewUser_withAUsedUserName_throwingDuplicateUserException() {
-        userService.add(completeUser);
-        userService.add(completeUser);
+        when(muhservice.search("janedoedoe")).thenReturn(Arrays.asList(completeUser));
+        userService.createUser(completeUser);
     }
 
     @Test(expected=IncompleteUserException.class)
     public void test_addNewUser_withIncompleteInformation_throwingIncompleteUserException() {
-        userService.add(incompleteUser);
+        userService.createUser(incompleteUser);
     }
 
     @Test(expected=Email.InvalidEmailException.class)
@@ -84,7 +89,7 @@ public class UserProfileTests {
     public void test_EditingUserEmailAddress() {
         Email newEmail = new Email("abc@test.ca");
         completeUser.setEmail(newEmail);
-        assertEquals(email, completeUser.getEmail());
+        assertEquals(newEmail, completeUser.getEmail());
     }
 
     public void test_GettingANonExistentUser_returnsNull() {

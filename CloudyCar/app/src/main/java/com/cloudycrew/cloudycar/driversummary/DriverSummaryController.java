@@ -1,13 +1,64 @@
 package com.cloudycrew.cloudycar.driversummary;
 
 import com.cloudycrew.cloudycar.ViewController;
+import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.observables.IObserver;
+import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+
+import java.util.List;
 
 /**
  * Created by George on 2016-11-05.
  */
 
 public class DriverSummaryController extends ViewController<IDriverSummaryView> {
-    public void refreshRequests() {
+    private RequestController requestController;
+    private IRequestStore requestStore;
 
+    public DriverSummaryController(RequestController requestController, IRequestStore requestStore) {
+        this.requestController = requestController;
+        this.requestStore = requestStore;
+    }
+    public void refreshRequests() {
+        dispatchShowLoading();
+        requestController.refreshRequests();
+    }
+
+    @Override
+    public void attachView(IDriverSummaryView view) {
+        super.attachView(view);
+        requestStore.addObserver(requestStoreObserver);
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        requestStore.removeObserver(requestStoreObserver);
+    }
+
+    private IObserver<IRequestStore> requestStoreObserver = store -> {
+        dispatchDisplayConfirmedRequests(store.getRequests(ConfirmedRequest.class));
+        dispatchDisplayAcceptedRequests(store.getRequests(AcceptedRequest.class));
+    };
+
+    private void dispatchShowLoading() {
+        if (getView() != null) {
+            getView().displayLoading();
+
+        }
+    }
+
+    private void dispatchDisplayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        if (getView() != null) {
+            getView().displayConfirmedRequests(confirmedRequests);
+        }
+    }
+
+    private void dispatchDisplayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
+        if (getView() != null) {
+            getView().displayAcceptedRequests(acceptedRequests);
+        }
     }
 }

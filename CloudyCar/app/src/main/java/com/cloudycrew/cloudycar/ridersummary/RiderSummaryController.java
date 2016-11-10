@@ -23,7 +23,6 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     }
     public void refreshRequests() {
         dispatchShowLoading();
-        // need to do this on a new thread
         requestController.refreshRequests();
     }
 
