@@ -8,7 +8,7 @@ import com.cloudycrew.cloudycar.models.User;
 
 public interface IUserService {
     User getUser(String username);
-    void createUser(User user);
+    void createUser(User user) throws DuplicateUserException, IncompleteUserException;
     User getCurrentUser();
     void updateUser(User user);
 }

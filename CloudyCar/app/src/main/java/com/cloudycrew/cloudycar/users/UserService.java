@@ -23,8 +23,17 @@ public class UserService implements IUserService
     }
 
     @Override
-    public void createUser(User user) {
-        elasticSearchService.create(user);
+    public void createUser(User user) throws DuplicateUserException, IncompleteUserException{
+        List<User> userlist = elasticSearchService.search(user.getUsername());
+        if(!user.verifyContactInformation()) {
+            throw new IncompleteUserException();
+        }
+        if(userlist.isEmpty()) {
+            elasticSearchService.create(user);
+        }
+        else {
+            throw new DuplicateUserException();
+        }
     }
 
     @Override
