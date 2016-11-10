@@ -12,6 +12,7 @@ import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchService;
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.fileservices.AndroidFileService;
 import com.cloudycrew.cloudycar.fileservices.IFileService;
+import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.RequestDetailsController;
 import com.cloudycrew.cloudycar.requeststorage.CloudRequestService;
@@ -25,6 +26,8 @@ import com.cloudycrew.cloudycar.scheduling.AndroidSchedulerProvider;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.SearchController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
+import com.cloudycrew.cloudycar.users.IUserService;
+import com.cloudycrew.cloudycar.users.UserService;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.searchly.jestdroid.DroidClientConfig;
 import com.searchly.jestdroid.JestClientFactory;
@@ -73,6 +76,15 @@ public class CloudyCarApplication extends Application {
                 .build();
     }
 
+    private IElasticSearchService<User> getUserElasticSearchService() {
+        return new ElasticSearchService.Builder<User>()
+                .setIndex("cmput301f16t12")
+                .setType("user")
+                .setTypeClass(User.class)
+                .setJestClient(getJestClient())
+                .build();
+    }
+
     private IRequestService getCloudRequestService() {
         return new CloudRequestService("gerg", getRequestElasticSearchService());
     }
@@ -95,8 +107,12 @@ public class CloudyCarApplication extends Application {
         return new RequestController("gerg", getRequestStore(), getRequestService(), getSchedulerProvider());
     }
 
+    private IUserService getUserService() {
+        return new UserService(getUserElasticSearchService());
+    }
+
     private UserController getUserController() {
-        return new UserController();
+        return new UserController(getUserService());
     }
 
     public DriverSummaryController getDriverSummaryController() {
