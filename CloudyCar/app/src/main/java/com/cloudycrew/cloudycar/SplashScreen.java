@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
+import com.cloudycrew.cloudycar.signup.SignUpActivity;
 
 public class SplashScreen extends Activity {
 
