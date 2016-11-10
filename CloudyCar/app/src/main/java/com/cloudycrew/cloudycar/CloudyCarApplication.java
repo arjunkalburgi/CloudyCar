@@ -107,8 +107,8 @@ public class CloudyCarApplication extends Application {
         return new RiderSummaryController(getRequestController(), getRequestStore());
     }
 
-    public RequestDetailsController getRequestDetailsController() {
-        return new RequestDetailsController();
+    public RequestDetailsController getRequestDetailsController(String requestId) {
+        return new RequestDetailsController(requestId, getRequestStore());
     }
 
     public UserProfileController getUserProfileController() {
