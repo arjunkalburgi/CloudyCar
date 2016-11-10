@@ -112,7 +112,7 @@ public class CloudyCarApplication extends Application {
         return new UserService(getUserElasticSearchService());
     }
 
-    private UserController getUserController() {
+    public UserController getUserController() {
         return new UserController(getUserService());
     }
 
