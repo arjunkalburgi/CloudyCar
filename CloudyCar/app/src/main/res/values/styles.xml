@@ -109,6 +109,43 @@
         <item name="riv_corner_radius_top_right">@dimen/card_corner_radius</item>
     </style>
 
+    <style name="UserDetailsTitleText" parent="android:Widget.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_alignLeft">@id/userImage</item>
+        <item name="android:layout_alignBottom">@id/userImage</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="UserDetailsEditButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_alignRight">@id/userImage</item>
+        <item name="android:layout_alignBottom">@id/userImage</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:gravity">bottom</item>
+    </style>
+
+    <style name="CardListItem" parent="CardView">
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="CardListIcon" parent="CardView">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CardListDetails" parent="android:Widget.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

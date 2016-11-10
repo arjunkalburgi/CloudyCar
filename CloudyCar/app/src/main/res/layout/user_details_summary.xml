@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundGrey">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@color/backgroundBlue"
+            android:id="@+id/userImage"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/UserDetailsTitleText"
+            android:text="Heyyyyyyyyyyyyyyyy"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/UserDetailsEditButton"
+            android:src="@drawable/ic_mode_edit_white_24dp"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/CardViewStyle"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/CardListItem"
+                android:id="@+id/Phone">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/CardListIcon"
+                    android:src="@drawable/ic_phone_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/CardListDetails"
+                    android:gravity="center_vertical"
+                    android:text="Hello Moto"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/backgroundGrey"></View>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/CardListItem"
+                android:layout_below="@id/Phone">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/CardListIcon"
+                    android:src="@drawable/ic_email_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/CardListDetails"
+                    android:gravity="center_vertical"
+                    android:text="Hello Moto"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

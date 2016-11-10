@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.userprofile;
 import android.os.Bundle;
 
 import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.User;
 
 /**
@@ -15,7 +16,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: setContentView
+        setContentView(R.layout.user_details_summary);
 
         resolveDependencies();
     }

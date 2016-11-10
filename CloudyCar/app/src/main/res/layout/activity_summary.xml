@@ -15,7 +15,8 @@
         <FrameLayout
             android:id="@+id/summary_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"/>
     </LinearLayout>
 
     <include
