@@ -1,4 +1,4 @@
-package com.cloudycrew.cloudycar;
+package com.cloudycrew.cloudycar.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.ISignUpView;
+import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.SignUpCompleteActivity;
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.email.Email;
 import com.cloudycrew.cloudycar.models.PhoneNumber;

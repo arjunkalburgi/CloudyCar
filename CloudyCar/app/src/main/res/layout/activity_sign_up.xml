@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@color/backgroundBlue"
-    tools:context="com.cloudycrew.cloudycar.SignUpActivity">
+    tools:context="com.cloudycrew.cloudycar.signup.SignUpActivity">
 
     <ImageView
         android:layout_width="wrap_content"
