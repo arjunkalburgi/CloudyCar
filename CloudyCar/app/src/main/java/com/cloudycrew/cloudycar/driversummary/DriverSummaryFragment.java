@@ -34,7 +34,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         // Lookup the recyclerview in activity layout
         layoutManager = new LinearLayoutManager(getActivity());
 
-        requestView = (RecyclerView) view.findViewById(R.id.pending_requests);
+        requestView = (RecyclerView) view.findViewById(R.id.accepted_offers_list);
         requestAdapter = new RequestAdapter(); // Create adapter
         requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
         requestView.setLayoutManager(layoutManager); // Set layout manager to position the items

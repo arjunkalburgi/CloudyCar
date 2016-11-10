@@ -12,26 +12,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Accepted Offers subtitle -->
-        <TextView
-            android:id="@+id/acceptedOffersLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/blueSubtitle"
-            android:text="Accepted Offers"/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/accepted_requests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <!-- Pending Offers subtitle -->
-        <TextView
-            android:id="@+id/pendingOffersLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/blueSubtitle"
-            android:text="Pending Offers"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pending_requests"

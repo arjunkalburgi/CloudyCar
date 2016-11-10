@@ -1,9 +1,9 @@
 package com.cloudycrew.cloudycar;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +17,9 @@ import com.cloudycrew.cloudycar.ridersummary.RiderSummaryFragment;
 
 public class SummaryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private RiderSummaryFragment riderSummaryFragment;
+    private DriverSummaryFragment driverSummaryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +37,15 @@ public class SummaryActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        riderSummaryFragment = new RiderSummaryFragment();
+        driverSummaryFragment = new DriverSummaryFragment();
+
         // determine rider or driver for main fragment
         String mode = this.getIntent().getStringExtra("mode");
         if (mode.equals("rider")) {
-            setFragment(RiderSummaryFragment.class);
+            setFragment(riderSummaryFragment);
         } else if (mode.equals("driver")) {
-            setFragment(DriverSummaryFragment.class);
+            setFragment(driverSummaryFragment);
         }
     }
 
@@ -84,9 +90,9 @@ public class SummaryActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_rider) {
-            setFragment(RiderSummaryFragment.class);
+            setFragment(riderSummaryFragment);
         } else if (id == R.id.nav_driver) {
-            setFragment(DriverSummaryFragment.class);
+            setFragment(driverSummaryFragment);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -94,15 +100,9 @@ public class SummaryActivity extends AppCompatActivity
         return true;
     }
 
-    private void setFragment(Class fragmentType) {
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentType.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.summary_content, fragment).commit();
+    private void setFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.summary_content, fragment)
+                .commit();
     }
 }
