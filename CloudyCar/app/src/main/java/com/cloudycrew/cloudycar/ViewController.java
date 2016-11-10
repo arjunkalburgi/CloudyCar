@@ -10,6 +10,10 @@ public class ViewController<T> {
     public T getView() {
         return view;
     }
+
+    public boolean isViewAttached() {
+        return getView() != null;
+    }
     
     public void attachView(T view) {
         this.view = view;
