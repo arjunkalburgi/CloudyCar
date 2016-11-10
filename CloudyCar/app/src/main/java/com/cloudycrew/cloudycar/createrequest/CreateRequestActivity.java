@@ -1,8 +1,8 @@
 package com.cloudycrew.cloudycar.createrequest;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.support.v7.widget.CardView;
 import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
@@ -23,12 +23,18 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         resolveDependencies();
 
         TextView submit = (TextView)this.findViewById(R.id.submit_ride_request);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Submit request to server
-            }
+        CardView routeSelector = (CardView)this.findViewById(R.id.routeSummary);
+        routeSelector.setOnClickListener(v -> {
+            launchMapActivity();
         });
+        submit.setOnClickListener(v -> {
+            //Submit request to server
+        });
+    }
+
+    private void launchMapActivity() {
+        Intent intent = new Intent(this,RouteSelector.class);
+        startActivity(intent);
     }
 
     @Override
