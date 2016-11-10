@@ -38,10 +38,9 @@ public class UserService implements IUserService
         if(!user.verifyContactInformation()) {
             throw new IncompleteUserException();
         }
-        if(duplicateUser != null) {
+        if(duplicateUser == null) {
             elasticSearchService.create(user);
-        }
-        else {
+        } else {
             throw new DuplicateUserException();
         }
     }
