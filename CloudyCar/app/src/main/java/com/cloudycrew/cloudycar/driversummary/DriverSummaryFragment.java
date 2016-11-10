@@ -8,13 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cloudycrew.cloudycar.ConfirmedRequestAdapter;
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +22,9 @@ import java.util.List;
 
 public class DriverSummaryFragment extends BaseFragment implements IDriverSummaryView {
     private DriverSummaryController driverSummaryController;
-    ArrayList<ConfirmedRequest> requestList;
+    private RecyclerView requestView;
+    private RecyclerView.Adapter requestAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,13 +32,12 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         resolveDependencies();
 
         // Lookup the recyclerview in activity layout
-        RecyclerView confirmedRequests = (RecyclerView) view.findViewById(R.id.acceptedOffersList);
+        layoutManager = new LinearLayoutManager(getActivity());
 
-        // Initialize contacts
-        requestList = new ArrayList<ConfirmedRequest>(); //AcceptedRequest.createContactsList(20);
-        ConfirmedRequestAdapter adapter = new ConfirmedRequestAdapter(getActivity(), requestList); // Create adapter passing in the sample user data
-        confirmedRequests.setAdapter(adapter); // Attach the adapter to the recyclerview to populate items
-        confirmedRequests.setLayoutManager(new LinearLayoutManager(getActivity())); // Set layout manager to position the items
+        requestView = (RecyclerView) view.findViewById(R.id.pending_requests);
+        requestAdapter = new RequestAdapter(); // Create adapter
+        requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
+        requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
 
         return view;
     }
