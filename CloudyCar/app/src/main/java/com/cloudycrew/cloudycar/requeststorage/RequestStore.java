@@ -101,6 +101,7 @@ public class RequestStore implements IRequestStore {
     @Override
     public void addObserver(IObserver<? super IRequestStore> observer) {
         observers.add(observer);
+        observer.notifyUpdate(this);
     }
 
     @Override
