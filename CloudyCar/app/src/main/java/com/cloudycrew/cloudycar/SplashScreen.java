@@ -12,9 +12,11 @@ public class SplashScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent main = new Intent(SplashScreen.this, SignUpActivity.class);
+        /*Intent main = new Intent(SplashScreen.this, SignUpActivity.class);
         startActivity(main);
-        finish();
-
+        finish();*/
+        Intent testProfile = new Intent(SplashScreen.this, UserProfileActivity.class);
+        testProfile.putExtra("username", "gerg");
+        startActivity(testProfile);
     }
 }

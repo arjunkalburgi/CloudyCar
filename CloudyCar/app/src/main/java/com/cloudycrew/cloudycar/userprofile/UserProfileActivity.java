@@ -1,10 +1,12 @@
 package com.cloudycrew.cloudycar.userprofile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
@@ -58,7 +60,14 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
             startActivity(callIntent);
         }
         catch (SecurityException e) {
-            //Do nothing?
+
+            //If the user hasn't enabled phone calls then show them a toast instead of failing silently
+            Context context = getApplicationContext();
+            CharSequence text = "To make phone calls please enable phone permissions in settings.";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+
+            toast.show();
         }
     }
 
@@ -78,7 +87,10 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
         usernameView.setText(user.getUsername());
         phoneNumber = user.getPhoneNumber().getPhoneNumber();
-        phoneNumberView.setText(phoneNumber);
+        phoneNumberView.setText(String.format("(%s)-%s-%s",
+                                phoneNumber.substring(0, 3),
+                                phoneNumber.substring(3, 6),
+                                phoneNumber.substring(6)));
         email = user.getEmail().getEmail();
         emailAddressView.setText(email);
 
