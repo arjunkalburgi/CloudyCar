@@ -80,8 +80,6 @@ public class RequestAdapter extends
 
     public class AcceptedViewHolder extends ViewHolder {
 
-        public TextView requestDest;
-        public TextView requestSrc;
         public TextView requestAcceptedBy;
 
         public AcceptedViewHolder(final View view) {
@@ -95,8 +93,6 @@ public class RequestAdapter extends
 
     public class ConfirmedViewHolder extends ViewHolder {
 
-        public TextView requestDest;
-        public TextView requestSrc;
         public TextView requestAcceptedBy;
 
         public ConfirmedViewHolder(final View view) {
