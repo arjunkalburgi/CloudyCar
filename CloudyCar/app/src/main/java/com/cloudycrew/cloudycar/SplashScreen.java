@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
+
 public class SplashScreen extends Activity {
 
     @Override
@@ -13,5 +15,6 @@ public class SplashScreen extends Activity {
         Intent main = new Intent(SplashScreen.this, SignUpActivity.class);
         startActivity(main);
         finish();
+
     }
 }

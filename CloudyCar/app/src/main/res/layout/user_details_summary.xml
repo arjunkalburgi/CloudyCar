@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/UserDetailsTitleText"
-            android:text="Heyyyyyyyyyyyyyyyy"
+            android:text="..."
             android:id="@+id/username"/>
         <ImageButton
             android:layout_width="wrap_content"
@@ -41,7 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/CardListItem"
-                android:id="@+id/Phone">
+                android:id="@+id/Phone"
+                android:onClick="initiatePhoneCall">
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -53,7 +54,7 @@
                     android:layout_height="match_parent"
                     style="@style/CardListDetails"
                     android:gravity="center_vertical"
-                    android:text="Hello Moto"
+                    android:text="..."
                     android:id="@+id/PhoneNumberText"/>
             </LinearLayout>
 
@@ -67,8 +68,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/CardListItem"
-                android:layout_below="@+id/Email">
-
+                android:layout_below="@+id/Email"
+                android:onClick="initiateEmail">
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -79,7 +80,7 @@
                     android:layout_height="match_parent"
                     style="@style/CardListDetails"
                     android:gravity="center_vertical"
-                    android:text="Hello Moto"
+                    android:text="..."
                     android:id="@+id/emailAddressText"/>
             </LinearLayout>
         </LinearLayout>

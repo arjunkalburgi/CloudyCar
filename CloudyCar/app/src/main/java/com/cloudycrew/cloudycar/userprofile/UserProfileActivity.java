@@ -1,16 +1,15 @@
 package com.cloudycrew.cloudycar.userprofile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.controllers.UserController;
-import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchService;
 import com.cloudycrew.cloudycar.models.User;
 
-import org.w3c.dom.Text;
 
 /**
  * Created by George on 2016-11-05.
@@ -18,14 +17,14 @@ import org.w3c.dom.Text;
 
 public class UserProfileActivity extends BaseActivity implements IUserProfileView {
     private UserProfileController userProfileController;
-
+    private String username, phoneNumber, email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_details_summary);
 
         Intent myIntent = getIntent();
-        String username = myIntent.getStringExtra("username");
+        username = myIntent.getStringExtra("username");
 
         resolveDependencies();
 
@@ -40,6 +39,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
     @Override
     protected void onPause() {
+        super.onPause();
         userProfileController.detachView();
     }
 
@@ -49,7 +49,25 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
     @Override
     public void displayLoading() {
+        //lol
+    }
 
+    public void initiatePhoneCall(View v) {
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+        try {
+            startActivity(callIntent);
+        }
+        catch (SecurityException e) {
+            //Do nothing?
+        }
+    }
+
+    public void initiateEmail(View v) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        Intent mailerIntent = Intent.createChooser(intent, null);
+        startActivity(mailerIntent);
     }
 
     @Override
@@ -59,8 +77,10 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         TextView emailAddressView = (TextView)findViewById(R.id.emailAddressText);
 
         usernameView.setText(user.getUsername());
-        phoneNumberView.setText(user.getPhoneNumber().getPhoneNumber());
-        emailAddressView.setText(user.getEmail().getEmail());
+        phoneNumber = user.getPhoneNumber().getPhoneNumber();
+        phoneNumberView.setText(phoneNumber);
+        email = user.getEmail().getEmail();
+        emailAddressView.setText(email);
 
         //Probably set the image here
     }

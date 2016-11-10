@@ -18,7 +18,17 @@ public class UserService implements IUserService
 
     @Override
     public User getUser(String username) {
-        List<User> userlist = elasticSearchService.search(username);
+
+        String query = "{\n" +
+                       "    \"query\": {\n" +
+                       "        \"filtered\" : {\n" +
+                       "            \"filter\" : {\n" +
+                       "                \"term\" : { \"username\" : \"" + username + "\" }\n" +
+                       "            }\n" +
+                       "        }\n" +
+                       "    }\n" +
+                       "}";
+        List<User> userlist = elasticSearchService.search(query);
         return userlist.size() > 0 ? userlist.get(0) : null;
     }
 
