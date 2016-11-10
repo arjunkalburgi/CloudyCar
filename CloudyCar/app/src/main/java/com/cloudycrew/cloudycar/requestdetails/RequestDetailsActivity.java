@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.requestdetails;
 import android.os.Bundle;
 
 import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 /**
@@ -33,7 +34,8 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
     }
 
     private void resolveDependencies() {
-        this.requestDetailsController = getCloudyCarApplication().getRequestDetailsController();
+        String requestId = getIntent().getStringExtra(Constants.EXTRA_REQUEST_ID);
+        this.requestDetailsController = getCloudyCarApplication().getRequestDetailsController(requestId);
     }
 
     @Override
