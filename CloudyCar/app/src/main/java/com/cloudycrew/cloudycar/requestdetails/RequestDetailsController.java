@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.requestdetails;
 
 import com.cloudycrew.cloudycar.ViewController;
+import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
@@ -12,10 +13,24 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 public class RequestDetailsController extends ViewController<IRequestDetailsView> {
     private String requestId;
     private IRequestStore requestStore;
+    private RequestController requestController;
 
-    public RequestDetailsController(String requestId, IRequestStore requestStore) {
+    public RequestDetailsController(String requestId, RequestController requestController, IRequestStore requestStore) {
         this.requestId = requestId;
+        this.requestController = requestController;
         this.requestStore = requestStore;
+    }
+
+    public void acceptRequest() {
+        requestController.acceptRequest(requestId);
+    }
+
+    public void confirmRequest() {
+        requestController.confirmRequest(requestId);
+    }
+
+    public void completeRequest() {
+        requestController.completeRequest(requestId);
     }
 
     @Override
