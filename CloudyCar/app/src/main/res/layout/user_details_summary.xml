@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/UserDetailsEditButton"
-            android:src="@drawable/ic_mode_edit_white_24dp"/>
+            android:src="@drawable/ic_mode_edit_white_24dp"
+            android:id="@+id/editUserDetailsButton"/>
     </RelativeLayout>
 
     <android.support.v7.widget.CardView

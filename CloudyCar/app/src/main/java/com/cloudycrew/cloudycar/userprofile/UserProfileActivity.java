@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.User;
 
 
@@ -19,6 +21,8 @@ import com.cloudycrew.cloudycar.models.User;
 
 public class UserProfileActivity extends BaseActivity implements IUserProfileView {
     private UserProfileController userProfileController;
+    private UserController userController;
+
     private String username, phoneNumber, email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +33,28 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         username = myIntent.getStringExtra("username");
 
         resolveDependencies();
+        ImageButton userDetailsButton = (ImageButton) findViewById(R.id.editUserDetailsButton);
+        if (username != userController.getCurrentUser().getUsername()) {
 
+            userDetailsButton.setVisibility(View.GONE);
+            userDetailsButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    //This too shall pass
+                }
+            });
+        } else {
+            userDetailsButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    editUserDetails();
+                }
+            });
+        }
         userProfileController.loadUser(username);
     }
 
@@ -47,11 +72,16 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
     private void resolveDependencies() {
         this.userProfileController = getCloudyCarApplication().getUserProfileController();
+        this.userController = getCloudyCarApplication().getUserController();
     }
 
     @Override
     public void displayLoading() {
         //lol
+    }
+
+    protected void editUserDetails() {
+        //??
     }
 
     public void initiatePhoneCall(View v) {

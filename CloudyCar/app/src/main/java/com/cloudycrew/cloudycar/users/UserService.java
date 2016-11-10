@@ -34,11 +34,11 @@ public class UserService implements IUserService
 
     @Override
     public void createUser(User user) throws DuplicateUserException, IncompleteUserException{
-        List<User> userlist = elasticSearchService.search(user.getUsername());
+        User duplicateUser = this.getUser(user.getUsername());
         if(!user.verifyContactInformation()) {
             throw new IncompleteUserException();
         }
-        if(userlist.isEmpty()) {
+        if(duplicateUser != null) {
             elasticSearchService.create(user);
         }
         else {
@@ -49,7 +49,7 @@ public class UserService implements IUserService
     @Override
     public User getCurrentUser() {
         //Lol
-        return null;
+        return new User("");
     }
 
     @Override
