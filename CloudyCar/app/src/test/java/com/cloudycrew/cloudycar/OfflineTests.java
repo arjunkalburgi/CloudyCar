@@ -3,7 +3,6 @@ package com.cloudycrew.cloudycar;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.CloudRequestService;
@@ -42,8 +41,9 @@ public class OfflineTests {
     private PendingRequest request1;
     private PendingRequest request2;
     private PendingRequest newRequest;
-    private AcceptedRequest acceptedRequest1;
-    private AcceptedRequest newAcceptedRequest;
+
+    private PendingRequest acceptedRequest1;
+    private PendingRequest newAcceptedRequest;
 
 
     @Before
@@ -67,8 +67,9 @@ public class OfflineTests {
         request2 = new PendingRequest(rider.getUsername(), route);
 
         newRequest = new PendingRequest(rider.getUsername(), route);
-        acceptedRequest1 = request1.acceptRequest(driver.getUsername());
-        newAcceptedRequest = newRequest.acceptRequest(driver.getUsername());
+
+        acceptedRequest1 = request1.accept(driver.getUsername());
+        newAcceptedRequest = newRequest.accept(driver.getUsername());
     }
 
     @Test
@@ -97,7 +98,7 @@ public class OfflineTests {
     public void test_getAcceptedRequests_ifTheDeviceIsOffline_getsLocalAcceptedRequests() {
         internetConnectivityProvider.setInternetAvailable(false);
 
-        List<AcceptedRequest> expectedRequests = Arrays.asList(acceptedRequest1);
+        List<PendingRequest> expectedRequests = Arrays.asList(acceptedRequest1);
         //List<AcceptedRequest> actualRequests = requestService.getAcceptedRequests();
 
         //assertEquals(expectedRequests, actualRequests);

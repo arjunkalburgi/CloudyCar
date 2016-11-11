@@ -1,6 +1,5 @@
 package com.cloudycrew.cloudycar.ridersummary;
 
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
 import java.util.List;
@@ -12,5 +11,5 @@ import java.util.List;
 public interface IRiderSummaryView {
     void displayLoading();
     void displayPendingRequests(List<PendingRequest> pendingRequests);
-    void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests);
+    void displayAcceptedRequests(List<PendingRequest> acceptedRequests);
 }

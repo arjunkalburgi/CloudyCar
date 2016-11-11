@@ -26,14 +26,20 @@
             android:name=".signup.SignUpActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SignUpCompleteActivity" />
-        <activity android:name=".createrequest.CreateRequestActivity">
-        </activity>
+        <activity
+            android:name=".SignUpCompleteActivity"/>
+        <activity
+            android:name=".createrequest.CreateRequestActivity"/>
         <activity
             android:name=".SummaryActivity"
             android:label="@string/title_activity_summary"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".userprofile.UserProfileActivity"/>
+        <activity
+            android:name=".requestdetails.RequestDetailsActivity"
+            android:label="@string/title_activity_request_details"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>
