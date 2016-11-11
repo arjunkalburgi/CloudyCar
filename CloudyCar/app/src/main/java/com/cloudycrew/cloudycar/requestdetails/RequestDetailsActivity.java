@@ -7,7 +7,6 @@ import android.widget.TextView;
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -66,8 +65,6 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
     public void onUpdateRequestClicked() {
         if (lastRequest.getClass().equals(PendingRequest.class)) {
             requestDetailsController.acceptRequest();
-        } else if (lastRequest.getClass().equals(AcceptedRequest.class)) {
-            requestDetailsController.confirmRequest();
         } else if (lastRequest.getClass().equals(ConfirmedRequest.class)) {
             requestDetailsController.completeRequest();
         }
@@ -87,8 +84,6 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
 
         if (request.getClass().equals(PendingRequest.class)) {
             updateButton.setText("Accept Request");
-        } else if (request.getClass().equals(AcceptedRequest.class)) {
-            updateButton.setText("Confirm Request");
         } else if (request.getClass().equals(ConfirmedRequest.class)) {
             updateButton.setText("Complete Request");
         } else if (request.getClass().equals(CompletedRequest.class)) {

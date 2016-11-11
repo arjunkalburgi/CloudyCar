@@ -1,6 +1,5 @@
 package com.cloudycrew.cloudycar.ridersummary;
 
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
 import java.util.List;

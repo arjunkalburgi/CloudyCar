@@ -3,7 +3,6 @@ package com.cloudycrew.cloudycar;
 import com.cloudycrew.cloudycar.fileservices.IFileService;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
