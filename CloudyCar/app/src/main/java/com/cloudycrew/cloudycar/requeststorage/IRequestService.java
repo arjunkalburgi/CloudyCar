@@ -1,6 +1,5 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;

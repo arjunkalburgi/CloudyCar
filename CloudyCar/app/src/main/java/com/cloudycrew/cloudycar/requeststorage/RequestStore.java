@@ -34,7 +34,7 @@ public class RequestStore implements IRequestStore {
     public <T extends Request> T getRequest(String requestId, Class<T> requestClass) {
         return Observable.from(requestMap.values())
                          .filter(r -> r.getId().equals(requestId))
-                         .filter(r -> r.getClass().isAssignableFrom(requestClass))
+                         .filter(r -> requestClass.isAssignableFrom(r.getClass()))
                          .cast(requestClass)
                          .toBlocking()
                          .firstOrDefault(null);
@@ -47,7 +47,7 @@ public class RequestStore implements IRequestStore {
 
     public <T extends Request> List<T> getRequests(Class<T> requestClass) {
         return Observable.from(requestMap.values())
-                         .filter(r -> r.getClass().isAssignableFrom(requestClass))
+                         .filter(r -> requestClass.isAssignableFrom(r.getClass()))
                          .cast(requestClass)
                          .toList()
                          .toBlocking()

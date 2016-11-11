@@ -1,7 +1,6 @@
 package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.Route;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
@@ -58,18 +57,18 @@ public class RequestController {
         Observable.just(requestId)
                   .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .map(r -> r.acceptRequest(userPreferences.getUserName()))
+                  .map(r -> r.accept(userPreferences.getUserName()))
                   .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::createRequest)
+                  .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::addRequest);
+                  .subscribe(requestStore::updateRequest);
     }
 
     public void confirmRequest(String requestId) {
         Observable.just(requestId)
-                  .map(id -> requestStore.getRequest(requestId, AcceptedRequest.class))
+                  .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .map(AcceptedRequest::confirmRequest)
+                  .map(r -> r.confirmRequest(userPreferences.getUserName()))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())

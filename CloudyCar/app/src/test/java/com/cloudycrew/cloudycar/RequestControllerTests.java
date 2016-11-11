@@ -6,7 +6,6 @@ import com.cloudycrew.cloudycar.email.IEmailService;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -50,7 +49,7 @@ public class RequestControllerTests {
 
     private PendingRequest request1;
     private PendingRequest request2;
-    private AcceptedRequest acceptedRequest1;
+    private PendingRequest acceptedRequest1;
     private ConfirmedRequest confirmedRequest1;
     private CompletedRequest completedRequest1;
 
@@ -70,8 +69,9 @@ public class RequestControllerTests {
         request1 = new PendingRequest(riderUsername, route);
         request2 = new PendingRequest(riderUsername, route);
 
-        acceptedRequest1 = request1.acceptRequest(driverUsername);
-        confirmedRequest1 = acceptedRequest1.confirmRequest();
+        acceptedRequest1 = request1.accept(driverUsername);
+
+        confirmedRequest1 = acceptedRequest1.confirmRequest(driverUsername);
         completedRequest1 = confirmedRequest1.completeRequest();
 
         schedulerProvider = new TestSchedulerProvider();
@@ -130,8 +130,8 @@ public class RequestControllerTests {
 
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
-        when(requestStore.getRequest(acceptedRequest1.getId(), AcceptedRequest.class)).thenReturn(acceptedRequest1);
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(requestStore.getRequest(acceptedRequest1.getId(), PendingRequest.class)).thenReturn(acceptedRequest1);
+        when(userPreferences.getUserName()).thenReturn(driverUsername);
 
         requestController.confirmRequest(acceptedRequest1.getId());
 
@@ -156,8 +156,8 @@ public class RequestControllerTests {
 
         requestController.acceptRequest(request1.getId());
 
-        verify(requestStore).addRequest(acceptedRequest1);
-        verify(requestService).createRequest(acceptedRequest1);
+        verify(requestStore).updateRequest(acceptedRequest1);
+        verify(requestService).updateRequest(acceptedRequest1);
     }
 
     @Test

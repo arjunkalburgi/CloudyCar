@@ -1,13 +1,11 @@
 package com.cloudycrew.cloudycar;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
@@ -15,16 +13,13 @@ import com.cloudycrew.cloudycar.models.requests.Request;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by insanekillah on 2016-11-08.
- */
-
 public class RequestAdapter extends
         RecyclerView.Adapter<RequestAdapter.ViewHolder> {
 
     private List<Request> requestList;
     private List<PendingRequest> pendingRequests;
-    private List<AcceptedRequest> acceptedRequests;
+    private List<PendingRequest> acceptedRequests;
+    private List<ConfirmedRequest> confirmedRequests;
 
     private final int PENDING_REQUEST = 0;
     private final int ACCEPTED_REQUEST = 1;
@@ -46,6 +41,7 @@ public class RequestAdapter extends
         requestList = new ArrayList<>();
         pendingRequests = new ArrayList<>();
         acceptedRequests = new ArrayList<>();
+        confirmedRequests = new ArrayList<>();
     }
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder {
@@ -106,11 +102,12 @@ public class RequestAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-        if (requestList.get(position) instanceof PendingRequest) {
+        Request r = requestList.get(position);
+        if (r instanceof PendingRequest && !((PendingRequest) r).hasBeenAccepted()) {
             return PENDING_REQUEST;
-        } else if (requestList.get(position) instanceof AcceptedRequest) {
+        } else if (r instanceof PendingRequest && ((PendingRequest) r).hasBeenAccepted()) {
             return ACCEPTED_REQUEST;
-        } else if (requestList.get(position) instanceof ConfirmedRequest) {
+        } else if (r instanceof ConfirmedRequest) {
             return CONFIRMED_REQUEST;
         }
         return -1;
@@ -142,18 +139,23 @@ public class RequestAdapter extends
         Request request = requestList.get(position);
 
         // populate the request item's views
-        TextView habitDestView = viewHolder.requestDest;
-        TextView habitSrcView = viewHolder.requestSrc;
+        TextView requestDestView = viewHolder.requestDest;
+        TextView requestSrcView = viewHolder.requestSrc;
         // change these to get actual place names later
-        habitDestView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
-        habitSrcView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
+        requestDestView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
+        requestSrcView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
 
-        if (request instanceof AcceptedRequest) {
-            TextView habitAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;
-            habitAcceptedView.setText("Accepted by " + ((AcceptedRequest) request).getDriverUsername());
+        if (request instanceof PendingRequest && ((PendingRequest) request).hasBeenAccepted()) {
+            TextView requestAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;
+            List<String> drivers = ((PendingRequest) request).getDriversWhoAccepted();
+            String driversText = "Accepted by " + drivers.get(0);
+            for (String driver : drivers.subList(1, drivers.size())) {
+                driversText += ", " + driver;
+            }
+            requestAcceptedView.setText(driversText);
         } else if (request instanceof ConfirmedRequest) {
-            TextView habitConfirmedView = ((ConfirmedViewHolder) viewHolder).requestAcceptedBy;
-            habitConfirmedView.setText("Accepted by " + ((ConfirmedRequest) request).getDriverUsername());
+            TextView requestConfirmedView = ((ConfirmedViewHolder) viewHolder).requestAcceptedBy;
+            requestConfirmedView.setText("Accepted by " + ((ConfirmedRequest) request).getDriverUsername());
         }
     }
 
@@ -168,8 +170,14 @@ public class RequestAdapter extends
         this.notifyDataSetChanged();
     }
 
-    public void setAcceptedRequests(List<AcceptedRequest> requests) {
+    public void setAcceptedRequests(List<PendingRequest> requests) {
         acceptedRequests = requests;
+        requestList = mergeLists();
+        this.notifyDataSetChanged();
+    }
+
+    public void setConfirmedRequests(List<ConfirmedRequest> requests) {
+        confirmedRequests = requests;
         requestList = mergeLists();
         this.notifyDataSetChanged();
     }
@@ -177,8 +185,9 @@ public class RequestAdapter extends
     // our full list will be both pending and accepted put together
     public List<Request> mergeLists() {
         List<Request> requests = new ArrayList<>();
-        requests.addAll(pendingRequests);
+        requests.addAll(confirmedRequests);
         requests.addAll(acceptedRequests);
+        requests.addAll(pendingRequests);
         return requests;
     }
 }
