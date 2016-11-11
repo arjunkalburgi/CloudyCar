@@ -14,11 +14,12 @@ public class RouteTest {
     private Route route;
     private Point endingPoint;
     private Point startingPoint;
+    private String testDescription = "test description";
 
     @Before
     public void setUp(){
-        startingPoint = new Point(48.1472373, 11.5673969);
-        endingPoint = new Point(48.1258551, 11.5121003);
+        startingPoint = new Point(48.1472373, 11.5673969,testDescription);
+        endingPoint = new Point(48.1258551, 11.5121003,testDescription);
         route = new Route(startingPoint,endingPoint);
     }
     @Test

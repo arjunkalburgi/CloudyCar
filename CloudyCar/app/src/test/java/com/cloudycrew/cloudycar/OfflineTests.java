@@ -41,6 +41,7 @@ public class OfflineTests {
     private PendingRequest request1;
     private PendingRequest request2;
     private PendingRequest newRequest;
+    private String testDescription;
 
     private PendingRequest acceptedRequest1;
     private PendingRequest newAcceptedRequest;
@@ -57,9 +58,10 @@ public class OfflineTests {
     private void set_up_requests() {
         rider = new User("janedoedoe");
         driver = new User("driverdood");
+        testDescription = "test description";
 
-        Point startingPoint = new Point(48.1472373, 11.5673969);
-        Point endingPoint = new Point(48.1258551, 11.5121003);
+        Point startingPoint = new Point(48.1472373, 11.5673969,testDescription);
+        Point endingPoint = new Point(48.1258551, 11.5121003,testDescription);
 
         Route route = new Route(startingPoint,endingPoint);
 

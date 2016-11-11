@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class RequestAdapter extends
     private List<PendingRequest> pendingRequests;
     private List<PendingRequest> acceptedRequests;
     private List<ConfirmedRequest> confirmedRequests;
+    private Context context;
 
     private final int PENDING_REQUEST = 0;
     private final int ACCEPTED_REQUEST = 1;
@@ -142,8 +144,9 @@ public class RequestAdapter extends
         TextView requestDestView = viewHolder.requestDest;
         TextView requestSrcView = viewHolder.requestSrc;
         // change these to get actual place names later
-        requestDestView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
-        requestSrcView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
+
+        requestDestView.setText(request.getRoute().getEndingPoint().getDescription());
+        requestSrcView.setText(request.getRoute().getStartingPoint().getDescription());
 
         if (request instanceof PendingRequest && ((PendingRequest) request).hasBeenAccepted()) {
             TextView requestAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;

@@ -61,8 +61,8 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
 
     private void formatRouteDisplay(TextView startText, TextView endText) {
         Resources resources = getResources();
-        String startToDisplay = String.format(resources.getString(R.string.write_start_location),userRoute.getStartingPoint());
-        String endToDisplay = String.format(resources.getString(R.string.write_end_location),userRoute.getEndingPoint());
+        String startToDisplay = String.format(resources.getString(R.string.write_start_location),userRoute.getStartingPoint().getDescription());
+        String endToDisplay = String.format(resources.getString(R.string.write_end_location),userRoute.getEndingPoint().getDescription());
         startText.setText(startToDisplay);
         endText.setText(endToDisplay);
     }

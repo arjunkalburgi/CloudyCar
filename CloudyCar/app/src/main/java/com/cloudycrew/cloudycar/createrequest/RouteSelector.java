@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
@@ -35,11 +36,13 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private LatLng start;
     private LatLng end;
+    private GeoDecoder geoDecoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_selector);
+        geoDecoder = new GeoDecoder(this);
         TextView submitButton = (TextView) this.findViewById(R.id.submit_route_from_map);
         submitButton.setOnClickListener(v->{
             if(end == null){
@@ -69,8 +72,8 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
 
     @NonNull
     private Route getRoute() {
-        Point startPoint = new Point(start.longitude,start.latitude);
-        Point endPoint = new Point(end.longitude,end.latitude);
+        Point startPoint = new Point(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
+        Point endPoint = new Point(end.longitude,end.latitude, geoDecoder.decodeLatLng(end.longitude,end.latitude));
         return new Route(startPoint,endPoint);
     }
 
@@ -136,7 +139,6 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
             }
         }
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
