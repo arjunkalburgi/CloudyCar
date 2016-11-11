@@ -28,7 +28,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_details_summary);
-
+        Boolean local = false;
         Intent myIntent = getIntent();
         username = myIntent.getStringExtra("username");
 
@@ -46,6 +46,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
                 }
             });
         } else {
+            local = true;
             userDetailsButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -55,13 +56,14 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
                 }
             });
         }
-        userProfileController.loadUser(username);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         userProfileController.attachView(this);
+        userProfileController.loadUser(username);
     }
 
     @Override

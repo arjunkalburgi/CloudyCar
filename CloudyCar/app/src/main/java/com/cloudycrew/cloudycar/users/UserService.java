@@ -27,7 +27,7 @@ public class UserService implements IUserService
                        "    \"query\": {\n" +
                        "        \"filtered\" : {\n" +
                        "            \"filter\" : {\n" +
-                       "                \"term\" : { \"username\" : \"" + username + "\" }\n" +
+                       "                \"term\" : { \"username\" : \"" + username.toLowerCase() + "\" }\n" +
                        "            }\n" +
                        "        }\n" +
                        "    }\n" +
