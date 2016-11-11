@@ -87,6 +87,9 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
 
     @Override
     public void onRequestCreated() {
-        finish();
+        Intent intent = new Intent(this, SummaryActivity.class);
+        intent.putExtra("mode", "rider");
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
