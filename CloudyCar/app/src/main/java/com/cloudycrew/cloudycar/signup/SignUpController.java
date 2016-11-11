@@ -35,9 +35,15 @@ public class SignUpController extends ViewController<ISignUpView> {
         ObservableUtils.fromAction(userController::createUser, user)
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(nothing -> dispatchOnSuccessfulRegistration(),
+                       .subscribe(nothing -> {
+                           registerLocalUser(user);
+                           dispatchOnSuccessfulRegistration();},
                                   throwable -> dispatchOnDuplicateUsernameFailure());
 
+    }
+
+    private void registerLocalUser(User user) {
+        userController.setCurrentUser(user);
     }
 
     private User createUser(String username, String email, String phoneNumber) {

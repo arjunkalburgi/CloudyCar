@@ -1,15 +1,13 @@
 package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.Route;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.utils.Utils;
-
-import java.util.List;
 
 import rx.Observable;
 
@@ -21,10 +19,10 @@ public class RequestController {
     private IRequestService requestService;
     private IRequestStore requestStore;
     private ISchedulerProvider schedulerProvider;
-    private String currentUser;
+    private IUserPreferences userPreferences;
 
-    public RequestController(String currentUser, IRequestStore requestStore, IRequestService requestService, ISchedulerProvider schedulerProvider) {
-        this.currentUser = currentUser;
+    public RequestController(IUserPreferences userPreferences, IRequestStore requestStore, IRequestService requestService, ISchedulerProvider schedulerProvider) {
+        this.userPreferences = userPreferences;
         this.requestStore = requestStore;
         this.requestService = requestService;
         this.schedulerProvider = schedulerProvider;
@@ -40,7 +38,7 @@ public class RequestController {
 
     public void createRequest(Route route) {
         Observable.just(route)
-                  .map(r -> new PendingRequest(currentUser, r))
+                  .map(r -> new PendingRequest(userPreferences.getUserName(), r))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::createRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
@@ -59,7 +57,7 @@ public class RequestController {
         Observable.just(requestId)
                   .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .doOnNext(r -> r.accept(currentUser))
+                  .doOnNext(r -> r.accept(userPreferences.getUserName()))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
@@ -70,7 +68,7 @@ public class RequestController {
         Observable.just(requestId)
                   .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .map(r -> r.confirmRequest(currentUser))
+                  .map(r -> r.confirmRequest(userPreferences.getUserName()))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
