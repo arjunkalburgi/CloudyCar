@@ -25,7 +25,8 @@ public class UserProfileController extends ViewController<IUserProfileView> {
         ObservableUtils.fromFunction(userController::getUser, username)
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(this::dispatchDisplayUser);
+                       .subscribe(this::dispatchDisplayUser,
+                                 throwable -> dispatchUserDoesNotExist());
     }
 
     private void dispatchDisplayLoading() {
@@ -37,6 +38,12 @@ public class UserProfileController extends ViewController<IUserProfileView> {
     private void dispatchDisplayUser(User user) {
         if (getView() != null) {
             getView().displayUser(user);
+        }
+    }
+
+    private void dispatchUserDoesNotExist() {
+        if (getView() != null) {
+            getView().displayErrorToast();
         }
     }
 }

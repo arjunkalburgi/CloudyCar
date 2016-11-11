@@ -126,4 +126,15 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
         //Probably set the image here
     }
+
+    public void displayErrorToast() {
+        //If the user hasn't enabled phone calls then show them a toast instead of failing silently
+        Context context = getApplicationContext();
+        CharSequence text = "That user doesn't exist anymore.";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+
+        toast.show();
+        finish();
+    }
 }

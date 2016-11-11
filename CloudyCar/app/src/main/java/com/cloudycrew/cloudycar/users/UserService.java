@@ -43,15 +43,17 @@ public class UserService implements IUserService
 
     @Override
     public void createUser(User user) throws DuplicateUserException, IncompleteUserException{
-        User duplicateUser = this.getUser(user.getUsername());
-        if(!user.verifyContactInformation()) {
-            throw new IncompleteUserException();
+        try {
+            this.getUser(user.getUsername());
         }
-        if(duplicateUser == null) {
+        catch (UserDoesNotExistException e) {
+            if(!user.verifyContactInformation()) {
+                throw new IncompleteUserException();
+            }
             elasticSearchService.create(user);
-        } else {
-            throw new DuplicateUserException();
+            return;
         }
+        throw new DuplicateUserException();
     }
 
     @Override
