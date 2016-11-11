@@ -131,7 +131,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public RequestDetailsController getRequestDetailsController(String requestId) {
-        return new RequestDetailsController(requestId, getRequestController(), getRequestStore());
+        return new RequestDetailsController(requestId, getRequestController(), getSchedulerProvider(), getRequestStore());
     }
 
     public UserProfileController getUserProfileController() {
