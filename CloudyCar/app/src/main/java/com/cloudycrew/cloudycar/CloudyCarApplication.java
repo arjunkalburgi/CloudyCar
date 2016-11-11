@@ -114,7 +114,7 @@ public class CloudyCarApplication extends Application {
         return new UserService(getUserElasticSearchService(), getUserPreferences());
     }
 
-    private IUserPreferences getUserPreferences() {
+    public IUserPreferences getUserPreferences() {
         return new UserPreferences(getApplicationContext());
     }
 

@@ -10,7 +10,7 @@
         android:layout_margin="16dp">
 
         <TextView
-            android:id="@+id/completion_date"
+            android:id="@+id/driver_username"
             android:textSize="16dp"
             android:text="Snack"
             android:layout_alignParentStart="true"
