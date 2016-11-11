@@ -28,6 +28,7 @@ import com.cloudycrew.cloudycar.search.SearchController;
 import com.cloudycrew.cloudycar.signup.SignUpController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
 import com.cloudycrew.cloudycar.users.IUserService;
+import com.cloudycrew.cloudycar.users.UserPreferences;
 import com.cloudycrew.cloudycar.users.UserService;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.searchly.jestdroid.DroidClientConfig;
@@ -109,7 +110,11 @@ public class CloudyCarApplication extends Application {
     }
 
     private IUserService getUserService() {
-        return new UserService(getUserElasticSearchService());
+        return new UserService(getUserElasticSearchService(), getUserPreferences());
+    }
+
+    private UserPreferences getUserPreferences() {
+        return new UserPreferences(getApplicationContext());
     }
 
     public UserController getUserController() {

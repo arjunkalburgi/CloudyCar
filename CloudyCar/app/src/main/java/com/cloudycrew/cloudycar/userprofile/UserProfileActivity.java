@@ -34,7 +34,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
         resolveDependencies();
         ImageButton userDetailsButton = (ImageButton) findViewById(R.id.editUserDetailsButton);
-        if (username != userController.getCurrentUser().getUsername()) {
+        if (!username.equals(userController.getCurrentUser().getUsername())) {
 
             userDetailsButton.setVisibility(View.GONE);
             userDetailsButton.setOnClickListener(new View.OnClickListener()
@@ -125,5 +125,16 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         emailAddressView.setText(email);
 
         //Probably set the image here
+    }
+
+    public void displayErrorToast() {
+        //If the user hasn't enabled phone calls then show them a toast instead of failing silently
+        Context context = getApplicationContext();
+        CharSequence text = "That user doesn't exist anymore.";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+
+        toast.show();
+        finish();
     }
 }

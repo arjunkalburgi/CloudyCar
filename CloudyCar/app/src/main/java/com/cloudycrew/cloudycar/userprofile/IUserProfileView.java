@@ -9,4 +9,5 @@ import com.cloudycrew.cloudycar.models.User;
 public interface IUserProfileView {
     void displayLoading();
     void displayUser(User user);
+    void displayErrorToast();
 }

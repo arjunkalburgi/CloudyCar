@@ -9,6 +9,8 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.users.DuplicateUserException;
 import com.cloudycrew.cloudycar.users.IUserService;
 import com.cloudycrew.cloudycar.users.IncompleteUserException;
+import com.cloudycrew.cloudycar.users.UserDoesNotExistException;
+import com.cloudycrew.cloudycar.users.UserPreferences;
 import com.cloudycrew.cloudycar.users.UserService;
 
 import org.junit.Before;
@@ -33,6 +35,8 @@ import static org.mockito.Mockito.*;
 public class UserProfileTests {
     @Mock
     private ElasticSearchService<User> muhservice;
+    @Mock
+    private UserPreferences userPreferences;
     private IUserService userService;
 
     private User completeUser;
@@ -48,7 +52,7 @@ public class UserProfileTests {
         completeUser.setEmail(email);
         completeUser.setPhoneNumber(phoneNumber);
         incompleteUser = new User("I'm sad and have no contact info");
-        userService = new UserService(muhservice);
+        userService = new UserService(muhservice, userPreferences);
     }
 
     @Test
@@ -59,7 +63,7 @@ public class UserProfileTests {
 
     @Test(expected=DuplicateUserException.class)
     public void test_addNewUser_withAUsedUserName_throwingDuplicateUserException() {
-        when(muhservice.search("janedoedoe")).thenReturn(Arrays.asList(completeUser));
+        when(muhservice.search(anyObject())).thenReturn(Arrays.asList(completeUser));
         userService.createUser(completeUser);
     }
 
@@ -92,8 +96,9 @@ public class UserProfileTests {
         assertEquals(newEmail, completeUser.getEmail());
     }
 
-    public void test_GettingANonExistentUser_returnsNull() {
-        assertNull(userService.getUser("I don't exist"));
+    @Test(expected=UserDoesNotExistException.class)
+    public void test_GettingANonExistentUser_Excepts() {
+        userService.getUser("I don't exist");
     }
 
 }
