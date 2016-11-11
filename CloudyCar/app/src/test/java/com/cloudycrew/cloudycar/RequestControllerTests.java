@@ -69,8 +69,7 @@ public class RequestControllerTests {
         request1 = new PendingRequest(riderUsername, route);
         request2 = new PendingRequest(riderUsername, route);
 
-        acceptedRequest1 = new PendingRequest(riderUsername, route);
-        acceptedRequest1.accept(driverUsername);
+        acceptedRequest1 = request1.accept(driverUsername);
 
         confirmedRequest1 = acceptedRequest1.confirmRequest(driverUsername);
         completedRequest1 = confirmedRequest1.completeRequest();
@@ -132,7 +131,7 @@ public class RequestControllerTests {
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
         when(requestStore.getRequest(acceptedRequest1.getId(), PendingRequest.class)).thenReturn(acceptedRequest1);
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(userPreferences.getUserName()).thenReturn(driverUsername);
 
         requestController.confirmRequest(acceptedRequest1.getId());
 
@@ -157,8 +156,8 @@ public class RequestControllerTests {
 
         requestController.acceptRequest(request1.getId());
 
-        verify(requestStore).addRequest(acceptedRequest1);
-        verify(requestService).createRequest(acceptedRequest1);
+        verify(requestStore).updateRequest(acceptedRequest1);
+        verify(requestService).updateRequest(acceptedRequest1);
     }
 
     @Test

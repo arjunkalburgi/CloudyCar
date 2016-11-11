@@ -31,7 +31,7 @@ public class LocalRequestServiceTests {
     private LocalRequestService localRequestService;
 
     private PendingRequest pendingRequest;
-    private AcceptedRequest acceptedRequest;
+    private PendingRequest acceptedRequest;
     private ConfirmedRequest confirmedRequest;
 
     @Before
@@ -39,8 +39,9 @@ public class LocalRequestServiceTests {
         Route route = new Route(new Point(0, 0), new Point(0, 0));
 
         pendingRequest = new PendingRequest("rider", route);
-        //acceptedRequest = pendingRequest.acceptRequest("driver");
-        confirmedRequest = acceptedRequest.confirmRequest();
+        acceptedRequest = new PendingRequest("rider", route);
+        acceptedRequest.accept("driver");
+        confirmedRequest = acceptedRequest.confirmRequest("driver");
 
         localRequestService = new LocalRequestService(fileService);
     }
