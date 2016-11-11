@@ -29,6 +29,10 @@ public class PendingRequest extends Request {
         return !getDriversWhoAccepted().isEmpty();
     }
 
+    public boolean hasBeenAcceptedBy(String driverUsername) {
+        return getDriversWhoAccepted().contains(driverUsername);
+    }
+
     public List<String> getDriversWhoAccepted() {
         if (driversWhoAccepted == null) {
             driversWhoAccepted = new ArrayList<>();

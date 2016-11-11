@@ -2,7 +2,6 @@ package com.cloudycrew.cloudycar.driversummary;
 
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
@@ -44,12 +43,12 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
 
     private IObserver<IRequestStore> requestStoreObserver = store -> {
         dispatchDisplayConfirmedRequests(store.getRequests(ConfirmedRequest.class));
-        dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
+        dispatchDisplayAcceptedRequests(getRequestsAcceptedByDriver());
     };
 
-    private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
+    private List<PendingRequest> getRequestsAcceptedByDriver() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(PendingRequest::hasBeenAccepted)
+                         .filter(r -> r.hasBeenAcceptedBy("GET DRIVER NAME"))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -58,7 +57,6 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
     private void dispatchShowLoading() {
         if (getView() != null) {
             getView().displayLoading();
-
         }
     }
 
