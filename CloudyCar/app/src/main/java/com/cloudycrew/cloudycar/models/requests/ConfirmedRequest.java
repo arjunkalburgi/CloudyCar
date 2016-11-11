@@ -37,7 +37,8 @@ public class ConfirmedRequest extends Request {
         return getId().equals(otherConfirmedRequest.getId()) &&
                 getDriverUsername().equals(otherConfirmedRequest.getDriverUsername()) &
                 getRider().equals(otherConfirmedRequest.getRider()) &&
-                getRoute().equals(otherConfirmedRequest.getRoute());
+                getRoute().equals(otherConfirmedRequest.getRoute()) &&
+                getPrice() == otherConfirmedRequest.getPrice();
     }
 
     @Override

@@ -34,7 +34,8 @@ public class CompletedRequest extends Request {
         return getId().equals(otherCompletedRequest.getId()) &&
                 getDriverUsername().equals(otherCompletedRequest.getDriverUsername()) &
                 getRider().equals(otherCompletedRequest.getRider()) &&
-                getRoute().equals(otherCompletedRequest.getRoute());
+                getRoute().equals(otherCompletedRequest.getRoute()) &&
+                getPrice() == otherCompletedRequest.getPrice();
     }
 
     @Override

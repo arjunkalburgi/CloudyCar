@@ -63,10 +63,12 @@ public class OfflineTests {
 
         Route route = new Route(startingPoint,endingPoint);
 
-        request1 = new PendingRequest(rider.getUsername(), route);
-        request2 = new PendingRequest(rider.getUsername(), route);
+        double price = 3.5;
 
-        newRequest = new PendingRequest(rider.getUsername(), route);
+        request1 = new PendingRequest(rider.getUsername(), route, price);
+        request2 = new PendingRequest(rider.getUsername(), route, price);
+
+        newRequest = new PendingRequest(rider.getUsername(), route, price);
 
         acceptedRequest1 = request1.accept(driver.getUsername());
         newAcceptedRequest = newRequest.accept(driver.getUsername());
