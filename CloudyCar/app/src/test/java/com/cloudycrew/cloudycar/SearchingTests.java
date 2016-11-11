@@ -33,16 +33,18 @@ public class SearchingTests {
 
     private Request request1;
     private Request request2;
+    private String testDescription;
 
     @Before
     public void set_up() {
-        Point startingPoint1 = new Point(48.1472373, 11.5673969);
-        Point endingPoint1 = new Point(48.1258551, 11.5121003);
+        testDescription = "test description";
+        Point startingPoint1 = new Point(48.1472373, 11.5673969,testDescription);
+        Point endingPoint1 = new Point(48.1258551, 11.5121003,testDescription);
 
         Route route1 = new Route(startingPoint1,endingPoint1);
 
-        Point startingPoint2 = new Point(53.5225, 113.6242);
-        Point endingPoint2 = new Point(53.5232, 113.5263);
+        Point startingPoint2 = new Point(53.5225, 113.6242,testDescription);
+        Point endingPoint2 = new Point(53.5232, 113.5263,testDescription);
 
         Route route2 = new Route(startingPoint2,endingPoint2);
 
@@ -57,7 +59,7 @@ public class SearchingTests {
 
     @Test
     public void test_searchByGeoLocation_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        Point pointFarFromAllRequests = new Point(0, 0);
+        Point pointFarFromAllRequests = new Point(0, 0,testDescription);
 
         List<Request> searchResults = searchService.searchWithPoint(pointFarFromAllRequests);
 
@@ -66,7 +68,7 @@ public class SearchingTests {
 
     @Test
     public void test_searchByGeoLocation_ifThereAreMatchingResults_thenReturnsResults() {
-        Point pointFarFromAllRequests = new Point(48.1472373, 11.5673969);
+        Point pointFarFromAllRequests = new Point(48.1472373, 11.5673969,testDescription);
 
         List<Request> expectedSearchResults = Arrays.asList(request1);
         List<Request> actualSearchResults = searchService.searchWithPoint(pointFarFromAllRequests);

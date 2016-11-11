@@ -46,7 +46,7 @@ public class RequestControllerTests {
 
     private User rider;
     private User driver;
-
+    private String testDescription;
     private PendingRequest request1;
     private PendingRequest request2;
     private PendingRequest acceptedRequest1;
@@ -57,12 +57,12 @@ public class RequestControllerTests {
     public void set_up() {
         riderUsername = "janedoedoe";
         driverUsername = "driverdood";
-
+        testDescription = "test description";
         rider = new User(riderUsername);
         driver = new User(driverUsername);
 
-        Point startingPoint = new Point(48.1472373, 11.5673969);
-        Point endingPoint = new Point(48.1258551, 11.5121003);
+        Point startingPoint = new Point(48.1472373, 11.5673969,testDescription );
+        Point endingPoint = new Point(48.1258551, 11.5121003,testDescription );
 
         Route route = new Route(startingPoint,endingPoint);
 
@@ -82,8 +82,8 @@ public class RequestControllerTests {
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        Point startingPoint = new Point(48.1472373, 11.5673969);
-        Point endingPoint = new Point(48.1258551, 11.5121003);
+        Point startingPoint = new Point(48.1472373, 11.5673969,testDescription );
+        Point endingPoint = new Point(48.1258551, 11.5121003,testDescription );
 
         Route route = new Route(startingPoint,endingPoint);
 

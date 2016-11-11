@@ -6,11 +6,14 @@ import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
+import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,9 +76,11 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
     @Override
     public void displayRequest(Request request) {
         lastRequest = request;
-        fromTextView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
-        toTextView.setText(String.valueOf(request.getRoute().getEndingPoint().getLatitude()));
-        priceTextView.setText(String.format("$%.2f",request.getPrice()));
+
+        fromTextView.setText(request.getRoute().getStartingPoint().getDescription());
+        toTextView.setText(request.getRoute().getEndingPoint().getDescription());
+
+        priceTextView.setText(String.format(Locale.getDefault(),"$%.2f",request.getPrice()));
         updateButtonText(request);
     }
 
@@ -83,9 +88,9 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         updateButton.setVisibility(View.VISIBLE);
 
         if (request.getClass().equals(PendingRequest.class)) {
-            updateButton.setText("Accept Request");
+            updateButton.setText(R.string.accept_request_button_text);
         } else if (request.getClass().equals(ConfirmedRequest.class)) {
-            updateButton.setText("Complete Request");
+            updateButton.setText(R.string.confirm_request_button_text);
         } else if (request.getClass().equals(CompletedRequest.class)) {
             updateButton.setVisibility(View.GONE);
         }
