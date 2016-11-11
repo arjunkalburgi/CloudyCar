@@ -21,12 +21,18 @@ public class UserProfileController extends ViewController<IUserProfileView> {
     
     public void loadUser(String username) {
         dispatchDisplayLoading();
+        User localUser = userController.getCurrentUser();
+        if( !username.equals(localUser.getUsername()) ) {
+            ObservableUtils.fromFunction(userController::getUser, username)
+                            .subscribeOn(schedulerProvider.ioScheduler())
+                            .observeOn(schedulerProvider.mainThreadScheduler())
+                            .subscribe(this::dispatchDisplayUser,
+                                        throwable -> dispatchUserDoesNotExist());
+        }
+        else {
+            this.dispatchDisplayUser(localUser);
+        }
 
-        ObservableUtils.fromFunction(userController::getUser, username)
-                       .subscribeOn(schedulerProvider.ioScheduler())
-                       .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(this::dispatchDisplayUser,
-                                 throwable -> dispatchUserDoesNotExist());
     }
 
     private void dispatchDisplayLoading() {

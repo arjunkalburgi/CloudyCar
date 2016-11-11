@@ -1,7 +1,7 @@
 package com.cloudycrew.cloudycar.driversummary;
 
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface IDriverSummaryView {
     void displayLoading();
-    void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests);
+    void displayAcceptedRequests(List<PendingRequest> acceptedRequests);
     void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests);
 }

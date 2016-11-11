@@ -1,7 +1,5 @@
 package com.cloudycrew.cloudycar;
 
-import android.provider.ContactsContract;
-
 import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchService;
 import com.cloudycrew.cloudycar.email.Email;
 import com.cloudycrew.cloudycar.models.PhoneNumber;
@@ -15,15 +13,11 @@ import com.cloudycrew.cloudycar.users.UserService;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

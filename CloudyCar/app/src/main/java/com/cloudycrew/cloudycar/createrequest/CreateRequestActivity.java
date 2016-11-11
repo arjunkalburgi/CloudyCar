@@ -21,6 +21,9 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_request);
+        TextView textView = (TextView) findViewById(R.id.pricetextview);
+        textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_attach_money_black_24dp, 0, 0, 0);
+
         this.getSupportActionBar().setTitle(R.string.request_create_header);
         resolveDependencies();
 
