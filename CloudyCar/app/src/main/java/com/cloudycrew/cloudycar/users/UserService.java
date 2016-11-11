@@ -13,11 +13,11 @@ import java.util.List;
 public class UserService implements IUserService
 {
     private IElasticSearchService<User> elasticSearchService;
-    private UserPreferences userPrefs;
+    private IUserPreferences userPrefs;
 
-    public UserService(IElasticSearchService<User> elasticSearchService, UserPreferences preferences) {
+    public UserService(IElasticSearchService<User> elasticSearchService, IUserPreferences preferences) {
         this.elasticSearchService = elasticSearchService;
-        userPrefs = preferences;
+        this.userPrefs = preferences;
     }
 
     @Override
