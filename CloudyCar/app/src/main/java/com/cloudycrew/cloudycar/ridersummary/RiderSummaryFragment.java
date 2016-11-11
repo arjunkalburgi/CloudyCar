@@ -14,9 +14,8 @@ import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;
 
@@ -92,6 +91,10 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     @Override
     public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
-        //requestAdapter.setAcceptedRequests(acceptedRequests);
+        requestAdapter.setAcceptedRequests(acceptedRequests);
+    }
+
+    public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        requestAdapter.setConfirmedRequests(confirmedRequests);
     }
 }

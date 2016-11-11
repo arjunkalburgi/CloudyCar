@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
