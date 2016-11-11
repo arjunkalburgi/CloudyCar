@@ -2,7 +2,6 @@ package com.cloudycrew.cloudycar.ridersummary;
 
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;

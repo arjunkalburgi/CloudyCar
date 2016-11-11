@@ -40,8 +40,13 @@ public class PendingRequest extends Request {
         return driversWhoAccepted;
     }
 
-    public void accept(String driverUsername) {
-        driversWhoAccepted.add(driverUsername);
+    public PendingRequest accept(String driverUsername) {
+        PendingRequest pendingRequest = new PendingRequest(getRider(), getRoute());
+        pendingRequest.id = getId();
+        pendingRequest.driversWhoAccepted.addAll(getDriversWhoAccepted());
+        pendingRequest.driversWhoAccepted.add(driverUsername);
+
+        return pendingRequest;
     }
 
     @Override

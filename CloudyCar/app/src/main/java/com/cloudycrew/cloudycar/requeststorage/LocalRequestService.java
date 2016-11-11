@@ -2,16 +2,10 @@ package com.cloudycrew.cloudycar.requeststorage;
 
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.fileservices.IFileService;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
-import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
-import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
-import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.cloudycrew.cloudycar.utils.StringUtils;
-import com.cloudycrew.cloudycar.utils.SubclassDeserializer;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;

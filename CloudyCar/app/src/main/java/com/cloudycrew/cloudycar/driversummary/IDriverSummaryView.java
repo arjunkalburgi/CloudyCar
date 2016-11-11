@@ -1,6 +1,5 @@
 package com.cloudycrew.cloudycar.driversummary;
 
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 

@@ -57,7 +57,7 @@ public class RequestController {
         Observable.just(requestId)
                   .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .doOnNext(r -> r.accept(userPreferences.getUserName()))
+                  .map(r -> r.accept(userPreferences.getUserName()))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
