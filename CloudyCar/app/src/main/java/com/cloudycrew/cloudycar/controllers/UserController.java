@@ -28,6 +28,8 @@ public class UserController {
         return userService.getCurrentUser();
     }
 
+    public void setCurrentUser(User user) { userService.setCurrentUser(user); }
+
     public void updateUser(User user) {
         userService.updateUser(user);
     }

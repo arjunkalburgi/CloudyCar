@@ -10,5 +10,8 @@ public interface IUserService {
     User getUser(String username);
     void createUser(User user) throws DuplicateUserException, IncompleteUserException;
     User getCurrentUser();
+    //Used right now to set the current user at signup but we could also make use of this to log in
+    //other users
+    void setCurrentUser(User user);
     void updateUser(User user);
 }

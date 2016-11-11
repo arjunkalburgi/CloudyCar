@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.app.FragmentManager;
@@ -12,18 +13,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.driversummary.DriverSummaryFragment;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryFragment;
+import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
 
-public class SummaryActivity extends AppCompatActivity
+public class SummaryActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RiderSummaryFragment riderSummaryFragment;
     private DriverSummaryFragment driverSummaryFragment;
+    private UserController userController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.resolveDependencies();
         setContentView(R.layout.activity_summary);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,6 +52,10 @@ public class SummaryActivity extends AppCompatActivity
         } else if (mode.equals("driver")) {
             setFragment(driverSummaryFragment);
         }
+    }
+
+    private void resolveDependencies() {
+        this.userController = getCloudyCarApplication().getUserController();
     }
 
     @Override
@@ -88,7 +97,9 @@ public class SummaryActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-
+            Intent intent = new Intent(SummaryActivity.this, UserProfileActivity.class);
+            intent.putExtra("username", userController.getCurrentUser().getUsername());
+            startActivity(intent);
         } else if (id == R.id.nav_rider) {
             setFragment(riderSummaryFragment);
         } else if (id == R.id.nav_driver) {

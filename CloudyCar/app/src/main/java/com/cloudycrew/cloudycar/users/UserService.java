@@ -1,6 +1,8 @@
 package com.cloudycrew.cloudycar.users;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
+import com.cloudycrew.cloudycar.email.Email;
+import com.cloudycrew.cloudycar.models.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import java.util.List;
 
@@ -10,9 +12,10 @@ import java.util.List;
 
 public class UserService implements IUserService
 {
-    IElasticSearchService<User> elasticSearchService;
+    private IElasticSearchService<User> elasticSearchService;
+    private UserPreferences userPrefs;
 
-    public UserService(IElasticSearchService<User> elasticSearchService) {
+    public UserService(IElasticSearchService<User> elasticSearchService, UserPreferences preferences) {
         this.elasticSearchService = elasticSearchService;
     }
 
@@ -47,8 +50,15 @@ public class UserService implements IUserService
 
     @Override
     public User getCurrentUser() {
-        //Lol
-        return new User("");
+        User currentUser = new User(userPrefs.getUserName());
+        currentUser.setEmail(new Email(userPrefs.getEmail()));
+        currentUser.setPhoneNumber(new PhoneNumber(userPrefs.getPhoneNumber()));
+        return currentUser;
+    }
+
+    @Override
+    public void setCurrentUser(User user) {
+        userPrefs.saveUser(user);
     }
 
     @Override
