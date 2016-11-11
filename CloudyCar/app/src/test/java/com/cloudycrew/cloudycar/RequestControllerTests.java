@@ -67,7 +67,7 @@ public class RequestControllerTests {
         request1 = new PendingRequest(riderUsername, route);
         request2 = new PendingRequest(riderUsername, route);
 
-        acceptedRequest1 = request1.acceptRequest(driverUsername);
+        //acceptedRequest1 = request1.acceptRequest(driverUsername);
         confirmedRequest1 = acceptedRequest1.confirmRequest();
         completedRequest1 = confirmedRequest1.completeRequest();
 

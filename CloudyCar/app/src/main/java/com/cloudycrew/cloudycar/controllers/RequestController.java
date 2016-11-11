@@ -2,10 +2,8 @@ package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
-import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
@@ -14,12 +12,6 @@ import com.cloudycrew.cloudycar.utils.Utils;
 import java.util.List;
 
 import rx.Observable;
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by George on 2016-10-23.
@@ -67,18 +59,18 @@ public class RequestController {
         Observable.just(requestId)
                   .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .map(r -> r.acceptRequest(currentUser))
+                  .doOnNext(r -> r.accept(currentUser))
                   .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::createRequest)
+                  .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::addRequest);
+                  .subscribe(requestStore::updateRequest);
     }
 
     public void confirmRequest(String requestId) {
         Observable.just(requestId)
-                  .map(id -> requestStore.getRequest(requestId, AcceptedRequest.class))
+                  .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .map(AcceptedRequest::confirmRequest)
+                  .map(r -> r.confirmRequest(currentUser))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())

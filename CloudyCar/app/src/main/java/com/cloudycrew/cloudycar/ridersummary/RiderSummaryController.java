@@ -7,7 +7,10 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by George on 2016-11-05.
@@ -40,8 +43,16 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
 
     private IObserver<IRequestStore> requestStoreObserver = store -> {
         dispatchDisplayPendingRequests(store.getRequests(PendingRequest.class));
-        dispatchDisplayAcceptedRequests(store.getRequests(AcceptedRequest.class));
+        dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
     };
+
+    private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
+        return Observable.from(requestStore.getRequests(PendingRequest.class))
+                         .filter(PendingRequest::hasBeenAccepted)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
 
     private void dispatchShowLoading() {
         if (getView() != null) {
@@ -55,7 +66,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
         }
     }
 
-    private void dispatchDisplayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
+    private void dispatchDisplayAcceptedRequests(List<PendingRequest> acceptedRequests) {
         if (getView() != null) {
             getView().displayAcceptedRequests(acceptedRequests);
         }

@@ -2,6 +2,8 @@ package com.cloudycrew.cloudycar.models.requests;
 
 import com.cloudycrew.cloudycar.models.Route;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -11,13 +13,31 @@ import java.util.UUID;
 public class PendingRequest extends Request {
     public static final String TYPE_NAME = "pending";
 
+    private List<String> driversWhoAccepted;
+
     public PendingRequest(String riderUsername, Route route) {
         super(TYPE_NAME, riderUsername, route);
         this.id = UUID.randomUUID().toString();
+        this.driversWhoAccepted = new ArrayList<>();
     }
 
-    public AcceptedRequest acceptRequest(String driverUsername){
-        return new AcceptedRequest(this, driverUsername);
+    public ConfirmedRequest confirmRequest(String driverUsername){
+        return new ConfirmedRequest(this, driverUsername);
+    }
+
+    public boolean hasBeenAccepted() {
+        return !getDriversWhoAccepted().isEmpty();
+    }
+
+    public List<String> getDriversWhoAccepted() {
+        if (driversWhoAccepted == null) {
+            driversWhoAccepted = new ArrayList<>();
+        }
+        return driversWhoAccepted;
+    }
+
+    public void accept(String driverUsername) {
+        driversWhoAccepted.add(driverUsername);
     }
 
     @Override
@@ -29,7 +49,8 @@ public class PendingRequest extends Request {
 
         return getId().equals(otherPendingRequest.getId()) &&
                 getRider().equals(otherPendingRequest.getRider()) &&
-                getRoute().equals(otherPendingRequest.getRoute());
+                getRoute().equals(otherPendingRequest.getRoute()) &&
+                getDriversWhoAccepted().equals(otherPendingRequest.getDriversWhoAccepted());
     }
 
     @Override

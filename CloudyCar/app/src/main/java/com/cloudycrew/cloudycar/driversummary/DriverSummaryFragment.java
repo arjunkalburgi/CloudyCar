@@ -13,6 +13,7 @@ import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     }
 
     @Override
-    public void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
+    public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
 
     }
 

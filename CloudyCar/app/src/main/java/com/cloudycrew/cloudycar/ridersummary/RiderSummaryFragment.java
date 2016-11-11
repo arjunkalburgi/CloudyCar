@@ -91,7 +91,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     @Override
-    public void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
-        requestAdapter.setAcceptedRequests(acceptedRequests);
+    public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
+        //requestAdapter.setAcceptedRequests(acceptedRequests);
     }
 }

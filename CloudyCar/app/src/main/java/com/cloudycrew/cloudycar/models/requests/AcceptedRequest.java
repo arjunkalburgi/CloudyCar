@@ -16,7 +16,7 @@ public class AcceptedRequest extends Request {
     }
 
     public ConfirmedRequest confirmRequest() {
-        return new ConfirmedRequest(this);
+        return null;
     }
 
     public String getDriverUsername() {

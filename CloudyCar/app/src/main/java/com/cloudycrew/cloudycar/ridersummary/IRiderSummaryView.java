@@ -12,5 +12,5 @@ import java.util.List;
 public interface IRiderSummaryView {
     void displayLoading();
     void displayPendingRequests(List<PendingRequest> pendingRequests);
-    void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests);
+    void displayAcceptedRequests(List<PendingRequest> acceptedRequests);
 }

@@ -39,7 +39,7 @@ public class LocalRequestServiceTests {
         Route route = new Route(new Point(0, 0), new Point(0, 0));
 
         pendingRequest = new PendingRequest("rider", route);
-        acceptedRequest = pendingRequest.acceptRequest("driver");
+        //acceptedRequest = pendingRequest.acceptRequest("driver");
         confirmedRequest = acceptedRequest.confirmRequest();
 
         localRequestService = new LocalRequestService(fileService);

@@ -4,10 +4,14 @@ import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by George on 2016-11-05.
@@ -40,8 +44,16 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
 
     private IObserver<IRequestStore> requestStoreObserver = store -> {
         dispatchDisplayConfirmedRequests(store.getRequests(ConfirmedRequest.class));
-        dispatchDisplayAcceptedRequests(store.getRequests(AcceptedRequest.class));
+        dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
     };
+
+    private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
+        return Observable.from(requestStore.getRequests(PendingRequest.class))
+                         .filter(PendingRequest::hasBeenAccepted)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
 
     private void dispatchShowLoading() {
         if (getView() != null) {
@@ -56,7 +68,7 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
         }
     }
 
-    private void dispatchDisplayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
+    private void dispatchDisplayAcceptedRequests(List<PendingRequest> acceptedRequests) {
         if (getView() != null) {
             getView().displayAcceptedRequests(acceptedRequests);
         }

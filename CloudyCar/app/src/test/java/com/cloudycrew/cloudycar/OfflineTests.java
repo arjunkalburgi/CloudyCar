@@ -67,8 +67,8 @@ public class OfflineTests {
         request2 = new PendingRequest(rider.getUsername(), route);
 
         newRequest = new PendingRequest(rider.getUsername(), route);
-        acceptedRequest1 = request1.acceptRequest(driver.getUsername());
-        newAcceptedRequest = newRequest.acceptRequest(driver.getUsername());
+//        acceptedRequest1 = request1.acceptRequest(driver.getUsername());
+//        newAcceptedRequest = newRequest.acceptRequest(driver.getUsername());
     }
 
     @Test
