@@ -43,7 +43,6 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
     private AcceptedDriversAdapter acceptedDriversAdapter;
     private RequestDetailsController requestDetailsController;
     private IUserPreferences userPreferences;
-    private Request lastRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +80,6 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
 
     @Override
     public void displayRequest(Request request) {
-        lastRequest = request;
         fromTextView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
         toTextView.setText(String.valueOf(request.getRoute().getEndingPoint().getLatitude()));
         priceTextView.setText(String.format("$%.2f",request.getPrice()));
@@ -112,8 +110,8 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
 
         acceptedDriversAdapter.setAll(pendingRequest.getDriversWhoAccepted());
         acceptedDriversAdapter.notifyDataSetChanged();
-        acceptedDriversAdapter.setOnConfirmClickedListener((i, username) -> requestDetailsController.confirmRequest());
-        
+        acceptedDriversAdapter.setOnConfirmClickedListener((i, username) -> requestDetailsController.confirmRequest(username));
+
         acceptedDriversHeader.setVisibility(View.VISIBLE);
         acceptedDriversRecyclerView.setVisibility(View.VISIBLE);
         updateButton.setVisibility(View.GONE);
@@ -126,7 +124,7 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         acceptedDriversRecyclerView.setVisibility(View.GONE);
 
         updateButton.setText("Confirm Request");
-        updateButton.setOnClickListener(v -> requestDetailsController.confirmRequest());
+        updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
     }
 

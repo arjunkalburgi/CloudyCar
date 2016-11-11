@@ -25,8 +25,8 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
         requestController.acceptRequest(requestId);
     }
 
-    public void confirmRequest() {
-        requestController.confirmRequest(requestId);
+    public void confirmRequest(String driverUsername) {
+        requestController.confirmRequest(requestId, driverUsername);
     }
 
     public void completeRequest() {

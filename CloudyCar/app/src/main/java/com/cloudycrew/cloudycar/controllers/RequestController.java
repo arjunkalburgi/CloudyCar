@@ -62,11 +62,11 @@ public class RequestController {
                   .subscribe(requestStore::updateRequest);
     }
 
-    public void confirmRequest(String requestId) {
+    public void confirmRequest(String requestId, String driverUsername) {
         Observable.just(requestId)
                   .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
                   .filter(Utils::isNotNull)
-                  .map(r -> r.confirmRequest(userPreferences.getUserName()))
+                  .map(r -> r.confirmRequest(driverUsername))
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::updateRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())
