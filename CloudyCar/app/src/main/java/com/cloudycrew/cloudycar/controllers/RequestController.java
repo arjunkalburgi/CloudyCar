@@ -36,9 +36,12 @@ public class RequestController {
                   .subscribe(requestStore::setAll);
     }
 
-    public void createRequest(Route route) {
-        Observable.just(route)
-                  .map(r -> new PendingRequest(userPreferences.getUserName(), r))
+    public void createRequest(PendingRequest request) {
+        Observable.just(request)
+                  .map(r -> {
+                      r.setRiderUsername(userPreferences.getUserName());
+                      return r;
+                  })
                   .observeOn(schedulerProvider.ioScheduler())
                   .doOnNext(requestService::createRequest)
                   .observeOn(schedulerProvider.mainThreadScheduler())

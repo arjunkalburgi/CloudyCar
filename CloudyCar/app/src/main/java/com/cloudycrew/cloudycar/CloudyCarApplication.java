@@ -143,10 +143,11 @@ public class CloudyCarApplication extends Application {
     }
 
     public CreateRequestController getCreateRequestController() {
-        return new CreateRequestController();
+        return new CreateRequestController(getRequestController());
     }
 
     public SignUpController getSignUpController() {
         return new SignUpController(getUserController(), getSchedulerProvider());
     }
+
 }

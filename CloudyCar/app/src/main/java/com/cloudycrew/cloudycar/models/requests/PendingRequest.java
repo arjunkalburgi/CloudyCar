@@ -15,8 +15,8 @@ public class PendingRequest extends Request {
 
     private List<String> driversWhoAccepted;
 
-    public PendingRequest(String riderUsername, Route route) {
-        super(TYPE_NAME, riderUsername, route);
+    public PendingRequest(String riderUsername, Route route, double price) {
+        super(TYPE_NAME, riderUsername, route, price);
         this.id = UUID.randomUUID().toString();
         this.driversWhoAccepted = new ArrayList<>();
     }
@@ -41,7 +41,7 @@ public class PendingRequest extends Request {
     }
 
     public PendingRequest accept(String driverUsername) {
-        PendingRequest pendingRequest = new PendingRequest(getRider(), getRoute());
+        PendingRequest pendingRequest = new PendingRequest(getRider(), getRoute(), getPrice());
         pendingRequest.id = getId();
         pendingRequest.driversWhoAccepted.addAll(getDriversWhoAccepted());
         pendingRequest.driversWhoAccepted.add(driverUsername);
@@ -66,4 +66,6 @@ public class PendingRequest extends Request {
     public int hashCode() {
         return getId().hashCode();
     }
+
+
 }

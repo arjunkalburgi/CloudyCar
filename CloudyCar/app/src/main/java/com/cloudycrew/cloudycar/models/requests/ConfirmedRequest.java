@@ -10,7 +10,7 @@ public class ConfirmedRequest extends Request {
     private String driverUsername;
 
     public ConfirmedRequest(PendingRequest pendingRequest, String driverUsername) {
-        super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute());
+        super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute(), pendingRequest.getPrice());
         this.id = pendingRequest.getId();
         this.driverUsername = driverUsername;
     }

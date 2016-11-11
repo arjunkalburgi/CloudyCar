@@ -55,28 +55,28 @@
         android:text="@string/your_estimated_fare_is" />
 
     <TextView
-        android:id="@+id/pricetextview"
+        android:id="@+id/suggested_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView6"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         style="@style/requestFareBoldText"
-        android:hint="__"
-        android:gravity="center_vertical|center_horizontal" />
+        android:gravity="center_vertical|center_horizontal"
+        android:text="3.50" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/fareCustomizer"
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_alignParentStart="false"
-        android:layout_below="@+id/pricetextview"
+        android:layout_below="@+id/suggested_price"
         style="@style/CardViewStyle">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/textView8"
+            android:id="@+id/set_price"
             android:gravity="left|center_vertical"
             android:paddingLeft="15dp"
             android:inputType="number"

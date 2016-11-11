@@ -66,8 +66,10 @@ public class RequestControllerTests {
 
         Route route = new Route(startingPoint,endingPoint);
 
-        request1 = new PendingRequest(riderUsername, route);
-        request2 = new PendingRequest(riderUsername, route);
+        double price = 3.50;
+
+        request1 = new PendingRequest(riderUsername, route, price);
+        request2 = new PendingRequest(riderUsername, route, price);
 
         acceptedRequest1 = request1.accept(driverUsername);
 
@@ -80,7 +82,7 @@ public class RequestControllerTests {
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        requestController.createRequest(request1.getRoute());
+        requestController.createRequest(request1);
 
         verify(requestStore).addRequest(request1);
         verify(requestService).createRequest(request1);

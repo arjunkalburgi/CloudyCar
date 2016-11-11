@@ -11,7 +11,7 @@ public class CompletedRequest extends Request {
     private String driverUsername;
 
     public CompletedRequest(ConfirmedRequest confirmedRequest) {
-        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute());
+        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute(), confirmedRequest.getPrice());
         this.id = confirmedRequest.getId();
         this.driverUsername = confirmedRequest.getDriverUsername();
     }
