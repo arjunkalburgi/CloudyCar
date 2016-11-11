@@ -37,8 +37,10 @@ public class LocalRequestServiceTests {
     public void setUp() {
         Route route = new Route(new Point(0, 0), new Point(0, 0));
 
-        pendingRequest = new PendingRequest("rider", route);
-        acceptedRequest = new PendingRequest("rider", route);
+        double price = 3.5;
+
+        pendingRequest = new PendingRequest("rider", route, price);
+        acceptedRequest = new PendingRequest("rider", route, price);
         acceptedRequest.accept("driver");
         confirmedRequest = acceptedRequest.confirmRequest("driver");
 

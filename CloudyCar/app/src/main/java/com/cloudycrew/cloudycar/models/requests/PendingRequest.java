@@ -59,7 +59,8 @@ public class PendingRequest extends Request {
         return getId().equals(otherPendingRequest.getId()) &&
                 getRider().equals(otherPendingRequest.getRider()) &&
                 getRoute().equals(otherPendingRequest.getRoute()) &&
-                getDriversWhoAccepted().equals(otherPendingRequest.getDriversWhoAccepted());
+                getDriversWhoAccepted().equals(otherPendingRequest.getDriversWhoAccepted()) &&
+                getPrice() == otherPendingRequest.getPrice();
     }
 
     @Override
