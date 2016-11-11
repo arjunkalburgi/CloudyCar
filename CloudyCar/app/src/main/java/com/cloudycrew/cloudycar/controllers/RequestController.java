@@ -36,16 +36,11 @@ public class RequestController {
                   .subscribe(requestStore::setAll);
     }
 
-    public void createRequest(PendingRequest request) {
-        Observable.just(request)
-                  .map(r -> {
-                      r.setRiderUsername(userPreferences.getUserName());
-                      return r;
-                  })
-                  .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::createRequest)
-                  .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::addRequest);
+    public void createRequest(Route route, double price) {
+        PendingRequest pendingRequest = new PendingRequest(userPreferences.getUserName(), route, price);
+
+        requestService.createRequest(pendingRequest);
+        requestStore.addRequest(pendingRequest);
     }
 
     public void cancelRequest(String requestId) {

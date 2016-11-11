@@ -52,6 +52,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
             bundle.putSerializable("route",route);
             intent.putExtras(bundle);
             startActivity(intent);
+            finish();
         });
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
