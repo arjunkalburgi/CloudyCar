@@ -129,7 +129,7 @@ public class RequestControllerTests {
     public void test_confirmRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
         when(userPreferences.getUserName()).thenReturn(riderUsername);
 
-        requestController.confirmRequest(acceptedRequest1.getId());
+        requestController.confirmRequest(acceptedRequest1.getId(), driverUsername);
 
         verify(requestStore, never()).updateRequest(anyObject());
         verify(requestService, never()).updateRequest(anyObject());
@@ -140,7 +140,7 @@ public class RequestControllerTests {
         when(requestStore.getRequest(acceptedRequest1.getId(), PendingRequest.class)).thenReturn(acceptedRequest1);
         when(userPreferences.getUserName()).thenReturn(driverUsername);
 
-        requestController.confirmRequest(acceptedRequest1.getId());
+        requestController.confirmRequest(acceptedRequest1.getId(), driverUsername);
 
         verify(requestStore).updateRequest(confirmedRequest1);
         verify(requestService).updateRequest(confirmedRequest1);

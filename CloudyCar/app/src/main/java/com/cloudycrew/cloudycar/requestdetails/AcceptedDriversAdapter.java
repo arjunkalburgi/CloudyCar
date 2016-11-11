@@ -22,7 +22,8 @@ public class AcceptedDriversAdapter extends ArrayAdapter<String, AcceptedDrivers
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.accepted_driver_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.accepted_driver_list_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -34,7 +35,7 @@ public class AcceptedDriversAdapter extends ArrayAdapter<String, AcceptedDrivers
         final String username = get(position);
 
         holder.setUsername(username);
-        holder.setOnClickListener(v -> dispatchOnConfirmClicked(position, username));
+        holder.setOnConfirmClickedListener(v -> dispatchOnConfirmClicked(position, username));
     }
 
     public interface OnConfirmClickedListener {

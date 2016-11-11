@@ -46,7 +46,7 @@ public class CloudyCarApplication extends Application {
 
     private IRequestStore getRequestStore() {
         if (requestStore == null) {
-            requestStore = new RequestStore();
+            requestStore = new RequestStore(getSchedulerProvider());
         }
         return requestStore;
     }
