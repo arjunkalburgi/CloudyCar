@@ -25,6 +25,7 @@ import com.cloudycrew.cloudycar.ridersummary.RiderSummaryController;
 import com.cloudycrew.cloudycar.scheduling.AndroidSchedulerProvider;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.SearchController;
+import com.cloudycrew.cloudycar.signup.SignUpController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
 import com.cloudycrew.cloudycar.users.IUserService;
 import com.cloudycrew.cloudycar.users.UserService;
@@ -111,7 +112,7 @@ public class CloudyCarApplication extends Application {
         return new UserService(getUserElasticSearchService());
     }
 
-    private UserController getUserController() {
+    public UserController getUserController() {
         return new UserController(getUserService());
     }
 
@@ -137,5 +138,9 @@ public class CloudyCarApplication extends Application {
 
     public CreateRequestController getCreateRequestController() {
         return new CreateRequestController();
+    }
+
+    public SignUpController getSignUpController() {
+        return new SignUpController(getUserController(), getSchedulerProvider());
     }
 }

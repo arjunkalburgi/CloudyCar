@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion 23
@@ -60,4 +61,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.8.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.+'
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }
