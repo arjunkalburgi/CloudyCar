@@ -16,6 +16,7 @@ import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
 import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
 public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryView {
     private RiderSummaryController riderSummaryController;
     private RecyclerView requestView;
-    private RecyclerView.Adapter requestAdapter;
+    private RequestAdapter requestAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -39,10 +40,14 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
         layoutManager = new LinearLayoutManager(getActivity());
 
-        requestView = (RecyclerView) view.findViewById(R.id.pending_requests);
+        requestView = (RecyclerView) view.findViewById(R.id.rider_requests);
         requestAdapter = new RequestAdapter(); // Create adapter passing in the sample user data
         requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
         requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
+
+        requestAdapter.setClickListener((view1, request) -> {
+            // do nothing for now
+        });
 
         return view;
     }
@@ -62,6 +67,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     public void onResume() {
         super.onResume();
         riderSummaryController.attachView(this);
+        riderSummaryController.refreshRequests();
     }
 
     @Override
@@ -81,11 +87,11 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     @Override
     public void displayPendingRequests(List<PendingRequest> pendingRequests) {
-
+        requestAdapter.setPendingRequests(pendingRequests);
     }
 
     @Override
     public void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
-
+        requestAdapter.setAcceptedRequests(acceptedRequests);
     }
 }
