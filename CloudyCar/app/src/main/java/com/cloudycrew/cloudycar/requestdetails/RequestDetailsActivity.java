@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
+import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
@@ -15,6 +16,8 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.users.UserPreferences;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,9 +83,9 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
 
     @Override
     public void displayRequest(Request request) {
-        fromTextView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
-        toTextView.setText(String.valueOf(request.getRoute().getEndingPoint().getLatitude()));
-        priceTextView.setText(String.format("$%.2f",request.getPrice()));
+        fromTextView.setText(request.getRoute().getStartingPoint().getDescription());
+        toTextView.setText(request.getRoute().getEndingPoint().getDescription());
+        priceTextView.setText(String.format(Locale.getDefault(),"$%.2f",request.getPrice()));
 
         if (request instanceof PendingRequest) {
             PendingRequest pendingRequest = (PendingRequest) request;
@@ -123,7 +126,7 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         acceptedDriversHeader.setVisibility(View.GONE);
         acceptedDriversRecyclerView.setVisibility(View.GONE);
 
-        updateButton.setText("Confirm Request");
+        updateButton.setText(R.string.confirm_request_button_text);
         updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
     }
@@ -134,7 +137,7 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         acceptedDriversHeader.setVisibility(View.GONE);
         acceptedDriversRecyclerView.setVisibility(View.GONE);
 
-        updateButton.setText("Accept Request");
+        updateButton.setText(R.string.accept_request_button_text);
         updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
         updateButton.setVisibility(View.VISIBLE);
     }

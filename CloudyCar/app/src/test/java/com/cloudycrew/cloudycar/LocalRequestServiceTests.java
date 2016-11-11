@@ -35,7 +35,8 @@ public class LocalRequestServiceTests {
 
     @Before
     public void setUp() {
-        Route route = new Route(new Point(0, 0), new Point(0, 0));
+        String testDescription = "test description";
+        Route route = new Route(new Point(0, 0,testDescription), new Point(0, 0,testDescription));
 
         double price = 3.5;
 
