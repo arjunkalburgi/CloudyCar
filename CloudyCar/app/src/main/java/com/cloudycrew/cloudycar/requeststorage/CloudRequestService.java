@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.requeststorage;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,18 +14,18 @@ import rx.Observable;
  */
 
 public class CloudRequestService implements IRequestService {
-    private String username;
+    private IUserPreferences userPreferences;
     private IElasticSearchService<Request> elasticSearchService;
 
-    public CloudRequestService(String username, IElasticSearchService<Request> elasticSearchService) {
-        this.username = username;
+    public CloudRequestService(IUserPreferences userPreferences, IElasticSearchService<Request> elasticSearchService) {
+        this.userPreferences = userPreferences;
         this.elasticSearchService = elasticSearchService;
     }
 
     @Override
     public List<Request> getRequests() {
         return Observable.from(elasticSearchService.getAll())
-                         .filter(r -> r.getRider().equals(username))
+                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
