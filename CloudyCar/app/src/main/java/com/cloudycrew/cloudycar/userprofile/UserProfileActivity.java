@@ -28,13 +28,13 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_details_summary);
-
+        Boolean local = false;
         Intent myIntent = getIntent();
         username = myIntent.getStringExtra("username");
 
         resolveDependencies();
         ImageButton userDetailsButton = (ImageButton) findViewById(R.id.editUserDetailsButton);
-        if (username != userController.getCurrentUser().getUsername()) {
+        if (!username.equals(userController.getCurrentUser().getUsername())) {
 
             userDetailsButton.setVisibility(View.GONE);
             userDetailsButton.setOnClickListener(new View.OnClickListener()
@@ -46,6 +46,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
                 }
             });
         } else {
+            local = true;
             userDetailsButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -55,13 +56,14 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
                 }
             });
         }
-        userProfileController.loadUser(username);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         userProfileController.attachView(this);
+        userProfileController.loadUser(username);
     }
 
     @Override
@@ -125,5 +127,16 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         emailAddressView.setText(email);
 
         //Probably set the image here
+    }
+
+    public void displayErrorToast() {
+        //If the user hasn't enabled phone calls then show them a toast instead of failing silently
+        Context context = getApplicationContext();
+        CharSequence text = "That user doesn't exist anymore.";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+
+        toast.show();
+        finish();
     }
 }

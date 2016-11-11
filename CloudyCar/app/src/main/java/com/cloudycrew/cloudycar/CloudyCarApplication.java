@@ -27,7 +27,9 @@ import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.SearchController;
 import com.cloudycrew.cloudycar.signup.SignUpController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.users.IUserService;
+import com.cloudycrew.cloudycar.users.UserPreferences;
 import com.cloudycrew.cloudycar.users.UserService;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.searchly.jestdroid.DroidClientConfig;
@@ -87,7 +89,7 @@ public class CloudyCarApplication extends Application {
     }
 
     private IRequestService getCloudRequestService() {
-        return new CloudRequestService("gerg", getRequestElasticSearchService());
+        return new CloudRequestService(getUserPreferences(), getRequestElasticSearchService());
     }
 
     private IConnectivityService getConnectivityService() {
@@ -105,11 +107,15 @@ public class CloudyCarApplication extends Application {
     }
 
     private RequestController getRequestController() {
-        return new RequestController("gerg", getRequestStore(), getRequestService(), getSchedulerProvider());
+        return new RequestController(getUserPreferences(), getRequestStore(), getRequestService(), getSchedulerProvider());
     }
 
     private IUserService getUserService() {
-        return new UserService(getUserElasticSearchService());
+        return new UserService(getUserElasticSearchService(), getUserPreferences());
+    }
+
+    private IUserPreferences getUserPreferences() {
+        return new UserPreferences(getApplicationContext());
     }
 
     public UserController getUserController() {
@@ -125,7 +131,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public RequestDetailsController getRequestDetailsController(String requestId) {
-        return new RequestDetailsController(requestId, getRequestStore());
+        return new RequestDetailsController(requestId, getRequestController(), getRequestStore());
     }
 
     public UserProfileController getUserProfileController() {

@@ -1,6 +1,8 @@
 package com.cloudycrew.cloudycar.users;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
+import com.cloudycrew.cloudycar.email.Email;
+import com.cloudycrew.cloudycar.models.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import java.util.List;
 
@@ -10,10 +12,12 @@ import java.util.List;
 
 public class UserService implements IUserService
 {
-    IElasticSearchService<User> elasticSearchService;
+    private IElasticSearchService<User> elasticSearchService;
+    private IUserPreferences userPrefs;
 
-    public UserService(IElasticSearchService<User> elasticSearchService) {
+    public UserService(IElasticSearchService<User> elasticSearchService, IUserPreferences preferences) {
         this.elasticSearchService = elasticSearchService;
+        this.userPrefs = preferences;
     }
 
     @Override
@@ -23,32 +27,53 @@ public class UserService implements IUserService
                        "    \"query\": {\n" +
                        "        \"filtered\" : {\n" +
                        "            \"filter\" : {\n" +
-                       "                \"term\" : { \"username\" : \"" + username + "\" }\n" +
+                       "                \"term\" : { \"username\" : \"" + username.toLowerCase() + "\" }\n" +
                        "            }\n" +
                        "        }\n" +
                        "    }\n" +
                        "}";
         List<User> userlist = elasticSearchService.search(query);
-        return userlist.size() > 0 ? userlist.get(0) : null;
+        if (userlist.size() > 0) {
+            return userlist.get(0);
+        }
+        else {
+            throw new UserDoesNotExistException();
+        }
     }
 
     @Override
-    public void createUser(User user) throws DuplicateUserException, IncompleteUserException{
-        User duplicateUser = this.getUser(user.getUsername());
-        if(!user.verifyContactInformation()) {
-            throw new IncompleteUserException();
+    public void createUser(User user){
+        try {
+            this.getUser(user.getUsername());
         }
-        if(duplicateUser == null) {
+        catch (UserDoesNotExistException e) {
+            if(!user.verifyContactInformation()) {
+                throw new IncompleteUserException();
+            }
             elasticSearchService.create(user);
-        } else {
-            throw new DuplicateUserException();
+            return;
         }
+        throw new DuplicateUserException();
     }
 
     @Override
     public User getCurrentUser() {
-        //Lol
-        return new User("");
+        String username = userPrefs.getUserName();
+        if (username.equals("")) {
+            throw new UserDoesNotExistException();
+        }
+        else
+        {
+            User currentUser = new User(username);
+            currentUser.setEmail(new Email(userPrefs.getEmail()));
+            currentUser.setPhoneNumber(new PhoneNumber(userPrefs.getPhoneNumber()));
+            return currentUser;
+        }
+    }
+
+    @Override
+    public void setCurrentUser(User user) {
+        userPrefs.saveUser(user);
     }
 
     @Override

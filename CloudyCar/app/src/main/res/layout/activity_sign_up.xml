@@ -59,9 +59,10 @@
         android:ems="15"
         android:hint="Phone Number"
         android:textColorHint="@color/colorPrimary"
-        android:background="@android:drawable/edit_text"
+
         android:textColor="@color/colorPrimary"
         android:inputType="phone" />
+        <!--android:background="@android:drawable/edit_text"-->
 
     <Button
         android:id="@+id/startButton"

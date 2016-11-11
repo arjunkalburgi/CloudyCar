@@ -6,7 +6,6 @@ import com.cloudycrew.cloudycar.email.IEmailService;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -14,6 +13,7 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.scheduling.TestSchedulerProvider;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +34,8 @@ public class RequestControllerTests {
     private IRequestStore requestStore;
     @Mock
     private IRequestService requestService;
+    @Mock
+    private IUserPreferences userPreferences;
 
     private ISchedulerProvider schedulerProvider;
 
@@ -47,7 +49,7 @@ public class RequestControllerTests {
 
     private PendingRequest request1;
     private PendingRequest request2;
-    private AcceptedRequest acceptedRequest1;
+    private PendingRequest acceptedRequest1;
     private ConfirmedRequest confirmedRequest1;
     private CompletedRequest completedRequest1;
 
@@ -67,16 +69,17 @@ public class RequestControllerTests {
         request1 = new PendingRequest(riderUsername, route);
         request2 = new PendingRequest(riderUsername, route);
 
-        acceptedRequest1 = request1.acceptRequest(driverUsername);
-        confirmedRequest1 = acceptedRequest1.confirmRequest();
+        acceptedRequest1 = request1.accept(driverUsername);
+
+        confirmedRequest1 = acceptedRequest1.confirmRequest(driverUsername);
         completedRequest1 = confirmedRequest1.completeRequest();
 
         schedulerProvider = new TestSchedulerProvider();
+        requestController = new RequestController(userPreferences, requestStore, requestService, schedulerProvider);
     }
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
         requestController.createRequest(request1.getRoute());
 
         verify(requestStore).addRequest(request1);
@@ -86,8 +89,8 @@ public class RequestControllerTests {
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        when(userPreferences.getUserName()).thenReturn(riderUsername);
 
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
         requestController.cancelRequest(request1.getId());
 
         verify(requestStore).deleteRequest(request1.getId());
@@ -96,7 +99,8 @@ public class RequestControllerTests {
 
     @Test
     public void test_completeRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
+        when(userPreferences.getUserName()).thenReturn(riderUsername);
+
         requestController.completeRequest(confirmedRequest1.getId());
 
         verify(requestStore, never()).updateRequest(anyObject());
@@ -106,8 +110,8 @@ public class RequestControllerTests {
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
         when(requestStore.getRequest(confirmedRequest1.getId(), ConfirmedRequest.class)).thenReturn(confirmedRequest1);
+        when(userPreferences.getUserName()).thenReturn(riderUsername);
 
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
         requestController.completeRequest(confirmedRequest1.getId());
 
         verify(requestStore).updateRequest(completedRequest1);
@@ -116,7 +120,8 @@ public class RequestControllerTests {
 
     @Test
     public void test_confirmRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
+        when(userPreferences.getUserName()).thenReturn(riderUsername);
+
         requestController.confirmRequest(acceptedRequest1.getId());
 
         verify(requestStore, never()).updateRequest(anyObject());
@@ -125,9 +130,9 @@ public class RequestControllerTests {
 
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
-        when(requestStore.getRequest(acceptedRequest1.getId(), AcceptedRequest.class)).thenReturn(acceptedRequest1);
+        when(requestStore.getRequest(acceptedRequest1.getId(), PendingRequest.class)).thenReturn(acceptedRequest1);
+        when(userPreferences.getUserName()).thenReturn(driverUsername);
 
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
         requestController.confirmRequest(acceptedRequest1.getId());
 
         verify(requestStore).updateRequest(confirmedRequest1);
@@ -136,7 +141,8 @@ public class RequestControllerTests {
 
     @Test
     public void test_acceptRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
-        requestController = new RequestController(riderUsername, requestStore, requestService, schedulerProvider);
+        when(userPreferences.getUserName()).thenReturn(riderUsername);
+
         requestController.acceptRequest(acceptedRequest1.getId());
 
         verify(requestStore, never()).addRequest(anyObject());
@@ -146,12 +152,12 @@ public class RequestControllerTests {
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
         when(requestStore.getRequest(request1.getId(), PendingRequest.class)).thenReturn(request1);
+        when(userPreferences.getUserName()).thenReturn(driverUsername);
 
-        requestController = new RequestController(driverUsername, requestStore, requestService, schedulerProvider);
         requestController.acceptRequest(request1.getId());
 
-        verify(requestStore).addRequest(acceptedRequest1);
-        verify(requestService).createRequest(acceptedRequest1);
+        verify(requestStore).updateRequest(acceptedRequest1);
+        verify(requestService).updateRequest(acceptedRequest1);
     }
 
     @Test
@@ -162,8 +168,8 @@ public class RequestControllerTests {
         expectedMessage.setSubject(String.format("%s has accepted your ride request", driver.getFirstName()));
 
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+        when(userPreferences.getUserName()).thenReturn(driverUsername);
 
-        requestController = new RequestController(driverUsername, requestStore, requestService, schedulerProvider);
         requestController.acceptRequest(request1.getId());
 
         verify(emailService).sendEmail(expectedMessage);

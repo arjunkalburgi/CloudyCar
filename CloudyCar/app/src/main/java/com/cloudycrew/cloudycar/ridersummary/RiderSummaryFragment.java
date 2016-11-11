@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cloudycrew.cloudycar.BaseFragment;
+import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
-import com.cloudycrew.cloudycar.models.requests.AcceptedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.requestdetails.RequestDetailsActivity;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ import java.util.List;
 public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryView {
     private RiderSummaryController riderSummaryController;
     private RecyclerView requestView;
-    private RecyclerView.Adapter requestAdapter;
+    private RequestAdapter requestAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -39,10 +41,14 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
         layoutManager = new LinearLayoutManager(getActivity());
 
-        requestView = (RecyclerView) view.findViewById(R.id.pending_requests);
+        requestView = (RecyclerView) view.findViewById(R.id.rider_requests);
         requestAdapter = new RequestAdapter(); // Create adapter passing in the sample user data
         requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
         requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
+
+        requestAdapter.setClickListener((view1, request) -> {
+            // do nothing for now
+        });
 
         return view;
     }
@@ -56,12 +62,14 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.rider_summary_header);
+        requestAdapter.setClickListener((v, r) -> launchRequestDetailsActivity(r.getId()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         riderSummaryController.attachView(this);
+        riderSummaryController.refreshRequests();
     }
 
     @Override
@@ -74,6 +82,12 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         riderSummaryController = getCloudyCarApplication().getRiderSummaryController();
     }
 
+    private void launchRequestDetailsActivity(String requestId) {
+        Intent intent = new Intent(getActivity(), RequestDetailsActivity.class);
+        intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
+        startActivity(intent);
+    }
+
     @Override
     public void displayLoading() {
         
@@ -81,11 +95,15 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     @Override
     public void displayPendingRequests(List<PendingRequest> pendingRequests) {
-
+        requestAdapter.setPendingRequests(pendingRequests);
     }
 
     @Override
-    public void displayAcceptedRequests(List<AcceptedRequest> acceptedRequests) {
+    public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
+        requestAdapter.setAcceptedRequests(acceptedRequests);
+    }
 
+    public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        requestAdapter.setConfirmedRequests(confirmedRequests);
     }
 }
