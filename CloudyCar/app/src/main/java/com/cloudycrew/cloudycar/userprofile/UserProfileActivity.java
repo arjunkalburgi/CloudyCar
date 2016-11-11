@@ -34,7 +34,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
         resolveDependencies();
         ImageButton userDetailsButton = (ImageButton) findViewById(R.id.editUserDetailsButton);
-        if (username != userController.getCurrentUser().getUsername()) {
+        if (!username.equals(userController.getCurrentUser().getUsername())) {
 
             userDetailsButton.setVisibility(View.GONE);
             userDetailsButton.setOnClickListener(new View.OnClickListener()

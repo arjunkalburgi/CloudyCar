@@ -7,9 +7,9 @@ import com.cloudycrew.cloudycar.models.User;
  */
 
 public interface IUserService {
-    User getUser(String username);
+    User getUser(String username) throws UserDoesNotExistException;
     void createUser(User user) throws DuplicateUserException, IncompleteUserException;
-    User getCurrentUser();
+    User getCurrentUser() throws UserDoesNotExistException;
     //Used right now to set the current user at signup but we could also make use of this to log in
     //other users
     void setCurrentUser(User user);

@@ -8,8 +8,6 @@ import android.widget.EditText;
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.SignUpCompleteActivity;
-import com.cloudycrew.cloudycar.controllers.UserController;
-import com.cloudycrew.cloudycar.users.UserPreferences;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

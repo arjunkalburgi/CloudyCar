@@ -17,10 +17,11 @@ public class UserService implements IUserService
 
     public UserService(IElasticSearchService<User> elasticSearchService, UserPreferences preferences) {
         this.elasticSearchService = elasticSearchService;
+        userPrefs = preferences;
     }
 
     @Override
-    public User getUser(String username) {
+    public User getUser(String username) throws UserDoesNotExistException {
 
         String query = "{\n" +
                        "    \"query\": {\n" +
@@ -32,7 +33,12 @@ public class UserService implements IUserService
                        "    }\n" +
                        "}";
         List<User> userlist = elasticSearchService.search(query);
-        return userlist.size() > 0 ? userlist.get(0) : null;
+        if (userlist.size() > 0) {
+            return userlist.get(0);
+        }
+        else {
+            throw new UserDoesNotExistException();
+        }
     }
 
     @Override
@@ -49,11 +55,18 @@ public class UserService implements IUserService
     }
 
     @Override
-    public User getCurrentUser() {
-        User currentUser = new User(userPrefs.getUserName());
-        currentUser.setEmail(new Email(userPrefs.getEmail()));
-        currentUser.setPhoneNumber(new PhoneNumber(userPrefs.getPhoneNumber()));
-        return currentUser;
+    public User getCurrentUser() throws UserDoesNotExistException {
+        String username = userPrefs.getUserName();
+        if (username.equals("")) {
+            throw new UserDoesNotExistException();
+        }
+        else
+        {
+            User currentUser = new User(username);
+            currentUser.setEmail(new Email(userPrefs.getEmail()));
+            currentUser.setPhoneNumber(new PhoneNumber(userPrefs.getPhoneNumber()));
+            return currentUser;
+        }
     }
 
     @Override

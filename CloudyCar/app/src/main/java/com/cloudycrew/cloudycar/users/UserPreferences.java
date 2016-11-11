@@ -29,11 +29,11 @@ public class UserPreferences {
     }
 
     public String getEmail() {
-        return sharedPrefs.getString(USERNAME_KEY, "");
+        return sharedPrefs.getString(EMAIL_KEY, "");
     }
 
     public String getPhoneNumber() {
-        return sharedPrefs.getString(USERNAME_KEY, "");
+        return sharedPrefs.getString(PHONENUMBER_KEY, "");
     }
 
     public void saveUser(User user) {
