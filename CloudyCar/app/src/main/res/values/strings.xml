@@ -17,5 +17,7 @@
 
     <string name="sign_up_duplicate_user_message">The username is already taken</string>
     <string name="sign_up_malformed_user_message">The user is malformed</string>
+    <string name="write_end_location">End: %s</string>
+    <string name="write_start_location">Start: %s</string>
 
 </resources>

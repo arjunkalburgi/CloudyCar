@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.createrequest;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -8,9 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -19,18 +23,36 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class RouteSelector extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
+    private static final String startName = "Start";
+    private static final String endName = "End";
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private LatLng start;
+    private LatLng end;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_selector);
+        TextView submitButton = (TextView) this.findViewById(R.id.submit_route_from_map);
+        submitButton.setOnClickListener(v->{
+            if(end == null){
+                Toast.makeText(this,"Choose a destination!",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(this,CreateRequestActivity.class);
+            Bundle bundle = new Bundle();
+            Route route = getRoute();
+            bundle.putSerializable("route",route);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -43,7 +65,13 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
 
+    @NonNull
+    private Route getRoute() {
+        Point startPoint = new Point(start.longitude,start.latitude);
+        Point endPoint = new Point(end.longitude,end.latitude);
+        return new Route(startPoint,endPoint);
     }
 
 
@@ -59,48 +87,74 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
 
+            }
 
-        //Location independant tasks
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                if(marker.getTitle().equals(startName)){
+                    start = marker.getPosition();
+                }else if(marker.getTitle().equals(endName)){
+                    end = marker.getPosition();
+                }
+            }
+        });
+        mMap.setOnMapClickListener(latLng -> {
+            if (end == null) {
+                mMap.addMarker(new MarkerOptions()
+                        .title(endName)
+                        .position(latLng)
+                        .draggable(true))
+                        .showInfoWindow();
+                end = latLng;
+            }
+        });
+
     }
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS: {
-                if(grantResults.length >0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this,"Location permission granted",Toast.LENGTH_SHORT).show();
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Location permission granted", Toast.LENGTH_SHORT).show();
                     this.recreate();
                 } else {
-                    Toast.makeText(this,"No location permission",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No location permission", Toast.LENGTH_SHORT).show();
                 }
-                return;
+
             }
         }
     }
 
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_LOCATION_PERMISSIONS);
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSIONS);
+
             return;
         }
         mMap.setMyLocationEnabled(true);
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        LatLng myLocation = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation,15));
+        LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+        mMap.addMarker(new MarkerOptions()
+                .title(startName)
+                .position(myLocation)
+                .draggable(true)
+        ).showInfoWindow();
+        start = myLocation;
     }
 
     @Override
@@ -112,5 +166,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
 }
 

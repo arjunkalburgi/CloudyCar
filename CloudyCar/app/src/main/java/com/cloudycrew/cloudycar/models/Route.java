@@ -1,10 +1,12 @@
 package com.cloudycrew.cloudycar.models;
 
+import java.io.Serializable;
+
 /**
  * Created by George on 2016-10-13.
  */
 
-public class Route {
+public class Route implements Serializable{
     private Point start;
     private Point end;
     public Route(Point start,Point end){

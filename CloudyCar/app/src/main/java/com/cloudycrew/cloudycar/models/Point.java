@@ -1,10 +1,12 @@
 package com.cloudycrew.cloudycar.models;
 
+import java.io.Serializable;
+
 /**
  * Created by George on 2016-10-13.
  */
 
-public class Point {
+public class Point implements Serializable {
     public double getLongitude() {
         return longitude;
     }
@@ -41,5 +43,9 @@ public class Point {
         temp = Double.doubleToLongBits(getLatitude());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+    @Override
+    public String toString(){
+        return String.format("Long: %5f, Lat: %5f",this.longitude,this.latitude);
     }
 }

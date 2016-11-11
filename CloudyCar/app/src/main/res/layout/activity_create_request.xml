@@ -43,6 +43,25 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/write_start_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/display_route_start"
+                tools:layout_weight="1" />
+
+            <TextView
+                android:text="@string/write_end_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/display_route_end"
+                android:layout_weight="1" />
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <TextView
