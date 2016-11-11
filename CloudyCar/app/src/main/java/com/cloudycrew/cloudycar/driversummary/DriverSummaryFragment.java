@@ -23,7 +23,7 @@ import java.util.List;
 public class DriverSummaryFragment extends BaseFragment implements IDriverSummaryView {
     private DriverSummaryController driverSummaryController;
     private RecyclerView requestView;
-    private RecyclerView.Adapter requestAdapter;
+    private RequestAdapter requestAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -71,11 +71,11 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @Override
     public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
-
+        requestAdapter.setAcceptedRequests(acceptedRequests);
     }
 
     @Override
     public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
-
+        requestAdapter.setConfirmedRequests(confirmedRequests);
     }
 }

@@ -22,8 +22,9 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:src="@drawable/splash_screen"
+
                 style="@style/CardImageView"/>
+            <!--android:src="@drawable/splash_screen"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,8 +69,9 @@
             <ImageView
                 android:id="@+id/imageViewDriver"
                 android:layout_width="match_parent"
-                android:src="@drawable/splash_screen"
+
                 style="@style/CardImageView"/>
+            <!--android:src="@drawable/splash_screen"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
