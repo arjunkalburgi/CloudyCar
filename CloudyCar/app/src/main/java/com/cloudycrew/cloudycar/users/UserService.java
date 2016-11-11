@@ -21,7 +21,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public User getUser(String username) throws UserDoesNotExistException {
+    public User getUser(String username) {
 
         String query = "{\n" +
                        "    \"query\": {\n" +
@@ -42,7 +42,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public void createUser(User user) throws DuplicateUserException, IncompleteUserException{
+    public void createUser(User user){
         try {
             this.getUser(user.getUsername());
         }
@@ -57,7 +57,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public User getCurrentUser() throws UserDoesNotExistException {
+    public User getCurrentUser() {
         String username = userPrefs.getUserName();
         if (username.equals("")) {
             throw new UserDoesNotExistException();
