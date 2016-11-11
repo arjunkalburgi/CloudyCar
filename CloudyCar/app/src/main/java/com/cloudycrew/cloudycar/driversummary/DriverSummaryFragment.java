@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.driversummary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cloudycrew.cloudycar.BaseFragment;
+import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.requestdetails.RequestDetailsActivity;
 
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Be a Driver");
+        requestAdapter.setClickListener((v, r) -> launchRequestDetailsActivity(r.getId()));
     }
 
     @Override
@@ -62,6 +66,12 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     private void resolveDependencies() {
         driverSummaryController = getCloudyCarApplication().getDriverSummaryController();
+    }
+
+    private void launchRequestDetailsActivity(String requestId) {
+        Intent intent = new Intent(getActivity(), RequestDetailsActivity.class);
+        intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
+        startActivity(intent);
     }
 
     @Override

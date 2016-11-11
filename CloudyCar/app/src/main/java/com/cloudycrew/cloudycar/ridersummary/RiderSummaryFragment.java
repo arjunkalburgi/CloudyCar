@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cloudycrew.cloudycar.BaseFragment;
+import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.requestdetails.RequestDetailsActivity;
 
 import java.util.List;
 
@@ -60,6 +62,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.rider_summary_header);
+        requestAdapter.setClickListener((v, r) -> launchRequestDetailsActivity(r.getId()));
     }
 
     @Override
@@ -77,6 +80,12 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     private void resolveDependencies() {
         riderSummaryController = getCloudyCarApplication().getRiderSummaryController();
+    }
+
+    private void launchRequestDetailsActivity(String requestId) {
+        Intent intent = new Intent(getActivity(), RequestDetailsActivity.class);
+        intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
+        startActivity(intent);
     }
 
     @Override
