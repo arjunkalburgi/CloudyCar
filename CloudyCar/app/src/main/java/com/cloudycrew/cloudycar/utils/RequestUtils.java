@@ -18,7 +18,6 @@ public class RequestUtils {
         return new SubclassDeserializer.Builder<Request>()
                 .setTypeFieldName("requestType")
                 .registerType(PendingRequest.TYPE_NAME, PendingRequest.class)
-                .registerType(AcceptedRequest.TYPE_NAME, AcceptedRequest.class)
                 .registerType(ConfirmedRequest.TYPE_NAME, ConfirmedRequest.class)
                 .registerType(CompletedRequest.TYPE_NAME, CompletedRequest.class)
                 .build();
