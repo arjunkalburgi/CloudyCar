@@ -15,6 +15,7 @@ import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
+import com.cloudycrew.cloudycar.createrequest.RouteSelector;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.RequestDetailsActivity;
@@ -54,7 +55,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     private void startRequestActivity(View view) {
-        Intent intent = new Intent(getActivity(), CreateRequestActivity.class);
+        Intent intent = new Intent(getActivity(), RouteSelector.class);
         startActivity(intent);
     }
 

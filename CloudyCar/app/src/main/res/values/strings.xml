@@ -13,9 +13,12 @@
     <string name="your_estimated_fare_is">Your estimated fare is:</string>
     <string name="submit">SUBMIT</string>
     <string name="rider_summary_header">Be a Rider</string>
+    <string name="title_activity_route_selector">Map</string>
 
     <string name="sign_up_duplicate_user_message">The username is already taken</string>
     <string name="sign_up_malformed_user_message">The user is malformed</string>
+    <string name="write_end_location">End: %s</string>
+    <string name="write_start_location">Start: %s</string>
     <string name="title_activity_request_details">RequestDetailsActivity</string>
 
 </resources>
