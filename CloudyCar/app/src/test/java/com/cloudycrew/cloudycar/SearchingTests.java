@@ -47,9 +47,10 @@ public class SearchingTests {
         Route route2 = new Route(startingPoint2,endingPoint2);
 
         User user= new User("SomeUser");
+        double price = 2.5;
 
-        request1 = new PendingRequest(user.getUsername(), route1);
-        request2 = new PendingRequest(user.getUsername(), route2);
+        request1 = new PendingRequest(user.getUsername(), route1, price);
+        request2 = new PendingRequest(user.getUsername(), route2, price);
 
         when(requestStore.getRequests()).thenReturn(Arrays.asList(request1, request2));
     }

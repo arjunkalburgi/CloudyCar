@@ -75,7 +75,7 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         lastRequest = request;
         fromTextView.setText(String.valueOf(request.getRoute().getStartingPoint().getLatitude()));
         toTextView.setText(String.valueOf(request.getRoute().getEndingPoint().getLatitude()));
-        priceTextView.setText("$10");
+        priceTextView.setText(String.format("$%.2f",request.getPrice()));
         updateButtonText(request);
     }
 

@@ -14,12 +14,14 @@ public abstract class Request implements Identifiable {
     private String requestType;
     private String riderUsername;
     private Route route;
+    private double price;
     protected String id;
 
-    public Request(String type, String riderUsername, Route route) {
+    public Request(String type, String riderUsername, Route route, double price) {
         this.requestType = type;
         this.riderUsername = riderUsername;
         this.route = route;
+        this.price = price;
     }
 
     public String getRequestType() {
@@ -34,7 +36,14 @@ public abstract class Request implements Identifiable {
         return route;
     }
 
+    public double getPrice() {
+        return price;
+    }
     public String getId(){
         return this.id.toString();
+    }
+
+    public void setRiderUsername(String name) {
+        this.riderUsername = name;
     }
 }

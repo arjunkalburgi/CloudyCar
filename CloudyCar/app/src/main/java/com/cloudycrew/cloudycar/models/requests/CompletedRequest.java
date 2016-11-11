@@ -11,7 +11,7 @@ public class CompletedRequest extends Request {
     private String driverUsername;
 
     public CompletedRequest(ConfirmedRequest confirmedRequest) {
-        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute());
+        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute(), confirmedRequest.getPrice());
         this.id = confirmedRequest.getId();
         this.driverUsername = confirmedRequest.getDriverUsername();
     }
@@ -34,7 +34,8 @@ public class CompletedRequest extends Request {
         return getId().equals(otherCompletedRequest.getId()) &&
                 getDriverUsername().equals(otherCompletedRequest.getDriverUsername()) &
                 getRider().equals(otherCompletedRequest.getRider()) &&
-                getRoute().equals(otherCompletedRequest.getRoute());
+                getRoute().equals(otherCompletedRequest.getRoute()) &&
+                getPrice() == otherCompletedRequest.getPrice();
     }
 
     @Override
