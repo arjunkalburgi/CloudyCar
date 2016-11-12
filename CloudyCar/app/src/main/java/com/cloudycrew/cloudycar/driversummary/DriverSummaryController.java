@@ -46,9 +46,17 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
     }
 
     private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayConfirmedRequests(store.getRequests(ConfirmedRequest.class));
+        dispatchDisplayConfirmedRequests(getRequestsConfirmedForDriver());
         dispatchDisplayAcceptedRequests(getRequestsAcceptedByDriver());
     };
+
+    private List<ConfirmedRequest> getRequestsConfirmedForDriver() {
+        return Observable.from(requestStore.getRequests(ConfirmedRequest.class))
+                         .filter(r -> r.getDriverUsername().equals(userPreferences.getUserName()))
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
 
     private List<PendingRequest> getRequestsAcceptedByDriver() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
