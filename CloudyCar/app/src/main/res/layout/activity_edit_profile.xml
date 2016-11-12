@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             style="@style/UserDetailsTitleText"
             android:text="..."
-            android:id="@+id/username"/>
+            android:id="@+id/editprofile_username"/>
 
     </RelativeLayout>
 
@@ -50,7 +50,7 @@
                     style="@style/CardListDetails"
                     android:gravity="center_vertical"
                     android:text="..."
-                    android:id="@+id/PhoneNumberText"/>
+                    android:id="@+id/phonenumber_edit"/>
             </LinearLayout>
 
             <View
@@ -76,7 +76,7 @@
                     style="@style/CardListDetails"
                     android:gravity="center_vertical"
                     android:text="..."
-                    android:id="@+id/emailAddressText"/>
+                    android:id="@+id/emailaddress_edit"/>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -91,13 +91,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel"/>
+                android:id="@+id/cancel_edits_button"
+                android:text="Cancel"
+                android:onClick="cancelChanges"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Confirm"
-                android:theme="@style/Button"/>/>
+                android:id="@+id/confirm_edits_button"
+                android:theme="@style/Button"
+                android:onClick="commitChanges"/>
             </LinearLayout>
         </LinearLayout>
 

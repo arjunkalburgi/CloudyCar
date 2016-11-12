@@ -9,4 +9,6 @@ import com.cloudycrew.cloudycar.models.User;
 public interface IEditProfileView {
     void displayLoading();
     void displayUser(User user);
+    void onEditSuccess();
+    void onEditFailure();
 }

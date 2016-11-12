@@ -45,4 +45,24 @@ public class EditProfileController extends ViewController<IEditProfileView> {
             getView().displayUser(user);
         }
     }
+
+    public void updateUser(User user) {
+        ObservableUtils.fromAction(userController::updateCurrentUser, user)
+                       .subscribeOn(schedulerProvider.ioScheduler())
+                       .observeOn(schedulerProvider.mainThreadScheduler())
+                       .subscribe(nothing -> dispatchOnEditSuccess(),
+                                  throwable -> dispatchOnEditFailure());
+    }
+
+    private void dispatchOnEditSuccess() {
+        if (isViewAttached()) {
+            getView().onEditSuccess();
+        }
+    }
+
+    private void dispatchOnEditFailure() {
+        if (isViewAttached()) {
+            getView().onEditFailure();
+        }
+    }
 }
