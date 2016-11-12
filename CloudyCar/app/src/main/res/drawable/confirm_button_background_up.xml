@@ -10,7 +10,7 @@
                 android:height="40dp" />
 
             <stroke android:width="4px"
-                android:color="@color/backgroundBlue"/>
+                android:color="@color/colorPrimary"/>
 
         </shape>
     </item>

@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
         <Button
             android:id="@+id/confirm_driver_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:paddingStart="10dp"
@@ -31,7 +32,7 @@
             android:background="@drawable/confirm_button_background"
             android:textAllCaps="false"
             android:fontFamily="sans-serif-light"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@drawable/confirm_button_text"
             android:text="Confirm Driver"/>
 
