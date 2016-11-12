@@ -91,7 +91,7 @@ public class CloudyCarApplication extends Application {
     }
 
     private ISearchService getSearchService() {
-        return new SearchService(getUserPreferences(), getRequestElasticSearchService());
+        return new SearchService(getUserPreferences(), getRequestStore(), getRequestElasticSearchService());
     }
 
     private IRequestService getCloudRequestService() {

@@ -4,6 +4,7 @@ import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.ArrayList;
@@ -17,10 +18,12 @@ import rx.Observable;
 
 public class SearchService implements ISearchService {
     private IUserPreferences userPreferences;
+    private IRequestStore requestStore;
     private IElasticSearchService<Request> requestElasticSearchService;
 
-    public SearchService(IUserPreferences userPreferences, IElasticSearchService<Request> requestElasticSearchService) {
+    public SearchService(IUserPreferences userPreferences, IRequestStore requestStore, IElasticSearchService<Request> requestElasticSearchService) {
         this.userPreferences = userPreferences;
+        this.requestStore = requestStore;
         this.requestElasticSearchService = requestElasticSearchService;
     }
 
@@ -40,11 +43,17 @@ public class SearchService implements ISearchService {
 
     @Override
     public List<PendingRequest> searchWithPoint(Point point) {
-        return getPendingRequestsThatDoNotBelongToTheCurrentUser(requestElasticSearchService.getAll());
+        List<Request> requests = requestElasticSearchService.getAll();
+        requestStore.addAll(requests);
+
+        return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
     }
 
     @Override
     public List<PendingRequest> searchWithKeyword(String keyword) {
-        return getPendingRequestsThatDoNotBelongToTheCurrentUser(requestElasticSearchService.getAll());
+        List<Request> requests = requestElasticSearchService.getAll();
+        requestStore.addAll(requests);
+
+        return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
     }
 }

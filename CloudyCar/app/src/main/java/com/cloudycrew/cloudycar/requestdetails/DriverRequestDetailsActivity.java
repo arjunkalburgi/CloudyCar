@@ -30,12 +30,11 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity {
 
         if (pendingRequest.hasBeenAcceptedBy(userPreferences.getUserName())) {
             statusTextView.setText("Waiting for the rider to confirm");
-
+        } else {
+            statusTextView.setText("You have not accepted this ride");
             updateButton.setText(R.string.accept_request_button_text);
             updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
             updateButton.setVisibility(View.VISIBLE);
-        } else {
-            statusTextView.setText("You have not accepted this ride");
         }
     }
 

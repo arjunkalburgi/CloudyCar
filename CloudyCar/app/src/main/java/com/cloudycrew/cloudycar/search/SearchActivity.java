@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,10 +9,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
+import com.cloudycrew.cloudycar.driversummary.DriverSummaryFragment;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 
 import java.util.List;
 
@@ -48,10 +52,12 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected void onResume() {
         super.onResume();
         searchController.attachView(this);
+        searchController.searchByPoint(null);
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         searchController.detachView();
     }
 
@@ -63,6 +69,11 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         requestAdapter = new RequestAdapter();
         searchRecyclerView.setAdapter(requestAdapter);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        requestAdapter.setClickListener((v, r) -> {
+            Intent intent = new Intent(SearchActivity.this, DriverRequestDetailsActivity.class);
+            intent.putExtra(Constants.EXTRA_REQUEST_ID, r.getId());
+            startActivity(intent);
+        });
     }
 
     @Override

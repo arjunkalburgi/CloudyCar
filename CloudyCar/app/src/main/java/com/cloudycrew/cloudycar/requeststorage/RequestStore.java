@@ -67,6 +67,14 @@ public class RequestStore implements IRequestStore {
     }
 
     @Override
+    public void addAll(Collection<? extends Request> requests) {
+        for (Request request: requests) {
+            requestMap.put(request.getId(), request);
+        }
+        notifyObservers();
+    }
+
+    @Override
     public void addRequest(Request request) {
         if (!requestMap.containsKey(request.getId())) {
             requestMap.put(request.getId(), request);
