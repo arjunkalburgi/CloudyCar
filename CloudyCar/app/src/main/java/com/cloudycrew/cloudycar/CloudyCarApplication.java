@@ -28,6 +28,7 @@ import com.cloudycrew.cloudycar.search.ISearchService;
 import com.cloudycrew.cloudycar.search.SearchController;
 import com.cloudycrew.cloudycar.search.SearchService;
 import com.cloudycrew.cloudycar.signup.SignUpController;
+import com.cloudycrew.cloudycar.userprofile.EditProfileController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.users.IUserService;
@@ -142,6 +143,10 @@ public class CloudyCarApplication extends Application {
 
     public UserProfileController getUserProfileController() {
         return new UserProfileController(getUserController(), getSchedulerProvider());
+    }
+
+    public EditProfileController getEditProfileController() {
+        return new EditProfileController(getUserController(), getSchedulerProvider());
     }
 
     public SearchController getSearchController() {

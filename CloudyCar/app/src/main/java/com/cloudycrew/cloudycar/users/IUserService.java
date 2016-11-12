@@ -14,4 +14,5 @@ public interface IUserService {
     //other users
     void setCurrentUser(User user);
     void updateUser(User user);
+    void updateCurrentUser(User user);
 }
