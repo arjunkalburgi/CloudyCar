@@ -57,6 +57,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     public void onResume() {
         super.onResume();
         driverSummaryController.attachView(this);
+        driverSummaryController.refreshRequests();
     }
 
     @Override

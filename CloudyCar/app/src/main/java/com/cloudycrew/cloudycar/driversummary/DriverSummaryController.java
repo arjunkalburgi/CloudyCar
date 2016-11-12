@@ -6,6 +6,7 @@ import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,15 @@ import rx.Observable;
 
 public class DriverSummaryController extends ViewController<IDriverSummaryView> {
     private RequestController requestController;
+    private IUserPreferences userPreferences;
     private IRequestStore requestStore;
 
-    public DriverSummaryController(RequestController requestController, IRequestStore requestStore) {
+    public DriverSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore) {
         this.requestController = requestController;
         this.requestStore = requestStore;
+        this.userPreferences = userPreferences;
     }
+
     public void refreshRequests() {
         dispatchShowLoading();
         requestController.refreshRequests();
@@ -48,7 +52,7 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
 
     private List<PendingRequest> getRequestsAcceptedByDriver() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(r -> r.hasBeenAcceptedBy("GET DRIVER NAME"))
+                         .filter(r -> r.hasBeenAcceptedBy(userPreferences.getUserName()))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());

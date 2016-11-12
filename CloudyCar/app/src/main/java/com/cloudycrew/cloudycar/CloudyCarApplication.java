@@ -123,7 +123,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public DriverSummaryController getDriverSummaryController() {
-        return new DriverSummaryController(getRequestController(), getRequestStore());
+        return new DriverSummaryController(getRequestController(), getUserPreferences(), getRequestStore());
     }
 
     public RiderSummaryController getRiderSummaryController() {
