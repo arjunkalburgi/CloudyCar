@@ -77,6 +77,12 @@ public class UserService implements IUserService
     }
 
     @Override
+    public void updateCurrentUser(User user) {
+        userPrefs.saveUser(user);
+        this.updateUser(user);
+    }
+
+    @Override
     public void updateUser(User user) {
         elasticSearchService.update(user);
     }

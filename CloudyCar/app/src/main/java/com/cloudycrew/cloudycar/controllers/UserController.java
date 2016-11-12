@@ -34,4 +34,6 @@ public class UserController {
     public void updateUser(User user) {
         userService.updateUser(user);
     }
+
+    public void updateCurrentUser(User user) { userService.updateCurrentUser(user); }
 }

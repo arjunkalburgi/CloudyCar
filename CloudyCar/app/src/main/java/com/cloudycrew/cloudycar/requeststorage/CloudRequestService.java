@@ -24,11 +24,7 @@ public class CloudRequestService implements IRequestService {
 
     @Override
     public List<Request> getRequests() {
-        return Observable.from(elasticSearchService.getAll())
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
-                         .toList()
-                         .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+        return elasticSearchService.getAll();
     }
 
     @Override

@@ -45,6 +45,13 @@ public class PhoneNumber {
         return true;
     }
 
+    public String prettyPrint() {
+        return String.format("(%s)-%s-%s",
+                phoneNumber.substring(0, 3),
+                phoneNumber.substring(3, 6),
+                phoneNumber.substring(6));
+    }
+
     public static class InvalidPhoneNumberException extends RuntimeException {
 
     }
