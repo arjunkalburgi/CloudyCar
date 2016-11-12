@@ -44,7 +44,6 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity {
         statusTextView.setText("The rider wants you to pick them up.");
         updateButton.setVisibility(View.GONE);
 
-        setRider(confirmedRequest.getRider());
         setDriver(confirmedRequest.getDriverUsername());
     }
 
@@ -52,7 +51,6 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity {
     public void displayCompletedRequest(CompletedRequest completedRequest) {
         displayBaseRequestInformation(completedRequest);
 
-        setRider(completedRequest.getRider());
         setDriver(completedRequest.getDriverUsername());
     }
 }

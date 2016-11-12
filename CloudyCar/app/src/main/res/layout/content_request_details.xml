@@ -47,6 +47,17 @@
         android:layout_below="@+id/accepted_drivers_header"
         android:layout_marginTop="16dp" />
 
+    <TextView
+        android:id="@+id/no_accepted_drivers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accepted_drivers_header"
+        android:text="No drivers have accepted this request"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/grey_700"/>
+
     <Button
         android:id="@+id/request_details_update_button"
         android:layout_width="match_parent"

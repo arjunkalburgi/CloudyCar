@@ -32,8 +32,6 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
     protected TextView driverLabelTextView;
     @BindView(R.id.request_details_driver)
     protected TextView driverTextView;
-    @BindView(R.id.request_details_rider_label)
-    protected TextView riderLabelTextView;
     @BindView(R.id.request_details_rider)
     protected TextView riderTextView;
     @BindView(R.id.request_details_update_button)
@@ -68,20 +66,13 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
 
     protected void displayBaseRequestInformation(Request request) {
         updateButton.setVisibility(View.GONE);
-        riderTextView.setVisibility(View.GONE);
-        riderLabelTextView.setVisibility(View.GONE);
         driverTextView.setVisibility(View.GONE);
         driverLabelTextView.setVisibility(View.GONE);
 
         fromTextView.setText(request.getRoute().getStartingPoint().getDescription());
         toTextView.setText(request.getRoute().getEndingPoint().getDescription());
         priceTextView.setText(String.format(Locale.getDefault(), "$%.2f", request.getPrice()));
-    }
-
-    protected void setRider(String rider) {
-        riderTextView.setText(rider);
-        riderTextView.setVisibility(View.VISIBLE);
-        riderLabelTextView.setVisibility(View.VISIBLE);
+        riderTextView.setText(request.getRider());
     }
 
     protected void setDriver(String driver) {

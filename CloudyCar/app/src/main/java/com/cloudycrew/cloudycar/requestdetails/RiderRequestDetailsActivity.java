@@ -6,22 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.cloudycrew.cloudycar.BaseActivity;
-import com.cloudycrew.cloudycar.Constants;
-import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
-import com.cloudycrew.cloudycar.users.IUserPreferences;
-import com.cloudycrew.cloudycar.users.UserPreferences;
-
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by George on 2016-11-05.
@@ -32,6 +24,8 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
     protected RecyclerView acceptedDriversRecyclerView;
     @BindView(R.id.accepted_drivers_header)
     protected TextView acceptedDriversHeader;
+    @BindView(R.id.no_accepted_drivers)
+    protected TextView noAcceptedDriversIndicator;
 
     private AcceptedDriversAdapter acceptedDriversAdapter;
 
@@ -51,17 +45,30 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
     }
 
     @Override
+    protected void displayBaseRequestInformation(Request request) {
+        super.displayBaseRequestInformation(request);
+
+        updateButton.setVisibility(View.GONE);
+        noAcceptedDriversIndicator.setVisibility(View.GONE);
+        acceptedDriversRecyclerView.setVisibility(View.GONE);
+        acceptedDriversHeader.setVisibility(View.GONE);
+    }
+
+    @Override
     public void displayPendingRequest(PendingRequest pendingRequest) {
         displayBaseRequestInformation(pendingRequest);
 
         statusTextView.setText("Pending");
-        acceptedDriversAdapter.setAll(pendingRequest.getDriversWhoAccepted());
-        acceptedDriversAdapter.notifyDataSetChanged();
-        acceptedDriversAdapter.setOnConfirmClickedListener((i, username) -> requestDetailsController.confirmRequest(username));
-
         acceptedDriversHeader.setVisibility(View.VISIBLE);
-        acceptedDriversRecyclerView.setVisibility(View.VISIBLE);
-        updateButton.setVisibility(View.GONE);
+
+        if (pendingRequest.hasBeenAccepted()) {
+            acceptedDriversRecyclerView.setVisibility(View.VISIBLE);
+            acceptedDriversAdapter.setAll(pendingRequest.getDriversWhoAccepted());
+            acceptedDriversAdapter.notifyDataSetChanged();
+            acceptedDriversAdapter.setOnConfirmClickedListener((i, username) -> requestDetailsController.confirmRequest(username));
+        } else {
+            noAcceptedDriversIndicator.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -69,14 +76,11 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         displayBaseRequestInformation(confirmedRequest);
 
         statusTextView.setText("Confirmed");
-        acceptedDriversHeader.setVisibility(View.GONE);
-        acceptedDriversRecyclerView.setVisibility(View.GONE);
 
         updateButton.setText(R.string.confirm_request_button_text);
         updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
 
-        setRider(confirmedRequest.getRider());
         setDriver(confirmedRequest.getDriverUsername());
     }
 
@@ -85,14 +89,11 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         displayBaseRequestInformation(completedRequest);
 
         statusTextView.setText("Completed");
-        acceptedDriversHeader.setVisibility(View.GONE);
-        acceptedDriversRecyclerView.setVisibility(View.GONE);
 
         updateButton.setText(R.string.confirm_request_button_text);
         updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
 
-        setRider(completedRequest.getRider());
         setDriver(completedRequest.getDriverUsername());
     }
 }
