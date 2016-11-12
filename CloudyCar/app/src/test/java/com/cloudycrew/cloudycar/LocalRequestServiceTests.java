@@ -35,13 +35,13 @@ public class LocalRequestServiceTests {
 
     @Before
     public void setUp() {
-        Route route = new Route(new Point(0, 0), new Point(0, 0));
+        String testDescription = "test description";
+        Route route = new Route(new Point(0, 0,testDescription), new Point(0, 0,testDescription));
 
         double price = 3.5;
 
         pendingRequest = new PendingRequest("rider", route, price);
-        acceptedRequest = new PendingRequest("rider", route, price);
-        acceptedRequest.accept("driver");
+        acceptedRequest = pendingRequest.accept("driver");
         confirmedRequest = acceptedRequest.confirmRequest("driver");
 
         localRequestService = new LocalRequestService(fileService);

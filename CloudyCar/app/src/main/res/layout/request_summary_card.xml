@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/ride_details_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ride_details_header"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/request_details_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="University of Alberta"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="From"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/request_details_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="Table top Cafe"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/request_details_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="$10"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/request_details_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="Waiting for a driver"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:id="@+id/request_details_rider_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rider"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <com.cloudycrew.cloudycar.users.UsernameTextView
+                    android:id="@+id/request_details_rider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="Gerg"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:animateLayoutChanges="true">
+
+                <TextView
+                    android:id="@+id/request_details_driver_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Driver"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <com.cloudycrew.cloudycar.users.UsernameTextView
+                    android:id="@+id/request_details_driver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:text="snack"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

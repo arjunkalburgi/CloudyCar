@@ -21,7 +21,11 @@ public class PendingRequest extends Request {
         this.driversWhoAccepted = new ArrayList<>();
     }
 
-    public ConfirmedRequest confirmRequest(String driverUsername){
+    public ConfirmedRequest confirmRequest(String driverUsername) {
+        if (!getDriversWhoAccepted().contains(driverUsername)) {
+            throw new ConfirmingDriverWhoHasNotAcceptedException();
+        }
+
         return new ConfirmedRequest(this, driverUsername);
     }
 
@@ -41,6 +45,10 @@ public class PendingRequest extends Request {
     }
 
     public PendingRequest accept(String driverUsername) {
+        if (hasBeenAcceptedBy(driverUsername)) {
+            throw new DriverAlreadyAcceptedException();
+        }
+
         PendingRequest pendingRequest = new PendingRequest(getRider(), getRoute(), getPrice());
         pendingRequest.id = getId();
         pendingRequest.driversWhoAccepted.addAll(getDriversWhoAccepted());
@@ -68,5 +76,12 @@ public class PendingRequest extends Request {
         return getId().hashCode();
     }
 
+    public static class DriverAlreadyAcceptedException extends RuntimeException {
+
+    }
+
+    public static class ConfirmingDriverWhoHasNotAcceptedException extends RuntimeException {
+
+    }
 
 }

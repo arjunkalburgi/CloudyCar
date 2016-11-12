@@ -1,5 +1,7 @@
 package com.cloudycrew.cloudycar.models;
 
+import com.cloudycrew.cloudycar.GeoDecoder;
+
 import java.io.Serializable;
 
 /**
@@ -15,11 +17,17 @@ public class Point implements Serializable {
         return latitude;
     }
 
+    private String description;
     private double longitude;
     private double latitude;
-    public Point(double longitude, double latitude) {
+    public Point(double longitude, double latitude, String description) {
         this.latitude=latitude;
         this.longitude=longitude;
+        if(description.length() > 1){
+            this.description = description;
+        }else{
+            this.description = this.toString();
+        }
     }
 
     @Override
@@ -47,5 +55,9 @@ public class Point implements Serializable {
     @Override
     public String toString(){
         return String.format("Long: %5f, Lat: %5f",this.longitude,this.latitude);
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

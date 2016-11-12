@@ -41,9 +41,17 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     }
 
     private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayPendingRequests(store.getRequests(PendingRequest.class));
+        dispatchDisplayPendingRequests(getPendingRequestsThatHaveNotBeenAccepted());
         dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
     };
+
+    private List<PendingRequest> getPendingRequestsThatHaveNotBeenAccepted() {
+        return Observable.from(requestStore.getRequests(PendingRequest.class))
+                         .filter(r -> !r.hasBeenAccepted())
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
 
     private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))

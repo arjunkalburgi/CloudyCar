@@ -14,11 +14,13 @@ public class PointTest {
     private Point point;
     double longitude;
     double latitude;
+    String testDescription;
     @Before
     public void setUp() throws Exception {
         longitude = 48.1472373;
         latitude  = 11.5673969;
-        point= new Point(longitude, latitude);
+        testDescription = "test description";
+        point= new Point(longitude, latitude,testDescription);
 
     }
 

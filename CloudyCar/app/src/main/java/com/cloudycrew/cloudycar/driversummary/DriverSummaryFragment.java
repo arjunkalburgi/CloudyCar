@@ -15,7 +15,8 @@ import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.requestdetails.RequestDetailsActivity;
+import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
+import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     public void onResume() {
         super.onResume();
         driverSummaryController.attachView(this);
+        driverSummaryController.refreshRequests();
     }
 
     @Override
@@ -69,7 +71,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     }
 
     private void launchRequestDetailsActivity(String requestId) {
-        Intent intent = new Intent(getActivity(), RequestDetailsActivity.class);
+        Intent intent = new Intent(getActivity(), DriverRequestDetailsActivity.class);
         intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
         startActivity(intent);
     }

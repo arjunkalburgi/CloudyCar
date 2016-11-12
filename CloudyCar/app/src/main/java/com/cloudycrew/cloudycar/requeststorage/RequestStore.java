@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.requeststorage;
 
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.observables.IObserver;
+import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,10 +21,12 @@ import rx.Observable;
 public class RequestStore implements IRequestStore {
     private Map<String, Request> requestMap;
     private Set<IObserver<? super IRequestStore>> observers;
+    private ISchedulerProvider schedulerProvider;
 
-    public RequestStore() {
+    public RequestStore(ISchedulerProvider schedulerProvider) {
         this.requestMap = new LinkedHashMap<>();
         this.observers = new HashSet<>();
+        this.schedulerProvider = schedulerProvider;
     }
 
     @Override
@@ -93,9 +96,9 @@ public class RequestStore implements IRequestStore {
     }
 
     protected void notifyObservers() {
-        for (IObserver<? super IRequestStore> observer: observers) {
-            observer.notifyUpdate(this);
-        }
+        Observable.from(observers)
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .forEach(o -> o.notifyUpdate(this));
     }
 
     @Override

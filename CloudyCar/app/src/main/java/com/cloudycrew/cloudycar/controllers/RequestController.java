@@ -1,13 +1,13 @@
 package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
-import com.cloudycrew.cloudycar.utils.Utils;
 
 import rx.Observable;
 
@@ -44,43 +44,40 @@ public class RequestController {
     }
 
     public void cancelRequest(String requestId) {
-        Observable.just(requestId)
-                  .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::deleteRequest)
-                  .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::deleteRequest);
+        requestService.deleteRequest(requestId);
+        requestStore.deleteRequest(requestId);
     }
 
     public void acceptRequest(String requestId) {
-        Observable.just(requestId)
-                  .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
-                  .filter(Utils::isNotNull)
-                  .map(r -> r.accept(userPreferences.getUserName()))
-                  .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::updateRequest)
-                  .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::updateRequest);
+        PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
+
+        if (pendingRequest != null) {
+            PendingRequest acceptedPendingRequest = pendingRequest.accept(userPreferences.getUserName());
+
+            requestService.updateRequest(acceptedPendingRequest);
+            requestStore.updateRequest(acceptedPendingRequest);
+        }
     }
 
-    public void confirmRequest(String requestId) {
-        Observable.just(requestId)
-                  .map(id -> requestStore.getRequest(requestId, PendingRequest.class))
-                  .filter(Utils::isNotNull)
-                  .map(r -> r.confirmRequest(userPreferences.getUserName()))
-                  .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::updateRequest)
-                  .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::updateRequest);
+    public void confirmRequest(String requestId, String driverUsername) {
+        PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
+
+        if (pendingRequest != null) {
+            ConfirmedRequest confirmedRequest = pendingRequest.confirmRequest(driverUsername);
+
+            requestService.updateRequest(confirmedRequest);
+            requestStore.updateRequest(confirmedRequest);
+        }
     }
 
     public void completeRequest(String requestId) {
-        Observable.just(requestId)
-                  .map(id -> requestStore.getRequest(requestId, ConfirmedRequest.class))
-                  .filter(Utils::isNotNull)
-                  .map(ConfirmedRequest::completeRequest)
-                  .observeOn(schedulerProvider.ioScheduler())
-                  .doOnNext(requestService::updateRequest)
-                  .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::updateRequest);
+        ConfirmedRequest confirmedRequest = requestStore.getRequest(requestId, ConfirmedRequest.class);
+
+        if (confirmedRequest != null) {
+            CompletedRequest completedRequest = confirmedRequest.completeRequest();
+
+            requestService.updateRequest(completedRequest);
+            requestStore.updateRequest(completedRequest);
+        }
     }
 }
