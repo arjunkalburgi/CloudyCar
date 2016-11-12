@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.controllers.UserController;
+import com.cloudycrew.cloudycar.models.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.signup.SignUpActivity;
 
 
 /**
@@ -23,12 +25,12 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     private UserProfileController userProfileController;
     private UserController userController;
 
-    private String username, phoneNumber, email;
+    private String username,email;
+    private PhoneNumber phoneNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_details_summary);
-        Boolean local = false;
         Intent myIntent = getIntent();
         username = myIntent.getStringExtra("username");
 
@@ -46,7 +48,6 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
                 }
             });
         } else {
-            local = true;
             userDetailsButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -83,7 +84,9 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     }
 
     protected void editUserDetails() {
-        //??
+        Intent editingIntent = new Intent(this, EditProfileActivity.class);
+        editingIntent.putExtra("username", username);
+        startActivity(editingIntent);
     }
 
     public void initiatePhoneCall(View v) {
@@ -118,11 +121,8 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         TextView emailAddressView = (TextView)findViewById(R.id.emailAddressText);
 
         usernameView.setText(user.getUsername());
-        phoneNumber = user.getPhoneNumber().getPhoneNumber();
-        phoneNumberView.setText(String.format("(%s)-%s-%s",
-                                phoneNumber.substring(0, 3),
-                                phoneNumber.substring(3, 6),
-                                phoneNumber.substring(6)));
+        phoneNumber = user.getPhoneNumber();
+        phoneNumberView.setText(phoneNumber.prettyPrint());
         email = user.getEmail().getEmail();
         emailAddressView.setText(email);
 
