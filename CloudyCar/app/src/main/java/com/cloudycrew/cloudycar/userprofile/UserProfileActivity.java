@@ -1,9 +1,12 @@
 package com.cloudycrew.cloudycar.userprofile;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,6 +25,7 @@ import com.cloudycrew.cloudycar.models.User;
  */
 
 public class UserProfileActivity extends BaseActivity implements IUserProfileView {
+    private static final int REQUEST_PHONE_PERMISSIONS = 2;
     private UserProfileController userProfileController;
     private UserController userController;
 
@@ -89,6 +93,10 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     }
 
     public void initiatePhoneCall(View v) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_PERMISSIONS);
+            return;
+        }
         Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
         try {
             startActivity(callIntent);
@@ -106,11 +114,14 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     }
 
     public void initiateEmail(View v) {
+        //From https://developer.android.com/guide/components/intents-common.html#Email
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setType("message/rfc822");
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        Intent mailerIntent = Intent.createChooser(intent, null);
-        startActivity(mailerIntent);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR CLOUDYCAR DRIVER IS READY");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -140,5 +151,21 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
         toast.show();
         finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PHONE_PERMISSIONS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Phone permission granted", Toast.LENGTH_SHORT).show();
+                    this.recreate();
+                } else {
+                    Toast.makeText(this, "No phone permissions", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
     }
 }
