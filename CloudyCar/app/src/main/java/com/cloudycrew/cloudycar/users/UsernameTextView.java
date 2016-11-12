@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.users;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,16 +17,17 @@ public class UsernameTextView extends TextView
     private final Context context;
 
     public UsernameTextView(Context contextin) {
-        super(contextin);
-        this.context = contextin;
-        this.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                UsernameOnClick(v);
-            }
-        });
+        this(contextin, null);
+    }
+
+    public UsernameTextView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public UsernameTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+        this.setOnClickListener(this::UsernameOnClick);
     }
 
     public void UsernameOnClick(View v) {

@@ -8,8 +8,8 @@
     android:padding="0dp"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity"
-    tools:showIn="@layout/activity_request_details"
+    tools:context="com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity"
+    tools:showIn="@layout/activity_driver_request_details"
     android:background="@color/backgroundGrey">
 
     <TextView
@@ -29,35 +29,6 @@
         android:layout_below="@+id/ride_details_header"
         layout="@layout/request_summary_card" />
 
-    <TextView
-        android:id="@+id/accepted_drivers_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ride_details_card"
-        android:text="Accepted Drivers"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/colorPrimary"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/accepted_drivers_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/accepted_drivers_header"
-        android:layout_marginTop="16dp" />
-
-    <TextView
-        android:id="@+id/no_accepted_drivers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/accepted_drivers_header"
-        android:text="No drivers have accepted this request"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/grey_700"/>
-
     <Button
         android:id="@+id/request_details_update_button"
         android:layout_width="match_parent"
@@ -65,7 +36,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="60dp"
         android:gravity="center_vertical|center_horizontal"
-        android:text="Complete Request"
+        android:text="Accept Request"
         android:background="@color/white" />
 
 </RelativeLayout>

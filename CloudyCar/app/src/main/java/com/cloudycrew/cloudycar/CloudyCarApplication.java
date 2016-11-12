@@ -46,7 +46,7 @@ public class CloudyCarApplication extends Application {
 
     private IRequestStore getRequestStore() {
         if (requestStore == null) {
-            requestStore = new RequestStore();
+            requestStore = new RequestStore(getSchedulerProvider());
         }
         return requestStore;
     }
@@ -114,7 +114,7 @@ public class CloudyCarApplication extends Application {
         return new UserService(getUserElasticSearchService(), getUserPreferences());
     }
 
-    private IUserPreferences getUserPreferences() {
+    public IUserPreferences getUserPreferences() {
         return new UserPreferences(getApplicationContext());
     }
 
@@ -123,7 +123,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public DriverSummaryController getDriverSummaryController() {
-        return new DriverSummaryController(getRequestController(), getRequestStore());
+        return new DriverSummaryController(getRequestController(), getUserPreferences(), getRequestStore());
     }
 
     public RiderSummaryController getRiderSummaryController() {
@@ -131,7 +131,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public RequestDetailsController getRequestDetailsController(String requestId) {
-        return new RequestDetailsController(requestId, getRequestController(), getRequestStore());
+        return new RequestDetailsController(requestId, getRequestController(), getSchedulerProvider(), getRequestStore());
     }
 
     public UserProfileController getUserProfileController() {
