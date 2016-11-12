@@ -27,7 +27,7 @@ import butterknife.OnClick;
  * Created by George on 2016-11-05.
  */
 
-public class RequestDetailsActivity extends BaseActivity implements IRequestDetailsView {
+public class RiderRequestDetailsActivity extends BaseActivity implements IRequestDetailsView {
     @BindView(R.id.request_details_from)
     protected TextView fromTextView;
     @BindView(R.id.request_details_to)
@@ -81,36 +81,17 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         acceptedDriversRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 
-    @Override
-    public void displayRequest(Request request) {
+    private void displayBaseRequestInformation(Request request) {
         fromTextView.setText(request.getRoute().getStartingPoint().getDescription());
         toTextView.setText(request.getRoute().getEndingPoint().getDescription());
         priceTextView.setText(String.format(Locale.getDefault(),"$%.2f",request.getPrice()));
-
-        if (request instanceof PendingRequest) {
-            PendingRequest pendingRequest = (PendingRequest) request;
-
-            if (pendingRequest.getRider().equals(userPreferences.getUserName())) {
-                displayAsPendingRider(pendingRequest);
-            } else {
-                displayAsPendingDriver(pendingRequest);
-            }
-        } else if (request instanceof  ConfirmedRequest) {
-            ConfirmedRequest confirmedRequest = (ConfirmedRequest) request;
-
-            if (confirmedRequest.getRider().equals(userPreferences.getUserName())) {
-                displayAsConfirmedRider(confirmedRequest);
-            } else {
-                displayAsConfirmedRider(confirmedRequest);
-            }
-        }
     }
 
-    private void displayAsPendingRider(PendingRequest pendingRequest) {
-        // Show drivers
-        // Give option to accept a driver
-        statusTextView.setText("Pending");
+    @Override
+    public void displayPendingRequest(PendingRequest pendingRequest) {
+        displayBaseRequestInformation(pendingRequest);
 
+        statusTextView.setText("Pending");
         acceptedDriversAdapter.setAll(pendingRequest.getDriversWhoAccepted());
         acceptedDriversAdapter.notifyDataSetChanged();
         acceptedDriversAdapter.setOnConfirmClickedListener((i, username) -> requestDetailsController.confirmRequest(username));
@@ -120,8 +101,10 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         updateButton.setVisibility(View.GONE);
     }
 
-    private void displayAsConfirmedRider(ConfirmedRequest confirmedRequest) {
-        // Show complete button
+    @Override
+    public void displayConfirmedRequest(ConfirmedRequest confirmedRequest) {
+        displayBaseRequestInformation(confirmedRequest);
+
         statusTextView.setText("Confirmed");
         acceptedDriversHeader.setVisibility(View.GONE);
         acceptedDriversRecyclerView.setVisibility(View.GONE);
@@ -131,22 +114,16 @@ public class RequestDetailsActivity extends BaseActivity implements IRequestDeta
         updateButton.setVisibility(View.VISIBLE);
     }
 
-    private void displayAsPendingDriver(PendingRequest pendingRequest) {
-        // Give option to
-        statusTextView.setText("You have not accepted this ride");
+    @Override
+    public void displayCompletedRequest(CompletedRequest completedRequest) {
+        displayBaseRequestInformation(completedRequest);
+
+        statusTextView.setText("Completed");
         acceptedDriversHeader.setVisibility(View.GONE);
         acceptedDriversRecyclerView.setVisibility(View.GONE);
 
-        updateButton.setText(R.string.accept_request_button_text);
-        updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
+        updateButton.setText(R.string.confirm_request_button_text);
+        updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
-    }
-
-    private void displayAsConfirmedDriver(ConfirmedRequest confirmedRequest) {
-        // Just give deteails
-        statusTextView.setText("You have accepted this ride");
-        acceptedDriversHeader.setVisibility(View.GONE);
-        acceptedDriversRecyclerView.setVisibility(View.GONE);
-        updateButton.setVisibility(View.GONE);
     }
 }

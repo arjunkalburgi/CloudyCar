@@ -2,6 +2,9 @@ package com.cloudycrew.cloudycar.requestdetails;
 
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
@@ -59,12 +62,32 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
     }
 
     private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayRequest(store.getRequest(requestId));
+        Request request = store.getRequest(requestId);
+
+        if (request instanceof PendingRequest) {
+            dispatchDisplayPendingRequest((PendingRequest) request);
+        } else if (request instanceof ConfirmedRequest) {
+            dispatchDisplayConfirmedRequest((ConfirmedRequest) request);
+        } else if (request instanceof CompletedRequest) {
+            dispatchDisplayCompletedRequest((CompletedRequest) request);
+        }
     };
 
-    private void dispatchDisplayRequest(Request request) {
-        if (getView() != null) {
-            getView().displayRequest(request);
+    private void dispatchDisplayPendingRequest(PendingRequest pendingRequest) {
+        if (isViewAttached()) {
+            getView().displayPendingRequest(pendingRequest);
+        }
+    }
+
+    private void dispatchDisplayConfirmedRequest(ConfirmedRequest confirmedRequest) {
+        if (isViewAttached()) {
+            getView().displayConfirmedRequest(confirmedRequest);
+        }
+    }
+
+    private void dispatchDisplayCompletedRequest(CompletedRequest completedRequest) {
+        if (isViewAttached()) {
+            getView().displayCompletedRequest(completedRequest);
         }
     }
 }

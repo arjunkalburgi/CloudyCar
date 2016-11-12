@@ -14,11 +14,10 @@ import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
-import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
 import com.cloudycrew.cloudycar.createrequest.RouteSelector;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.requestdetails.RequestDetailsActivity;
+import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     private void launchRequestDetailsActivity(String requestId) {
-        Intent intent = new Intent(getActivity(), RequestDetailsActivity.class);
+        Intent intent = new Intent(getActivity(), RiderRequestDetailsActivity.class);
         intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
         startActivity(intent);
     }

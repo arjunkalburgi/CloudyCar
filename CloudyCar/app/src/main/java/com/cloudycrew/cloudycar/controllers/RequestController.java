@@ -4,12 +4,10 @@ import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
-import com.cloudycrew.cloudycar.utils.Utils;
 
 import rx.Observable;
 
