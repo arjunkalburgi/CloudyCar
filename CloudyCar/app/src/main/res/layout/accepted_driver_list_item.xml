@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
 
-        <TextView
+        <com.cloudycrew.cloudycar.users.UsernameTextView
             android:id="@+id/driver_username"
             android:textSize="16dp"
             android:text="Snack"
