@@ -60,14 +60,14 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
     @Override
     public void displayPendingRequest(PendingRequest pendingRequest) {
         displayBaseRequestInformation(pendingRequest);
+        current_request = pendingRequest;
         if (pendingRequest.hasBeenAcceptedBy(userPreferences.getUserName())) {
-            statusTextView.setText(R.string.waiting_for_confirm);
-            current_request = pendingRequest;
+            statusTextView.setText("Waiting for the rider to confirm");
+        } else {
+            statusTextView.setText(R.string.havent_accepted_ride);
             updateButton.setText(R.string.accept_request_button_text);
             updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
             updateButton.setVisibility(View.VISIBLE);
-        } else {
-            statusTextView.setText(R.string.havent_accepted_ride);
         }
     }
 

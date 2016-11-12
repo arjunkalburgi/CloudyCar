@@ -31,8 +31,8 @@ public class SearchingTests {
     @Mock
     private ISearchService searchService;
 
-    private Request request1;
-    private Request request2;
+    private PendingRequest request1;
+    private PendingRequest request2;
     private String testDescription;
 
     @Before
@@ -61,7 +61,7 @@ public class SearchingTests {
     public void test_searchByGeoLocation_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
         Point pointFarFromAllRequests = new Point(0, 0,testDescription);
 
-        List<Request> searchResults = searchService.searchWithPoint(pointFarFromAllRequests);
+        List<PendingRequest> searchResults = searchService.searchWithPoint(pointFarFromAllRequests);
 
         assertTrue(searchResults.isEmpty());
     }
@@ -70,8 +70,8 @@ public class SearchingTests {
     public void test_searchByGeoLocation_ifThereAreMatchingResults_thenReturnsResults() {
         Point pointFarFromAllRequests = new Point(48.1472373, 11.5673969,testDescription);
 
-        List<Request> expectedSearchResults = Arrays.asList(request1);
-        List<Request> actualSearchResults = searchService.searchWithPoint(pointFarFromAllRequests);
+        List<PendingRequest> expectedSearchResults = Arrays.asList(request1);
+        List<PendingRequest> actualSearchResults = searchService.searchWithPoint(pointFarFromAllRequests);
 
         assertEquals(expectedSearchResults, actualSearchResults);
     }
@@ -80,7 +80,7 @@ public class SearchingTests {
     public void test_searchByKeyword_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
         String keyword = "pacific ocean";
 
-        List<Request> searchResults = searchService.searchWithKeyword(keyword);
+        List<PendingRequest> searchResults = searchService.searchWithKeyword(keyword);
 
         assertTrue(searchResults.isEmpty());
     }
@@ -89,8 +89,8 @@ public class SearchingTests {
     public void test_searchByKeyword_ifThereAreMatchingResults_thenReturnsResults() {
         String keyword = "west edmonton mall";
 
-        List<Request> expectedSearchResults = Arrays.asList(request2);
-        List<Request> actualSearchResults = searchService.searchWithKeyword(keyword);
+        List<PendingRequest> expectedSearchResults = Arrays.asList(request2);
+        List<PendingRequest> actualSearchResults = searchService.searchWithKeyword(keyword);
 
         assertEquals(expectedSearchResults, actualSearchResults);
     }

@@ -17,31 +17,32 @@ import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
+import com.cloudycrew.cloudycar.search.SearchActivity;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by George on 2016-11-05.
  */
 
 public class DriverSummaryFragment extends BaseFragment implements IDriverSummaryView {
+    @BindView(R.id.accepted_offers_list)
+    protected RecyclerView requestView;
+
     private DriverSummaryController driverSummaryController;
-    private RecyclerView requestView;
     private RequestAdapter requestAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_summary, container, false);
+        ButterKnife.bind(this, view);
         resolveDependencies();
-
-        // Lookup the recyclerview in activity layout
-        layoutManager = new LinearLayoutManager(getActivity());
-
-        requestView = (RecyclerView) view.findViewById(R.id.accepted_offers_list);
-        requestAdapter = new RequestAdapter(); // Create adapter
-        requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
-        requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
+        setUpRecyclerView();
 
         return view;
     }
@@ -66,8 +67,22 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         driverSummaryController.detachView();
     }
 
+    @OnClick(R.id.fab)
+    protected void onSearchRequestsClicked() {
+        startActivity(new Intent(getActivity(), SearchActivity.class));
+    }
+
     private void resolveDependencies() {
         driverSummaryController = getCloudyCarApplication().getDriverSummaryController();
+    }
+
+    private void setUpRecyclerView() {
+        layoutManager = new LinearLayoutManager(getActivity());
+
+        requestAdapter = new RequestAdapter();
+        requestView.setAdapter(requestAdapter);
+        requestView.setLayoutManager(layoutManager);
+
     }
 
     private void launchRequestDetailsActivity(String requestId) {

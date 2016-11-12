@@ -57,7 +57,11 @@
 
         <activity
             android:name=".createrequest.RouteSelector"
-            android:label="@string/title_activity_route_selector"></activity>
+            android:label="@string/title_activity_route_selector"/>
+        <activity
+            android:name=".search.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
