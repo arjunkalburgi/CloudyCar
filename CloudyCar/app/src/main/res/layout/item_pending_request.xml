@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:paddingTop="16dp">
 
     <TextView
         android:id="@+id/pending_request_dest"
@@ -10,7 +11,9 @@
         android:layout_alignParentStart="true"
         android:textSize="24sp"
         android:maxLines="1"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" />
 
     <TextView
         android:id="@+id/pending_request_src"
@@ -18,7 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/pending_request_dest"
         android:fontFamily="sans-serif-light"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" />
 
     <View
         android:layout_width="match_parent"

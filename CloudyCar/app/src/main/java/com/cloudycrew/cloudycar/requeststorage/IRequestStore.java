@@ -18,6 +18,7 @@ public interface IRequestStore extends IObservable<IRequestStore> {
     <T extends Request> List<T> getRequests(Class<T> requestClass);
 
     void setAll(Collection<? extends Request> requests);
+    void addAll(Collection<? extends Request> requests);
 
     void addRequest(Request request);
     void updateRequest(Request request);
