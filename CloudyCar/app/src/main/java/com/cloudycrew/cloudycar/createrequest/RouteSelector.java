@@ -4,12 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.GeoDecoder;
@@ -27,7 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RouteSelector extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -45,6 +44,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_selector);
+        ButterKnife.bind(this);
         geoDecoder = new GeoDecoder(this);
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -61,7 +61,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     }
 
     @OnClick(R.id.submit_route_from_map)
-    private void submitOnClick() {
+    protected void submitOnClick() {
         if(end == null){
             Toast.makeText(this,"Choose a destination!",Toast.LENGTH_SHORT).show();
             return;
