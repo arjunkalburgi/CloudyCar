@@ -27,25 +27,13 @@ import butterknife.OnClick;
  * Created by George on 2016-11-05.
  */
 
-public class RiderRequestDetailsActivity extends BaseActivity implements IRequestDetailsView {
-    @BindView(R.id.request_details_from)
-    protected TextView fromTextView;
-    @BindView(R.id.request_details_to)
-    protected TextView toTextView;
-    @BindView(R.id.request_details_price)
-    protected TextView priceTextView;
-    @BindView(R.id.request_details_status)
-    protected TextView statusTextView;
-    @BindView(R.id.request_details_update_button)
-    protected TextView updateButton;
+public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
     @BindView(R.id.accepted_drivers_recycler_view)
     protected RecyclerView acceptedDriversRecyclerView;
     @BindView(R.id.accepted_drivers_header)
     protected TextView acceptedDriversHeader;
 
     private AcceptedDriversAdapter acceptedDriversAdapter;
-    private RequestDetailsController requestDetailsController;
-    private IUserPreferences userPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,38 +41,13 @@ public class RiderRequestDetailsActivity extends BaseActivity implements IReques
         setContentView(R.layout.activity_request_details);
 
         ButterKnife.bind(this);
-        resolveDependencies();
         setUpRecyclerView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onPause();
-        requestDetailsController.attachView(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onResume();
-        requestDetailsController.detachView();
-    }
-
-    private void resolveDependencies() {
-        String requestId = getIntent().getStringExtra(Constants.EXTRA_REQUEST_ID);
-        this.requestDetailsController = getCloudyCarApplication().getRequestDetailsController(requestId);
-        this.userPreferences = getCloudyCarApplication().getUserPreferences();
     }
 
     private void setUpRecyclerView() {
         acceptedDriversAdapter = new AcceptedDriversAdapter();
         acceptedDriversRecyclerView.setAdapter(acceptedDriversAdapter);
         acceptedDriversRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-    }
-
-    private void displayBaseRequestInformation(Request request) {
-        fromTextView.setText(request.getRoute().getStartingPoint().getDescription());
-        toTextView.setText(request.getRoute().getEndingPoint().getDescription());
-        priceTextView.setText(String.format(Locale.getDefault(),"$%.2f",request.getPrice()));
     }
 
     @Override
