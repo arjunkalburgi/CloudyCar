@@ -89,11 +89,7 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         displayBaseRequestInformation(completedRequest);
 
         statusTextView.setText("Completed");
-
         updateButton.setText(R.string.confirm_request_button_text);
-        updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
-        updateButton.setVisibility(View.VISIBLE);
-
         setDriver(completedRequest.getDriverUsername());
     }
 }
