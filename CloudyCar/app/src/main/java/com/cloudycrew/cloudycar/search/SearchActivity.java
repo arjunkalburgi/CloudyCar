@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.search;
 import android.os.Bundle;
 
 import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     }
 
     @Override
-    public void showSearchResults(List<Request> searchResults) {
+    public void showSearchResults(List<PendingRequest> searchResults) {
 
     }
 }
