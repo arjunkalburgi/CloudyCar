@@ -28,9 +28,11 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity {
         displayBaseRequestInformation(pendingRequest);
         statusTextView.setText("You have not accepted this ride");
 
-        updateButton.setText(R.string.accept_request_button_text);
-        updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
-        updateButton.setVisibility(View.VISIBLE);
+        if (pendingRequest.hasBeenAcceptedBy(userPreferences.getUserName())) {
+            updateButton.setText(R.string.accept_request_button_text);
+            updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
+            updateButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
