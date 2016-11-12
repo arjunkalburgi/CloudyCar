@@ -4,12 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.GeoDecoder;
@@ -27,6 +26,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class RouteSelector extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
@@ -42,20 +44,8 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_selector);
+        ButterKnife.bind(this);
         geoDecoder = new GeoDecoder(this);
-        Button submitButton = (Button) this.findViewById(R.id.submit_route_from_map);
-        submitButton.setOnClickListener(v->{
-            if(end == null){
-                Toast.makeText(this,"Choose a destination!",Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Intent intent = new Intent(this,CreateRequestActivity.class);
-            Bundle bundle = new Bundle();
-            Route route = getRoute();
-            bundle.putSerializable("route",route);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        });
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -70,6 +60,20 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
+    @OnClick(R.id.submit_route_from_map)
+    protected void submitOnClick() {
+        if(end == null){
+            Toast.makeText(this,"Choose a destination!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(this,CreateRequestActivity.class);
+        Bundle bundle = new Bundle();
+        Route route = getRoute();
+        bundle.putSerializable("route",route);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     @NonNull
     private Route getRoute() {
         Point startPoint = new Point(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
@@ -78,15 +82,6 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
