@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.GeoDecoder;
@@ -43,7 +43,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_selector);
         geoDecoder = new GeoDecoder(this);
-        TextView submitButton = (TextView) this.findViewById(R.id.submit_route_from_map);
+        Button submitButton = (Button) this.findViewById(R.id.submit_route_from_map);
         submitButton.setOnClickListener(v->{
             if(end == null){
                 Toast.makeText(this,"Choose a destination!",Toast.LENGTH_SHORT).show();

@@ -146,7 +146,7 @@ public class RequestAdapter extends
         // change these to get actual place names later
 
         requestDestView.setText(request.getRoute().getEndingPoint().getDescription());
-        requestSrcView.setText(request.getRoute().getStartingPoint().getDescription());
+        requestSrcView.setText("from " + request.getRoute().getStartingPoint().getDescription());
 
         if (request instanceof PendingRequest && ((PendingRequest) request).hasBeenAccepted()) {
             TextView requestAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;

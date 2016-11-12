@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.createrequest;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
     @BindView(R.id.suggested_price)
     protected TextView suggestedPrice;
     @BindView(R.id.submit_ride_request)
-    protected TextView submit;
+    protected Button submit;
     @BindView(R.id.display_route_start)
     protected TextView startText;
     @BindView(R.id.display_route_end)
