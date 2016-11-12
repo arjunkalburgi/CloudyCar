@@ -60,7 +60,6 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
     @Override
     public void displayPendingRequest(PendingRequest pendingRequest) {
         displayBaseRequestInformation(pendingRequest);
-
         if (pendingRequest.hasBeenAcceptedBy(userPreferences.getUserName())) {
             statusTextView.setText(R.string.waiting_for_confirm);
             current_request = pendingRequest;
