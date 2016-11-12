@@ -7,7 +7,22 @@ import android.support.v4.app.Fragment;
  */
 
 public class BaseFragment extends Fragment {
+    private boolean firstTimeStarted = true;
+
     public CloudyCarApplication getCloudyCarApplication() {
         return (CloudyCarApplication) getActivity().getApplication();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (firstTimeStarted) {
+            onFirstResume();
+            firstTimeStarted = false;
+        }
+    }
+    
+    public void onFirstResume() {
+
     }
 }
