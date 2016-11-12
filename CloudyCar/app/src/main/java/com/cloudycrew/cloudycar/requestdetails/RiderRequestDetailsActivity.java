@@ -75,6 +75,9 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         updateButton.setText(R.string.confirm_request_button_text);
         updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
+
+        setRider(confirmedRequest.getRider());
+        setDriver(confirmedRequest.getDriverUsername());
     }
 
     @Override
@@ -88,5 +91,8 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         updateButton.setText(R.string.confirm_request_button_text);
         updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
         updateButton.setVisibility(View.VISIBLE);
+
+        setRider(completedRequest.getRider());
+        setDriver(completedRequest.getDriverUsername());
     }
 }
