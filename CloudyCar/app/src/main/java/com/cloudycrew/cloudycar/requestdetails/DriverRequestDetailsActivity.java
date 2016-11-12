@@ -21,6 +21,7 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_request_details);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
     }
 
     @Override

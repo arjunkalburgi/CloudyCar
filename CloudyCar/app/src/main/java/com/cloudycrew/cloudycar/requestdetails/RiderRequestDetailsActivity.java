@@ -35,6 +35,7 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         setContentView(R.layout.activity_request_details);
 
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         setUpRecyclerView();
     }
 

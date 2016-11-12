@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.requestdetails;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -9,7 +10,6 @@ import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
-import com.google.android.gms.vision.text.Text;
 
 import java.util.Locale;
 
@@ -36,6 +36,8 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
     protected TextView riderTextView;
     @BindView(R.id.request_details_update_button)
     protected TextView updateButton;
+    @BindView(R.id.toolbar)
+    protected Toolbar toolbar;
 
     protected IUserPreferences userPreferences;
     protected RequestDetailsController requestDetailsController;
