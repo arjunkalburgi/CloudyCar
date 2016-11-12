@@ -16,7 +16,7 @@
         android:id="@+id/ride_details_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ride Details"
+        android:text="@string/ride_details"
         android:fontFamily="sans-serif-medium"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -28,15 +28,23 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ride_details_header"
         layout="@layout/request_summary_card" />
-
+    <fragment
+        android:id="@+id/routeDisplayFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/request_details_update_button"
+        android:layout_below="@+id/ride_details_card"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
     <Button
         android:id="@+id/request_details_update_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="Accept Request"
+        android:text="@string/accept_request"
         android:background="@color/white" />
+
+
 
 </RelativeLayout>

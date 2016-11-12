@@ -23,5 +23,9 @@
     <string name="title_activity_search">Search</string>
     <string name="accept_request_button_text">Accept Request</string>
     <string name="confirm_request_button_text">Complete Request</string>
+    <string name="accept_request">Accept Request</string>
+    <string name="rider_wants_pickup">The rider wants you to pick them up.</string>
+    <string name="havent_accepted_ride">You have not accepted this ride</string>
+    <string name="waiting_for_confirm">Waiting for the rider to confirm</string>
 
 </resources>
