@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.ArrayAdapter;
@@ -29,13 +30,18 @@ public class AcceptedDriversAdapter extends ArrayAdapter<String, AcceptedDrivers
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
 
         final String username = get(position);
 
+        holder.reset();
         holder.setUsername(username);
-        holder.setOnConfirmClickedListener(v -> dispatchOnConfirmClicked(position, username));
+
+        holder.setOnConfirmClickedListener(v -> {
+            holder.showLoading();
+            dispatchOnConfirmClicked(position, username);
+        });
     }
 
     public interface OnConfirmClickedListener {
@@ -59,16 +65,29 @@ public class AcceptedDriversAdapter extends ArrayAdapter<String, AcceptedDrivers
     public static class ViewHolder extends BaseViewHolder {
         @BindView(R.id.driver_username)
         protected TextView driverUsername;
+        @BindView(R.id.confirm_loading_indicator)
+        protected ProgressBar confirmLoadingIndicator;
         @BindView(R.id.confirm_driver_button)
         protected Button confirmDriverButton;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            confirmLoadingIndicator.setVisibility(View.GONE);
         }
 
         public void setUsername(String username) {
             driverUsername.setText(username);
+        }
+
+        public void showLoading() {
+            confirmDriverButton.setVisibility(View.GONE);
+            confirmLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        public void reset() {
+            confirmDriverButton.setVisibility(View.VISIBLE);
+            confirmLoadingIndicator.setVisibility(View.GONE);
         }
 
         public void setOnConfirmClickedListener(View.OnClickListener onClickListener) {
