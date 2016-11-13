@@ -205,4 +205,12 @@ public class RequestAdapter extends
         requests.addAll(pendingRequests);
         return requests;
     }
+
+    public void remove (int pos) {
+        if (mergeLists().contains(mergeLists().get(pos))) {
+            // remove
+
+            // notify
+        }
+    }
 }
