@@ -14,18 +14,22 @@ import com.cloudycrew.cloudycar.models.Route;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by George on 2016-11-05.
  */
 
+/**
+ * Activity where a rider finalizes and saves their request. They can review the route they chose,
+ * see a suggested fare, and optionally set their own fare. When satisfied with their overall request,
+ * they can submit the request, which returns them to the rider summary
+ */
 public class CreateRequestActivity extends BaseActivity implements ICreateRequestView {
     @BindView(R.id.set_price)
     protected EditText userPrice;
     @BindView(R.id.suggested_price)
     protected TextView suggestedPrice;
-    @BindView(R.id.submit_ride_request)
-    protected Button submit;
     @BindView(R.id.display_route_start)
     protected TextView startText;
     @BindView(R.id.display_route_end)
@@ -49,17 +53,20 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         suggestedPrice.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_attach_money_black_24dp, 0, 0, 0);
         formatRouteDisplay(startText, endText);
 
-        submit.setOnClickListener(v -> {
-            //Submit request to server
-            if(userPrice.getText().length()>0){
-                price = Double.parseDouble(userPrice.getText().toString());
-            }else{
-                price = Double.parseDouble(suggestedPrice.getText().toString());
-            }
-            createRequestController.saveRequest(userRoute,price);
-        });
     }
 
+    /**
+     * When the submit button is pressed, send the route and price chosen to the createRequestController.
+     */
+    @OnClick(R.id.submit_ride_request)
+    public void submitOnClick(){
+        if(userPrice.getText().length()>0){
+            price = Double.parseDouble(userPrice.getText().toString());
+        }else{
+            price = Double.parseDouble(suggestedPrice.getText().toString());
+        }
+        createRequestController.saveRequest(userRoute,price);
+    }
     /**
      * Apply descriptions from the start and end point to the startText and endText view
      * @param startText The view to place the starting point description
@@ -91,6 +98,11 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         createRequestController = getCloudyCarApplication().getCreateRequestController();
     }
 
+    /**
+     * Callback method for when the user created request has been successfully saved. The user is
+     * returned to the rider summary view, and the CreateRequestActivity and RouteSelector activities
+     * are ended
+     */
     @Override
     public void onRequestCreated() {
         Intent intent = new Intent(this, SummaryActivity.class);

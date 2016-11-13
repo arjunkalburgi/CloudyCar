@@ -87,6 +87,11 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
         setDriver(completedRequest.getDriverUsername());
     }
 
+    /**
+     * Once the Google API client has connected, add the markers representing the current route
+     * start and end points, and configure the camera to include all markers
+     * @param bundle
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LatLng start = new LatLng(current_request.getRoute().getStartingPoint().getLatitude(),
@@ -108,6 +113,12 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
         mMap.animateCamera(cu);
     }
 
+    /**
+     * Based on the markers present in the map, configure the camera to zoom to a level so that all
+     * markers are visible
+     * @param markers The list of markers to be included in the view
+     * @return
+     */
     @NonNull
     private CameraUpdate configureCamera(List<Marker> markers) {
         //Credit: http://stackoverflow.com/questions/14828217/android-map-v2-zoom-to-show-all-the-markers
