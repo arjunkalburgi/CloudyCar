@@ -30,7 +30,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
 
     @Override
     public List<T> getAll() {
-        return search("");
+        return search("{ \"size\" : 100 } ");
     }
 
     @Override
