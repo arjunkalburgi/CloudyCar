@@ -3,20 +3,35 @@ package com.cloudycrew.cloudycar.models;
 /**
  * Created by George on 2016-10-13.
  */
-
 public class PhoneNumber {
 
     private String phoneNumber;
 
+    /**
+     * Instantiates a new Phone number.
+     *
+     * @param number the number
+     */
     public PhoneNumber(String number) {
         this.setPhoneNumber(number);
     }
 
+    /**
+     * Gets phone number.
+     *
+     * @return the phone number
+     */
     public String getPhoneNumber()
     {
         return phoneNumber;
     }
 
+    /**
+     * Sets phone number.
+     *
+     * @param phoneNumber the phone number
+     * @throws InvalidPhoneNumberException if the number is invalid
+     */
     public void setPhoneNumber(String phoneNumber) throws InvalidPhoneNumberException
     {
         if (!validate(phoneNumber))
@@ -45,6 +60,11 @@ public class PhoneNumber {
         return true;
     }
 
+    /**
+     * Returns a human-readable representation of a PhoneNumber
+     *
+     * @return the string
+     */
     public String prettyPrint() {
         return String.format("(%s)-%s-%s",
                 phoneNumber.substring(0, 3),

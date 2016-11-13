@@ -6,49 +6,98 @@ import com.cloudycrew.cloudycar.email.Email;
 /**
  * Created by George on 2016-10-13.
  */
-
 public class User implements Identifiable {
     private String username;
     private Email email;
     private PhoneNumber phoneNumber;
     private String firstName;
 
+    /**
+     * Instantiates a new User.
+     *
+     * @param username the username
+     */
     public User(String username) {
         this.username = username;
     }
 
+    /**
+     * Gets username.
+     *
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets username.
+     *
+     * @param username the username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Gets email.
+     *
+     * @return the email
+     */
     public Email getEmail() {
         return email;
     }
 
+    /**
+     * Sets email.
+     *
+     * @param email the email
+     */
     public void setEmail(Email email) {
         this.email = email;
     }
 
+    /**
+     * Gets phone number.
+     *
+     * @return the phone number
+     */
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
+    /**
+     * Sets phone number.
+     *
+     * @param phoneNumber the phone number
+     */
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * Gets first name.
+     *
+     * @return the first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Sets first name.
+     *
+     * @param firstName the first name
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * Verify contact information boolean.
+     *
+     * @return the boolean
+     */
     public boolean verifyContactInformation() {
         return this.email != null && this.phoneNumber != null;
     }

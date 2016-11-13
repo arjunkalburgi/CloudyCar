@@ -9,18 +9,34 @@ import java.util.UUID;
 /**
  * Created by George on 2016-10-13.
  */
-
 public class PendingRequest extends Request {
+    /**
+     * The constant TYPE_NAME.
+     */
     public static final String TYPE_NAME = "pending";
 
     private List<String> driversWhoAccepted;
 
+    /**
+     * Instantiates a new Pending request.
+     *
+     * @param riderUsername the rider username
+     * @param route         the route
+     * @param price         the price
+     */
     public PendingRequest(String riderUsername, Route route, double price) {
         super(TYPE_NAME, riderUsername, route, price);
         this.id = UUID.randomUUID().toString();
         this.driversWhoAccepted = new ArrayList<>();
     }
 
+    /**
+     * Confirm a request for a given driver
+     *
+     * @param driverUsername the driver username
+     * @throws ConfirmingDriverWhoHasNotAcceptedException if the driver has not accepted the request
+     * @return the confirmed request
+     */
     public ConfirmedRequest confirmRequest(String driverUsername) {
         if (!getDriversWhoAccepted().contains(driverUsername)) {
             throw new ConfirmingDriverWhoHasNotAcceptedException();
@@ -29,14 +45,30 @@ public class PendingRequest extends Request {
         return new ConfirmedRequest(this, driverUsername);
     }
 
+    /**
+     * Has been accepted boolean.
+     *
+     * @return the boolean
+     */
     public boolean hasBeenAccepted() {
         return !getDriversWhoAccepted().isEmpty();
     }
 
+    /**
+     * Has been accepted by boolean.
+     *
+     * @param driverUsername the driver username
+     * @return the boolean
+     */
     public boolean hasBeenAcceptedBy(String driverUsername) {
         return getDriversWhoAccepted().contains(driverUsername);
     }
 
+    /**
+     * Gets drivers who accepted.
+     *
+     * @return the drivers who accepted
+     */
     public List<String> getDriversWhoAccepted() {
         if (driversWhoAccepted == null) {
             driversWhoAccepted = new ArrayList<>();
@@ -44,6 +76,13 @@ public class PendingRequest extends Request {
         return driversWhoAccepted;
     }
 
+    /**
+     * Accept pending request.
+     *
+     * @param driverUsername the driver username
+     * @throws DriverAlreadyAcceptedException if the driver has already accepted the requesr
+     * @return the pending request
+     */
     public PendingRequest accept(String driverUsername) {
         if (hasBeenAcceptedBy(driverUsername)) {
             throw new DriverAlreadyAcceptedException();
