@@ -16,18 +16,27 @@ import rx.Observable;
 /**
  * Created by George on 2016-11-05.
  */
-
 public class DriverSummaryController extends ViewController<IDriverSummaryView> {
     private RequestController requestController;
     private IUserPreferences userPreferences;
     private IRequestStore requestStore;
 
+    /**
+     * Instantiates a new Driver summary controller.
+     *
+     * @param requestController the request controller
+     * @param userPreferences   the user preferences
+     * @param requestStore      the request store
+     */
     public DriverSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore) {
         this.requestController = requestController;
         this.requestStore = requestStore;
         this.userPreferences = userPreferences;
     }
 
+    /**
+     * Refresh requests asynchronously.
+     */
     public void refreshRequests() {
         dispatchShowLoading();
         requestController.refreshRequests();

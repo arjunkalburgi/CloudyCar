@@ -9,20 +9,27 @@ import com.cloudycrew.cloudycar.utils.ObservableUtils;
 /**
  * Created by George on 2016-11-05.
  */
-
 public class CreateRequestController extends ViewController<ICreateRequestView> {
     private RequestController requestController;
     private ISchedulerProvider schedulerProvider;
 
+    /**
+     * Instantiates a new Create request controller.
+     *
+     * @param requestController the request controller
+     * @param schedulerProvider the scheduler provider
+     */
     public CreateRequestController(RequestController requestController, ISchedulerProvider schedulerProvider) {
         this.requestController = requestController;
         this.schedulerProvider = schedulerProvider;
     }
 
     /**
-     * Call the requestController to create a new request
-     * @param userRoute The route selected from the previous RouteSelector activity
-     * @param price The price, either selected by the user or suggested by the app
+     * Attempts to create a request asynchronously.
+     * On success onRequestCreated() is called on the view.
+     *
+     * @param userRoute the user route
+     * @param price     the price
      */
     public void saveRequest(Route userRoute, double price) {
         ObservableUtils.fromAction(requestController::createRequest, userRoute, price)
