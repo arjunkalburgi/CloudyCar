@@ -29,6 +29,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * This class is responsible for the view containing the map that the rider selects his route on.
+ * First, the user must allow the app to access their location. Once this is allowed, a "Start" marker
+ * is placed on their current location. They can then touch anywhere on the map to place an "End" marker.
+ * The user can move placed markers by long pressing a marker and dragging it a new location.
+ */
 public class RouteSelector extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
@@ -143,6 +149,11 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * The GoogleMaps API has connected, so now LocationServices can be used to access user location
+     * and place the initial start marker
+     * @param bundle
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
