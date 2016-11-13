@@ -20,7 +20,7 @@ public class EditProfileController extends ViewController<IEditProfileView> {
     }
 
     /**
-     * Asyncrhonously loads a user
+     * Asynchronously loads a user
      * @param username - username of the user to load
      */
     public void loadUser(String username) {

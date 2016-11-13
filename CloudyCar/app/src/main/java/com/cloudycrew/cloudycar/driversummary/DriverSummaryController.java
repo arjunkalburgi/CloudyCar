@@ -35,7 +35,7 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
     }
 
     /**
-     * Refresh requests asynchronously.
+     * Refresh requests a driver is involved in asynchronously.
      */
     public void refreshRequests() {
         dispatchShowLoading();
