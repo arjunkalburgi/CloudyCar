@@ -7,7 +7,19 @@ import com.cloudycrew.cloudycar.models.User;
  */
 
 public interface IUserProfileView {
+    /**
+     * Callback for loading
+     */
     void displayLoading();
+
+    /**
+     * Callback for displaying a user
+     * @param user
+     */
     void displayUser(User user);
+
+    /**
+     * Callback for error in displaying a user, shows a meaningful message in a toast
+     */
     void displayErrorToast();
 }

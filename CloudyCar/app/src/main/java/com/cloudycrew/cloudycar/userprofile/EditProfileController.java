@@ -19,6 +19,10 @@ public class EditProfileController extends ViewController<IEditProfileView> {
         this.schedulerProvider = schedulerProvider;
     }
 
+    /**
+     * Asyncrhonously loads a user
+     * @param username - username of the user to load
+     */
     public void loadUser(String username) {
         dispatchDisplayLoading();
         User localUser = userController.getCurrentUser();
@@ -46,6 +50,10 @@ public class EditProfileController extends ViewController<IEditProfileView> {
         }
     }
 
+    /**
+     * Asynchronously updates a user locally and remotely, calls appropriate callbacks for failures
+     * @param user - the user to update
+     */
     public void updateUser(User user) {
         ObservableUtils.fromAction(userController::updateCurrentUser, user)
                        .subscribeOn(schedulerProvider.ioScheduler())
