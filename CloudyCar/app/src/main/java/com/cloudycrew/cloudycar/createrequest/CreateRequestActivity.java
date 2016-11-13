@@ -58,8 +58,7 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         userRoute = (Route) getIntent().getExtras().getSerializable("route");
 
         this.getSupportActionBar().setTitle(R.string.request_create_header);
-        suggestedPrice.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_attach_money_black_24dp, 0, 0, 0);
-        suggestedPrice.setText(generateSuggestedFare(userRoute));
+        suggestedPrice.setText("$" + generateSuggestedFare(userRoute));
         formatRouteDisplay(startText, endText);
 
     }
