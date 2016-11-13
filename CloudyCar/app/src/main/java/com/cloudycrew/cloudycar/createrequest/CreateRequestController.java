@@ -19,6 +19,11 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
         this.schedulerProvider = schedulerProvider;
     }
 
+    /**
+     * Call the requestController to create a new request
+     * @param userRoute The route selected from the previous RouteSelector activity
+     * @param price The price, either selected by the user or suggested by the app
+     */
     public void saveRequest(Route userRoute, double price) {
         ObservableUtils.fromAction(requestController::createRequest, userRoute, price)
                        .subscribeOn(schedulerProvider.ioScheduler())

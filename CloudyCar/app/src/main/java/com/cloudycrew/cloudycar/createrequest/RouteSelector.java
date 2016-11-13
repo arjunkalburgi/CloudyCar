@@ -60,6 +60,10 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Once the end destination has been set, start the CreateRequestActivity, packaged with the
+     * route selected
+     */
     @OnClick(R.id.submit_route_from_map)
     protected void submitOnClick() {
         if(end == null){
@@ -81,7 +85,11 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         return new Route(startPoint,endPoint);
     }
 
-
+    /**
+     * Configure the map to allow the user to click to place an end point, and drag and drop
+     * existing markers
+     * @param googleMap The map object being drawn
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

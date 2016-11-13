@@ -60,6 +60,11 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         });
     }
 
+    /**
+     * Apply descriptions from the start and end point to the startText and endText view
+     * @param startText The view to place the starting point description
+     * @param endText The view to place the ending point description
+     */
     private void formatRouteDisplay(TextView startText, TextView endText) {
         Resources resources = getResources();
         String startToDisplay = String.format(resources.getString(R.string.write_start_location),userRoute.getStartingPoint().getDescription());
