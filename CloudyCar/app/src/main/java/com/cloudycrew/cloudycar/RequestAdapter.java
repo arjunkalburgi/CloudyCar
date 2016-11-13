@@ -21,7 +21,7 @@ public class RequestAdapter extends
     private List<PendingRequest> pendingRequests;
     private List<PendingRequest> acceptedRequests;
     private List<ConfirmedRequest> confirmedRequests;
-    private Context context;
+    private boolean useGenericLayout = false;
 
     private final int PENDING_REQUEST = 0;
     private final int ACCEPTED_REQUEST = 1;
@@ -44,6 +44,14 @@ public class RequestAdapter extends
         pendingRequests = new ArrayList<>();
         acceptedRequests = new ArrayList<>();
         confirmedRequests = new ArrayList<>();
+    }
+
+    public RequestAdapter(boolean useGenericLayout) {
+        requestList = new ArrayList<>();
+        pendingRequests = new ArrayList<>();
+        acceptedRequests = new ArrayList<>();
+        confirmedRequests = new ArrayList<>();
+        this.useGenericLayout = useGenericLayout;
     }
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder {
@@ -105,7 +113,9 @@ public class RequestAdapter extends
     @Override
     public int getItemViewType(int position) {
         Request r = requestList.get(position);
-        if (r instanceof PendingRequest && !((PendingRequest) r).hasBeenAccepted()) {
+        if (this.useGenericLayout) {
+            return PENDING_REQUEST;
+        } else if (r instanceof PendingRequest && !((PendingRequest) r).hasBeenAccepted()) {
             return PENDING_REQUEST;
         } else if (r instanceof PendingRequest && ((PendingRequest) r).hasBeenAccepted()) {
             return ACCEPTED_REQUEST;
@@ -148,17 +158,19 @@ public class RequestAdapter extends
         requestDestView.setText(request.getRoute().getEndingPoint().getDescription());
         requestSrcView.setText("from " + request.getRoute().getStartingPoint().getDescription());
 
-        if (request instanceof PendingRequest && ((PendingRequest) request).hasBeenAccepted()) {
-            TextView requestAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;
-            List<String> drivers = ((PendingRequest) request).getDriversWhoAccepted();
-            String driversText = "Accepted by " + drivers.get(0);
-            for (String driver : drivers.subList(1, drivers.size())) {
-                driversText += ", " + driver;
+        if (!this.useGenericLayout) {
+            if (request instanceof PendingRequest && ((PendingRequest) request).hasBeenAccepted()) {
+                TextView requestAcceptedView = ((AcceptedViewHolder) viewHolder).requestAcceptedBy;
+                List<String> drivers = ((PendingRequest) request).getDriversWhoAccepted();
+                String driversText = "Accepted by " + drivers.get(0);
+                for (String driver : drivers.subList(1, drivers.size())) {
+                    driversText += ", " + driver;
+                }
+                requestAcceptedView.setText(driversText);
+            } else if (request instanceof ConfirmedRequest) {
+                TextView requestConfirmedView = ((ConfirmedViewHolder) viewHolder).requestAcceptedBy;
+                requestConfirmedView.setText("Accepted by " + ((ConfirmedRequest) request).getDriverUsername());
             }
-            requestAcceptedView.setText(driversText);
-        } else if (request instanceof ConfirmedRequest) {
-            TextView requestConfirmedView = ((ConfirmedViewHolder) viewHolder).requestAcceptedBy;
-            requestConfirmedView.setText("Accepted by " + ((ConfirmedRequest) request).getDriverUsername());
         }
     }
 

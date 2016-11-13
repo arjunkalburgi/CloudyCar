@@ -66,7 +66,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     }
 
     private void setUpRecyclerView() {
-        requestAdapter = new RequestAdapter();
+        requestAdapter = new RequestAdapter(true);
         searchRecyclerView.setAdapter(requestAdapter);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         requestAdapter.setClickListener((v, r) -> {

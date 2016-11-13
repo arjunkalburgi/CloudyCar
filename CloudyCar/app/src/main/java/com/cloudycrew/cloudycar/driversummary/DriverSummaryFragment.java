@@ -79,7 +79,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     private void setUpRecyclerView() {
         layoutManager = new LinearLayoutManager(getActivity());
 
-        requestAdapter = new RequestAdapter();
+        requestAdapter = new RequestAdapter(true);
         requestView.setAdapter(requestAdapter);
         requestView.setLayoutManager(layoutManager);
 
