@@ -14,13 +14,20 @@ import rx.Observable;
 /**
  * Created by George on 2016-10-23.
  */
-
 public class RequestController {
     private IRequestService requestService;
     private IRequestStore requestStore;
     private ISchedulerProvider schedulerProvider;
     private IUserPreferences userPreferences;
 
+    /**
+     * Instantiates a new Request controller.
+     *
+     * @param userPreferences   the user preferences
+     * @param requestStore      the request store
+     * @param requestService    the request service
+     * @param schedulerProvider the scheduler provider
+     */
     public RequestController(IUserPreferences userPreferences, IRequestStore requestStore, IRequestService requestService, ISchedulerProvider schedulerProvider) {
         this.userPreferences = userPreferences;
         this.requestStore = requestStore;
@@ -28,6 +35,9 @@ public class RequestController {
         this.schedulerProvider = schedulerProvider;
     }
 
+    /**
+     * Refresh requests. On success, the new requests are added to the request store.
+     */
     public void refreshRequests() {
         Observable.just(null)
                   .observeOn(schedulerProvider.ioScheduler())
@@ -36,6 +46,12 @@ public class RequestController {
                   .subscribe(requestStore::setAll);
     }
 
+    /**
+     * Create a request.
+     *
+     * @param route the route
+     * @param price the price
+     */
     public void createRequest(Route route, double price) {
         PendingRequest pendingRequest = new PendingRequest(userPreferences.getUserName(), route, price);
 
@@ -43,11 +59,22 @@ public class RequestController {
         requestStore.addRequest(pendingRequest);
     }
 
+    /**
+     * Cancels a request.
+     *
+     * @param requestId the request id
+     */
     public void cancelRequest(String requestId) {
         requestService.deleteRequest(requestId);
         requestStore.deleteRequest(requestId);
     }
 
+    /**
+     * Accepts a request as the current user. No changes will occur if no request can be found
+     * matching the specified id.
+     *
+     * @param requestId the request id
+     */
     public void acceptRequest(String requestId) {
         PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
 
@@ -59,6 +86,13 @@ public class RequestController {
         }
     }
 
+    /**
+     * Confirms a request as the current user. No changes will occur if no request can be found
+     * matching the specified id.
+     *
+     * @param requestId      the request id
+     * @param driverUsername the driver username
+     */
     public void confirmRequest(String requestId, String driverUsername) {
         PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
 
@@ -70,6 +104,12 @@ public class RequestController {
         }
     }
 
+    /**
+     * Completes a request as the current user. No changes will occur if no request can be found
+     * matching the specified id.
+     *
+     * @param requestId the request id
+     */
     public void completeRequest(String requestId) {
         ConfirmedRequest confirmedRequest = requestStore.getRequest(requestId, ConfirmedRequest.class);
 
