@@ -5,6 +5,7 @@ import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,11 @@ import rx.Observable;
 public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     private RequestController requestController;
     private IRequestStore requestStore;
+    private IUserPreferences userPreferences;
 
-    public RiderSummaryController(RequestController requestController, IRequestStore requestStore) {
+    public RiderSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore) {
         this.requestController = requestController;
+        this.userPreferences = userPreferences;
         this.requestStore = requestStore;
     }
     public void refreshRequests() {
@@ -47,6 +50,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
 
     private List<PendingRequest> getPendingRequestsThatHaveNotBeenAccepted() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
+                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
                          .filter(r -> !r.hasBeenAccepted())
                          .toList()
                          .toBlocking()
@@ -55,6 +59,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
 
     private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
+                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
                          .filter(PendingRequest::hasBeenAccepted)
                          .toList()
                          .toBlocking()
