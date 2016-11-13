@@ -24,6 +24,7 @@ import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.RouteSelector;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 
 import java.util.List;
@@ -158,6 +159,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 //                TestAdapter adapter = (TestAdapter)requestView.getAdapter();
                 RequestAdapter adapter = (RequestAdapter) requestView.getAdapter();
                 adapter.remove(swipedPosition);
+                Request r = adapter.get(swipedPosition);
+                riderSummaryController.deleteRequest(r.getId());
             }
 
             @Override

@@ -5,7 +5,9 @@ import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
+import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     private RequestController requestController;
     private IRequestStore requestStore;
     private IUserPreferences userPreferences;
+    private ISchedulerProvider schedulerProvider;
 
     /**
      * Instantiates a new Rider summary controller.
@@ -27,10 +30,11 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
      * @param userPreferences   the user preferences
      * @param requestStore      the request store
      */
-    public RiderSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore) {
+    public RiderSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore, ISchedulerProvider schedulerProvider) {
         this.requestController = requestController;
         this.userPreferences = userPreferences;
         this.requestStore = requestStore;
+        this.schedulerProvider = schedulerProvider;
     }
 
     /**
@@ -39,6 +43,12 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     public void refreshRequests() {
         dispatchShowLoading();
         requestController.refreshRequests();
+    }
+
+    public void deleteRequest(String reqid) {
+        ObservableUtils.fromAction(requestController::cancelRequest,reqid)
+            .subscribeOn(schedulerProvider.ioScheduler())
+                .subscribe();
     }
 
     @Override

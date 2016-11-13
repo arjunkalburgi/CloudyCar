@@ -207,10 +207,14 @@ public class RequestAdapter extends
     }
 
     public void remove (int pos) {
-        if (mergeLists().contains(mergeLists().get(pos))) {
-            // remove
+        Request r = mergeLists().get(pos);
+        pendingRequests.remove(r);
+        confirmedRequests.remove(r);
+        requestList = mergeLists();
+        this.notifyDataSetChanged();
+    }
 
-            // notify
-        }
+    public Request get (int pos) {
+        return mergeLists().get(pos);
     }
 }
