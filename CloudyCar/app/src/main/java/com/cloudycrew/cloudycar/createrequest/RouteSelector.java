@@ -84,6 +84,10 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
+    /**
+     * Packages the start and end location into a Route
+     * @return The route chosen by the rider
+     */
     @NonNull
     private Route getRoute() {
         Point startPoint = new Point(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
@@ -171,6 +175,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                 .draggable(true)
         ).showInfoWindow();
         start = myLocation;
+
     }
 
     @Override
