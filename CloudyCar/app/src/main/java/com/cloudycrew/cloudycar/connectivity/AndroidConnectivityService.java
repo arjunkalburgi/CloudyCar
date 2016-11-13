@@ -10,11 +10,15 @@ import android.net.NetworkInfo;
 /**
  * Created by George on 2016-10-24.
  */
-
 public class AndroidConnectivityService implements IConnectivityService {
     private Context context;
     private OnConnectivityChangedListener onConnectivityChangedListener;
 
+    /**
+     * Instantiates a new Android connectivity service.
+     *
+     * @param context the context
+     */
     public AndroidConnectivityService(Context context) {
         this.context = context;
         registerConnectivityListener();

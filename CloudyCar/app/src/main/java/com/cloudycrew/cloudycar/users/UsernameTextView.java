@@ -10,6 +10,11 @@ import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
 
 /**
  * Created by Ryan on 2016-11-09.
+ *
+ * A textview specifically for displaying usernames. Provides a centralized way of fetching the
+ * information from that username and displaying it to the user.
+ *
+ * Given the username it will navigate to the user profile activity.
  */
 
 public class UsernameTextView extends TextView

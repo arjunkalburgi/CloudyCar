@@ -8,6 +8,10 @@ import com.cloudycrew.cloudycar.models.User;
 
 /**
  * Created by Ryan on 2016-11-10.
+ *
+ * A class for storing the information on the currently logged in user - guarantees that certain
+ * functionality will be available to the user even when they do not have connectivity.
+ *
  */
 
 public class UserPreferences implements IUserPreferences {

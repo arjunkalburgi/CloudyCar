@@ -7,12 +7,21 @@ import java.io.Serializable;
 /**
  * Created by George on 2016-10-13.
  */
-
 public class Point implements Serializable {
+    /**
+     * Gets longitude.
+     *
+     * @return the longitude
+     */
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     * Gets latitude.
+     *
+     * @return the latitude
+     */
     public double getLatitude() {
         return latitude;
     }
@@ -20,6 +29,14 @@ public class Point implements Serializable {
     private String description;
     private double longitude;
     private double latitude;
+
+    /**
+     * Instantiates a new Point.
+     *
+     * @param longitude   the longitude
+     * @param latitude    the latitude
+     * @param description the description
+     */
     public Point(double longitude, double latitude, String description) {
         this.latitude=latitude;
         this.longitude=longitude;
@@ -57,6 +74,11 @@ public class Point implements Serializable {
         return String.format("Long: %5f, Lat: %5f",this.longitude,this.latitude);
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }

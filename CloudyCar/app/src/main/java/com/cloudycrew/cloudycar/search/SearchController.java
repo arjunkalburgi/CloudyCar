@@ -11,16 +11,26 @@ import java.util.List;
 /**
  * Created by George on 2016-11-05.
  */
-
 public class SearchController extends ViewController<ISearchView> {
     private ISearchService searchService;
     private ISchedulerProvider schedulerProvider;
 
+    /**
+     * Instantiates a new Search controller.
+     *
+     * @param searchService     the search service
+     * @param schedulerProvider the scheduler provider
+     */
     public SearchController(ISearchService searchService, ISchedulerProvider schedulerProvider) {
         this.searchService = searchService;
         this.schedulerProvider = schedulerProvider;
     }
 
+    /**
+     * Asynchronously searches for requests within a point
+     *
+     * @param point the point
+     */
     public void searchByPoint(Point point) {
         dispatchShowLoading();
 
@@ -30,6 +40,11 @@ public class SearchController extends ViewController<ISearchView> {
                        .subscribe(this::dispatchShowSearchResults);
     }
 
+    /**
+     * Asynchronously searches for requests close to a keyword
+     *
+     * @param keyword the keyword
+     */
     public void searchByKeyword(String keyword) {
         dispatchShowLoading();
         

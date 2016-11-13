@@ -13,11 +13,21 @@ import java.util.Locale;
  * Created by Harley Vanselow on 2016-11-11.
  */
 
+/**
+ * This class is responsible for converting Lat/Long coordinates into more human readable text.
+ */
 public class GeoDecoder {
     private Context context;
     public GeoDecoder(Context context){
         this.context = context;
     }
+
+    /**
+     * Returns a string describing the location indicated by the input arguments
+     * @param longitude
+     * @param latitude
+     * @return          Address corresponding to the lat/long
+     */
     public String decodeLatLng(double longitude, double latitude){
         String result;
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
@@ -41,6 +51,10 @@ public class GeoDecoder {
         return result;
     }
 
+    /**
+     * Method called if the Geocoding class can't produce an address
+     * @return Returns an empty string if nothing is found
+     */
     private String noInfoFound() {
         return "";
     }
