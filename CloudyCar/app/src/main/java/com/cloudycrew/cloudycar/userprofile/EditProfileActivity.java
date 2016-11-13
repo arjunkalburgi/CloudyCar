@@ -93,12 +93,20 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
         toast.show();
     }
 
+    /**
+     * Handler for the confirm button
+     * @param v
+     */
     public void commitChanges(View v) {
         editedUser.setEmail(new Email(emailEditText.getText().toString()));
         editedUser.setPhoneNumber(new PhoneNumber(phoneEditText.getText().toString()));
         editProfileController.updateUser(editedUser);
     }
 
+    /**
+     * Handler for the cancel button
+     * @param v
+     */
     public void cancelChanges(View v) {
         finish();
     }

@@ -8,6 +8,10 @@ import java.util.List;
 
 /**
  * Created by Ryan on 2016-11-08.
+ *
+ * The service for fetching, creating, and updating users. Constructs queries through the elastic
+ * search service to do this and also uses user preferences to update the currently logged in user
+ * locally.
  */
 
 public class UserService implements IUserService

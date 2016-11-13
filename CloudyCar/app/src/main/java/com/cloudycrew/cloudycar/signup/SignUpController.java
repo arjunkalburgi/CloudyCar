@@ -12,16 +12,28 @@ import com.cloudycrew.cloudycar.utils.ObservableUtils;
 /**
  * Created by George on 2016-11-09.
  */
-
 public class SignUpController extends ViewController<ISignUpView> {
     private UserController userController;
     private ISchedulerProvider schedulerProvider;
 
+    /**
+     * Instantiates a new Sign up controller.
+     *
+     * @param userController    the user controller
+     * @param schedulerProvider the scheduler provider
+     */
     public SignUpController(UserController userController, ISchedulerProvider schedulerProvider) {
         this.userController = userController;
         this.schedulerProvider = schedulerProvider;
     }
 
+    /**
+     * Asynchronously registers a user.
+     *
+     * @param username    the username
+     * @param email       the email
+     * @param phoneNumber the phone number
+     */
     public void registerUser(String username, String email, String phoneNumber) {
         try {
             User newUser = createUser(username, email, phoneNumber);

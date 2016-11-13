@@ -88,12 +88,19 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         //lol
     }
 
+    /**
+     * Launches an intent to edit the current user
+     */
     protected void editUserDetails() {
         Intent editingIntent = new Intent(this, EditProfileActivity.class);
         editingIntent.putExtra("username", username);
         startActivity(editingIntent);
     }
 
+    /**
+     * Initiates a phone call to the current user
+     * @param v
+     */
     public void initiatePhoneCall(View v) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_PERMISSIONS);
@@ -115,12 +122,15 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         }
     }
 
+    /**
+     * Initiates an email to the current user
+     * @param v
+     */
     public void initiateEmail(View v) {
         //From https://developer.android.com/guide/components/intents-common.html#Email
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR CLOUDYCAR DRIVER IS READY");
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }

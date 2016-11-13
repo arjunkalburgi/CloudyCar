@@ -18,7 +18,11 @@ public class UserProfileController extends ViewController<IUserProfileView> {
         this.userController = userController;
         this.schedulerProvider = schedulerProvider;
     }
-    
+
+    /**
+     * Asynchronously loads a user
+     * @param username - username of the user to load
+     */
     public void loadUser(String username) {
         dispatchDisplayLoading();
         User localUser = userController.getCurrentUser();

@@ -15,17 +15,27 @@ import rx.Observable;
 /**
  * Created by George on 2016-11-05.
  */
-
 public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     private RequestController requestController;
     private IRequestStore requestStore;
     private IUserPreferences userPreferences;
 
+    /**
+     * Instantiates a new Rider summary controller.
+     *
+     * @param requestController the request controller
+     * @param userPreferences   the user preferences
+     * @param requestStore      the request store
+     */
     public RiderSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore) {
         this.requestController = requestController;
         this.userPreferences = userPreferences;
         this.requestStore = requestStore;
     }
+
+    /**
+     * Refresh requests a rider is involved in asynchronously.
+     */
     public void refreshRequests() {
         dispatchShowLoading();
         requestController.refreshRequests();

@@ -14,13 +14,20 @@ import com.cloudycrew.cloudycar.utils.ObservableUtils;
 /**
  * Created by George on 2016-11-05.
  */
-
 public class RequestDetailsController extends ViewController<IRequestDetailsView> {
     private String requestId;
     private IRequestStore requestStore;
     private ISchedulerProvider schedulerProvider;
     private RequestController requestController;
 
+    /**
+     * Instantiates a new Request details controller.
+     *
+     * @param requestId         the request id
+     * @param requestController the request controller
+     * @param schedulerProvider the scheduler provider
+     * @param requestStore      the request store
+     */
     public RequestDetailsController(String requestId, RequestController requestController, ISchedulerProvider schedulerProvider, IRequestStore requestStore) {
         this.requestId = requestId;
         this.requestController = requestController;
@@ -28,6 +35,9 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
         this.requestStore = requestStore;
     }
 
+    /**
+     * Accept request.
+     */
     public void acceptRequest() {
         ObservableUtils.fromAction(requestController::acceptRequest, requestId)
                        .subscribeOn(schedulerProvider.ioScheduler())
@@ -35,6 +45,11 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
                        .subscribe();
     }
 
+    /**
+     * Confirm request.
+     *
+     * @param driverUsername the driver username
+     */
     public void confirmRequest(String driverUsername) {
         ObservableUtils.fromAction(requestController::confirmRequest, requestId, driverUsername)
                        .subscribeOn(schedulerProvider.ioScheduler())
@@ -42,6 +57,9 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
                        .subscribe();
     }
 
+    /**
+     * Complete request.
+     */
     public void completeRequest() {
         ObservableUtils.fromAction(requestController::completeRequest, requestId)
                        .subscribeOn(schedulerProvider.ioScheduler())
