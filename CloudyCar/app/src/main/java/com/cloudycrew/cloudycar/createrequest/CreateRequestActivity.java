@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.createrequest;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +12,13 @@ import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.SummaryActivity;
 import com.cloudycrew.cloudycar.models.Route;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.model.DistanceMatrix;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,9 +59,30 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
 
         this.getSupportActionBar().setTitle(R.string.request_create_header);
         suggestedPrice.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_attach_money_black_24dp, 0, 0, 0);
+        suggestedPrice.setText(generateSuggestedFare(userRoute));
         formatRouteDisplay(startText, endText);
 
     }
+
+    private String generateSuggestedFare(Route userRoute) {
+        String result = "";
+        GeoApiContext geoApiContext = new GeoApiContext().setApiKey(
+                getResources().getString(R.string.google_maps_key));
+        com.google.maps.model.LatLng start = new com.google.maps.model.LatLng(userRoute.getStartingPoint().getLatitude(),userRoute.getStartingPoint().getLongitude());
+        com.google.maps.model.LatLng end = new com.google.maps.model.LatLng(userRoute.getEndingPoint().getLatitude(),userRoute.getEndingPoint().getLongitude());
+        try {
+            DistanceMatrix matrix = DistanceMatrixApi.newRequest(geoApiContext).origins(start).destinations(end).await();
+            long duration = matrix.rows[0].elements[0].duration.inSeconds;
+            Log.d("Duration in seconds",String.valueOf(duration));
+            Double doubleDuration = new Double(duration);
+            double fairFare = (doubleDuration/(60*60))*20;
+            result = String.format(Locale.getDefault(),"%.2f",fairFare);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result.isEmpty()?"3.50":result;
+    }
+
 
     /**
      * When the submit button is pressed, send the route and price chosen to the createRequestController.
