@@ -72,7 +72,14 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
         editedUser = user;
         usernameTextView.setText(user.getUsername());
         emailEditText.setText(user.getEmail().getEmail());
-        phoneEditText.addTextChangedListener(new PatternedTextWatcher("(###)-###-####"));
+        PatternedTextWatcher patternedTextWatcher = new PatternedTextWatcher.Builder("(###)-###-####")
+                .fillExtraCharactersAutomatically(false)
+                .deleteExtraCharactersAutomatically(false)
+                .specialChar("#")
+                .respectPatternLength(true)
+                .saveAllInput(false)
+                .build();
+        phoneEditText.addTextChangedListener(patternedTextWatcher);
         phoneEditText.setText(user.getPhoneNumber().getPhoneNumber());
         phoneEditText.setSelection(user.getPhoneNumber().prettyPrint().length());
     }
