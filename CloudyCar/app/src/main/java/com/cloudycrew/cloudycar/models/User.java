@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.models;
 
 import com.cloudycrew.cloudycar.Identifiable;
 import com.cloudycrew.cloudycar.email.Email;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 
 /**
  * Created by George on 2016-10-13.
