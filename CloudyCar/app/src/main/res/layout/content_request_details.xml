@@ -64,6 +64,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:text="Complete Request"
+        android:textColor="@color/colorPrimaryDark"
         android:background="@color/white" />
 
 </RelativeLayout>
