@@ -106,7 +106,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_PERMISSIONS);
             return;
         }
-        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber.getPhoneNumber()));
         try {
             startActivity(callIntent);
         }
