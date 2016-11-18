@@ -139,6 +139,10 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        /**
+         * Kiuwan suggests that this should have a defualt in the switch. After closer inspection
+         * this should probably just be an if since we don't actually look for any other cases.
+         */
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS: {
                 if (grantResults.length > 0

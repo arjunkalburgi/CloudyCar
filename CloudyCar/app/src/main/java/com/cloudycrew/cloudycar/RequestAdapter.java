@@ -61,6 +61,9 @@ public class RequestAdapter extends
         public ViewHolder(final View view) {
             super(view);
 
+            /**
+             * Since this variable is unused it should be removed
+             */
             final ViewHolder vh = this;
 
             // clicking on a list item other than the complete button

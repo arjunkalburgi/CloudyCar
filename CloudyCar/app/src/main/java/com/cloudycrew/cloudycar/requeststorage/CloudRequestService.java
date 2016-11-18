@@ -14,6 +14,10 @@ import rx.Observable;
  */
 
 public class CloudRequestService implements IRequestService {
+    /**
+     * Kiuwan suggests removing this unused private member. We should either remove it or determine
+     * why it was stubbed out and use it if the case is still viable.
+     */
     private IUserPreferences userPreferences;
     private IElasticSearchService<Request> elasticSearchService;
 
