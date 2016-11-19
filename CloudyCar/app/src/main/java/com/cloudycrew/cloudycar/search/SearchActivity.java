@@ -16,11 +16,20 @@ import com.cloudycrew.cloudycar.driversummary.DriverSummaryFragment;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
+import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
+import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
+import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ca.antonious.viewcelladapter.SectionViewCell;
+import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
+import ca.antonious.viewcelladapter.ViewCellAdapter;
+import rx.Observable;
 
 /**
  * Created by George on 2016-11-05.
@@ -34,7 +43,9 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     @BindView(R.id.search_results_recycler_view)
     protected RecyclerView searchRecyclerView;
 
-    private RequestAdapter requestAdapter;
+    private ViewCellAdapter viewCellAdapter;
+    private SectionViewCell searchResultsSection;
+
     private SearchController searchController;
 
     @Override
@@ -66,14 +77,15 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     }
 
     private void setUpRecyclerView() {
-        requestAdapter = new RequestAdapter(true);
-        searchRecyclerView.setAdapter(requestAdapter);
-        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        requestAdapter.setClickListener((v, r) -> {
-            Intent intent = new Intent(SearchActivity.this, DriverRequestDetailsActivity.class);
-            intent.putExtra(Constants.EXTRA_REQUEST_ID, r.getId());
-            startActivity(intent);
-        });
+        viewCellAdapter = new ViewCellAdapter();
+        viewCellAdapter.setHasStableIds(true);
+
+        searchResultsSection = new SectionViewCell();
+
+        viewCellAdapter.add(searchResultsSection);
+
+        searchRecyclerView.setAdapter(viewCellAdapter);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -84,6 +96,27 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     @Override
     public void showSearchResults(List<PendingRequest> searchResults) {
         searchProgressBar.setVisibility(View.GONE);
-        requestAdapter.setPendingRequests(searchResults);
+
+        searchResultsSection.setAll(getPendingRequestViewCells(searchResults));
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
+    private void launchRequestDetailsActivity(String requestId) {
+        Intent intent = new Intent(this, RiderRequestDetailsActivity.class);
+        intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
+        startActivity(intent);
+    }
+
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
+        launchRequestDetailsActivity(request.getId());
+    };
+
+    private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
+        return Observable.from(pendingRequests)
+                         .map(PendingRequestViewCell::new)
+                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 }
