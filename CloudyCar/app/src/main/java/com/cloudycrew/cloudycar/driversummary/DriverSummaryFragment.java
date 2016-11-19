@@ -19,8 +19,10 @@ import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 import com.cloudycrew.cloudycar.search.SearchActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
+import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,19 +126,26 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         viewCellAdapter.notifyDataSetChanged();
     }
 
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
+        launchRequestDetailsActivity(request.getId());
+    };
+
+
     private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                .map(AcceptedRequestViewCell::new)
-                .toList()
-                .toBlocking()
-                .firstOrDefault(new ArrayList<>());
+                         .map(AcceptedRequestViewCell::new)
+                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
         return Observable.from(confirmedRequests)
-                .map(ConfirmedRequestViewCell::new)
-                .toList()
-                .toBlocking()
-                .firstOrDefault(new ArrayList<>());
+                         .map(ConfirmedRequestViewCell::new)
+                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 }

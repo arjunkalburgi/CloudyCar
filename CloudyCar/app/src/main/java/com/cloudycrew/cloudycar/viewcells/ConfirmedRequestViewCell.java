@@ -12,7 +12,7 @@ import ca.antonious.viewcelladapter.GenericSingleViewCell;
  * Created by George on 2016-11-17.
  */
 
-public class ConfirmedRequestViewCell extends GenericSingleViewCell<ConfirmedRequestViewCell.ViewHolder, ConfirmedRequest> {
+public class ConfirmedRequestViewCell extends BaseRequestViewCell<ConfirmedRequestViewCell.ViewHolder, ConfirmedRequest> {
 
     public ConfirmedRequestViewCell(ConfirmedRequest model) {
         super(model);
@@ -25,8 +25,9 @@ public class ConfirmedRequestViewCell extends GenericSingleViewCell<ConfirmedReq
 
     @Override
     public void bindViewCell(ViewHolder viewHolder) {
-        ConfirmedRequest request = getModel();
+        super.bindViewCell(viewHolder);
 
+        ConfirmedRequest request = getModel();
         viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
         viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
         viewHolder.setAcceptedDriver("Accepted by: " + request.getDriverUsername());
@@ -38,9 +39,9 @@ public class ConfirmedRequestViewCell extends GenericSingleViewCell<ConfirmedReq
         public ViewHolder(View view) {
             super(view);
 
-            requestDest = (TextView) view.findViewById(R.id.accepted_request_dest);
-            requestSrc = (TextView) view.findViewById(R.id.accepted_request_src);
-            requestAcceptedBy = (TextView) view.findViewById(R.id.accepted_request_acceptedby);
+            requestDest = (TextView) view.findViewById(R.id.confirmed_request_dest);
+            requestSrc = (TextView) view.findViewById(R.id.confirmed_request_src);
+            requestAcceptedBy = (TextView) view.findViewById(R.id.confirmed_request_acceptedby);
         }
 
         public void setAcceptedDriver(String driverUsername) {

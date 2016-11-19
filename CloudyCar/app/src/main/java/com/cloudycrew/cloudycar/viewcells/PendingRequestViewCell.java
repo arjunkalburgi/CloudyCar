@@ -12,7 +12,7 @@ import ca.antonious.viewcelladapter.GenericSingleViewCell;
  * Created by George on 2016-11-17.
  */
 
-public class PendingRequestViewCell extends GenericSingleViewCell<PendingRequestViewCell.ViewHolder, PendingRequest> {
+public class PendingRequestViewCell extends BaseRequestViewCell<PendingRequestViewCell.ViewHolder, PendingRequest> {
 
     public PendingRequestViewCell(PendingRequest model) {
         super(model);
@@ -25,8 +25,9 @@ public class PendingRequestViewCell extends GenericSingleViewCell<PendingRequest
 
     @Override
     public void bindViewCell(PendingRequestViewCell.ViewHolder viewHolder) {
-        PendingRequest request = getModel();
+        super.bindViewCell(viewHolder);
 
+        PendingRequest request = getModel();
         viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
         viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
     }

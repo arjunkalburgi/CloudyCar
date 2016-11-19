@@ -17,6 +17,10 @@ public class BaseRequestViewHolder extends BaseViewHolder {
         super(itemView);
     }
 
+    public void setOnClickListener(View.OnClickListener onClickListner) {
+        itemView.setOnClickListener(onClickListner);
+    }
+
     public void setRequestDestination(String destination) {
         requestDest.setText(destination);
     }
