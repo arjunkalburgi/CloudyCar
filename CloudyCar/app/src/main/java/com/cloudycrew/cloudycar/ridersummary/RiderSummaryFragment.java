@@ -19,6 +19,7 @@ import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
 import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
@@ -34,14 +35,14 @@ import rx.Observable;
  */
 
 public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryView {
-    private RiderSummaryController riderSummaryController;
     private RecyclerView requestView;
-    private RequestAdapter requestAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-
     private ViewCellAdapter viewCellAdapter;
+
+    private SectionWithHeaderViewCell confirmedRequestsSections;
     private SectionWithHeaderViewCell acceptedRequestsSection;
     private SectionWithHeaderViewCell pendingRequestsSection;
+
+    private RiderSummaryController riderSummaryController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,16 +52,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener((v) -> startRequestActivity(v));
 
-        layoutManager = new LinearLayoutManager(getActivity());
-
         requestView = (RecyclerView) view.findViewById(R.id.rider_requests);
-//        requestAdapter = new RequestAdapter(); // Create adapter passing in the sample user data
-//        requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
-//        requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
-//
-//        requestAdapter.setClickListener((view1, request) -> {
-//            // do nothing for now
-//        });
 
         setUpRecyclerView();
 
@@ -99,12 +91,16 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private void setUpRecyclerView() {
         viewCellAdapter = new ViewCellAdapter();
 
+        confirmedRequestsSections = new SectionWithHeaderViewCell();
+        confirmedRequestsSections.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
+
         acceptedRequestsSection = new SectionWithHeaderViewCell();
         acceptedRequestsSection.setSectionHeader(new HeaderViewCell("Accepted Requests"));
 
         pendingRequestsSection = new SectionWithHeaderViewCell();
         pendingRequestsSection.setSectionHeader(new HeaderViewCell("Pending Requests"));
 
+        viewCellAdapter.add(confirmedRequestsSections);
         viewCellAdapter.add(acceptedRequestsSection);
         viewCellAdapter.add(pendingRequestsSection);
 
@@ -123,6 +119,23 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         
     }
 
+    @Override
+    public void displayPendingRequests(List<PendingRequest> pendingRequests) {
+        pendingRequestsSection.setAll(getPendingRequestViewCells(pendingRequests));
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
+        acceptedRequestsSection.setAll(getAcceptedRequestViewCells(acceptedRequests));
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
+    public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        confirmedRequestsSections.setAll(getConfirmedRequestViewCells(confirmedRequests));
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
     private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
                          .map(PendingRequestViewCell::new)
@@ -133,27 +146,17 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                .map(AcceptedRequestViewCell::new)
-                .toList()
-                .toBlocking()
-                .firstOrDefault(new ArrayList<>());
+                         .map(AcceptedRequestViewCell::new)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 
-    @Override
-    public void displayPendingRequests(List<PendingRequest> pendingRequests) {
-        //requestAdapter.setPendingRequests(pendingRequests);
-        pendingRequestsSection.setAll(getPendingRequestViewCells(pendingRequests));
-        viewCellAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
-        //requestAdapter.setAcceptedRequests(acceptedRequests);
-        acceptedRequestsSection.setAll(getAcceptedRequestViewCells(acceptedRequests));
-        viewCellAdapter.notifyDataSetChanged();
-    }
-
-    public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
-        requestAdapter.setConfirmedRequests(confirmedRequests);
+    private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
+        return Observable.from(confirmedRequests)
+                         .map(ConfirmedRequestViewCell::new)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 }
