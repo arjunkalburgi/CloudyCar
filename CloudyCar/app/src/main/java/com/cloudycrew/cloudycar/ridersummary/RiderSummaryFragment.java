@@ -3,6 +3,8 @@ package com.cloudycrew.cloudycar.ridersummary;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,9 @@ import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
 import ca.antonious.viewcelladapter.ViewCellAdapter;
 import rx.Observable;
@@ -35,7 +40,11 @@ import rx.Observable;
  */
 
 public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryView {
-    private RecyclerView requestView;
+    @BindView(R.id.rider_requests)
+    protected RecyclerView requestView;
+    @BindView(R.id.rider_summary_swipe_container)
+    protected SwipeRefreshLayout swipeRefreshLayout;
+
     private ViewCellAdapter viewCellAdapter;
 
     private SectionWithHeaderViewCell confirmedRequestsSection;
@@ -47,34 +56,30 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rider_summary, container, false);
+        ButterKnife.bind(this, view);
+
         resolveDependencies();
-
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener((v) -> startRequestActivity(v));
-
-        requestView = (RecyclerView) view.findViewById(R.id.rider_requests);
-
         setUpRecyclerView();
+        setUpSwipeRefreshLayout();
 
         return view;
-    }
-
-    private void startRequestActivity(View view) {
-        Intent intent = new Intent(getActivity(), RouteSelector.class);
-        startActivity(intent);
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.rider_summary_header);
-        //requestAdapter.setClickListener((v, r) -> launchRequestDetailsActivity(r.getId()));
+        setActivityTitle(R.string.rider_summary_header);
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         riderSummaryController.attachView(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onFirstResume() {
+        super.onFirstResume();
         riderSummaryController.refreshRequests();
     }
 
@@ -86,6 +91,10 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     private void resolveDependencies() {
         riderSummaryController = getCloudyCarApplication().getRiderSummaryController();
+    }
+
+    private void setUpSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(() -> riderSummaryController.refreshRequests());
     }
 
     private void setUpRecyclerView() {
@@ -109,6 +118,12 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         requestView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    @OnClick(R.id.fab)
+    protected void startRequestActivity() {
+        Intent intent = new Intent(getActivity(), RouteSelector.class);
+        startActivity(intent);
+    }
+
     private void launchRequestDetailsActivity(String requestId) {
         Intent intent = new Intent(getActivity(), RiderRequestDetailsActivity.class);
         intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
@@ -117,23 +132,31 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     @Override
     public void displayLoading() {
-        
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
+    }
+
+    public void stopLoading() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void displayPendingRequests(List<PendingRequest> pendingRequests) {
+        stopLoading();
         pendingRequestsSection.setAll(getPendingRequestViewCells(pendingRequests));
         viewCellAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
+        stopLoading();
         acceptedRequestsSection.setAll(getAcceptedRequestViewCells(acceptedRequests));
         viewCellAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        stopLoading();
         confirmedRequestsSection.setAll(getConfirmedRequestViewCells(confirmedRequests));
         viewCellAdapter.notifyDataSetChanged();
     }

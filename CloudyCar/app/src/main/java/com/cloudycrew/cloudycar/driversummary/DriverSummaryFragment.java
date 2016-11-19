@@ -2,6 +2,8 @@ package com.cloudycrew.cloudycar.driversummary;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +40,8 @@ import rx.Observable;
 public class DriverSummaryFragment extends BaseFragment implements IDriverSummaryView {
     @BindView(R.id.accepted_offers_list)
     protected RecyclerView requestView;
+    @BindView(R.id.driver_summary_swipe_container)
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     private ViewCellAdapter viewCellAdapter;
     private SectionWithHeaderViewCell confirmedRequestsSection;
@@ -49,8 +53,10 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_summary, container, false);
         ButterKnife.bind(this, view);
+
         resolveDependencies();
         setUpRecyclerView();
+        setUpSwipeRefreshLayout();
 
         return view;
     }
@@ -58,13 +64,18 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Be a Driver");
+        setActivityTitle("Be a Driver");
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         driverSummaryController.attachView(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onFirstResume() {
+        super.onFirstResume();
         driverSummaryController.refreshRequests();
     }
 
@@ -74,13 +85,13 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         driverSummaryController.detachView();
     }
 
-    @OnClick(R.id.fab)
-    protected void onSearchRequestsClicked() {
-        startActivity(new Intent(getActivity(), SearchActivity.class));
-    }
-
     private void resolveDependencies() {
         driverSummaryController = getCloudyCarApplication().getDriverSummaryController();
+    }
+
+    private void setUpSwipeRefreshLayout() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        swipeRefreshLayout.setOnRefreshListener(() -> driverSummaryController.refreshRequests());
     }
 
     private void setUpRecyclerView() {
@@ -100,6 +111,11 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         requestView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    @OnClick(R.id.fab)
+    protected void onSearchRequestsClicked() {
+        startActivity(new Intent(getActivity(), SearchActivity.class));
+    }
+
     private void launchRequestDetailsActivity(String requestId) {
         Intent intent = new Intent(getActivity(), DriverRequestDetailsActivity.class);
         intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
@@ -108,17 +124,24 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @Override
     public void displayLoading() {
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
+    }
 
+    public void stopLoading() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
+        stopLoading();
         acceptedRequestsSection.setAll(getAcceptedRequestViewCells(acceptedRequests));
         viewCellAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        stopLoading();
         confirmedRequestsSection.setAll(getConfirmedRequestViewCells(confirmedRequests));
         viewCellAdapter.notifyDataSetChanged();
     }
