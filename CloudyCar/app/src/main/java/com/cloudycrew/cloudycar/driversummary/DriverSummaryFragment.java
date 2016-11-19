@@ -18,12 +18,19 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 import com.cloudycrew.cloudycar.search.SearchActivity;
+import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
+import ca.antonious.viewcelladapter.ViewCellAdapter;
+import rx.Observable;
 
 /**
  * Created by George on 2016-11-05.
@@ -33,9 +40,11 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     @BindView(R.id.accepted_offers_list)
     protected RecyclerView requestView;
 
+    private ViewCellAdapter viewCellAdapter;
+    private SectionWithHeaderViewCell confirmedRequestsSection;
+    private SectionWithHeaderViewCell acceptedRequestsSection;
+
     private DriverSummaryController driverSummaryController;
-    private RequestAdapter requestAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +60,6 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Be a Driver");
-        requestAdapter.setClickListener((v, r) -> launchRequestDetailsActivity(r.getId()));
     }
 
     @Override
@@ -77,12 +85,20 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     }
 
     private void setUpRecyclerView() {
-        layoutManager = new LinearLayoutManager(getActivity());
+        viewCellAdapter = new ViewCellAdapter();
+        viewCellAdapter.setHasStableIds(true);
 
-        requestAdapter = new RequestAdapter(true);
-        requestView.setAdapter(requestAdapter);
-        requestView.setLayoutManager(layoutManager);
+        confirmedRequestsSection = new SectionWithHeaderViewCell();
+        confirmedRequestsSection.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
 
+        acceptedRequestsSection = new SectionWithHeaderViewCell();
+        acceptedRequestsSection.setSectionHeader(new HeaderViewCell("Accepted Requests"));
+
+        viewCellAdapter.add(confirmedRequestsSection);
+        viewCellAdapter.add(acceptedRequestsSection);
+
+        requestView.setAdapter(viewCellAdapter);
+        requestView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private void launchRequestDetailsActivity(String requestId) {
@@ -98,11 +114,29 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @Override
     public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
-        requestAdapter.setAcceptedRequests(acceptedRequests);
+        acceptedRequestsSection.setAll(getAcceptedRequestViewCells(acceptedRequests));
+        viewCellAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
-        requestAdapter.setConfirmedRequests(confirmedRequests);
+        confirmedRequestsSection.setAll(getConfirmedRequestViewCells(confirmedRequests));
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
+    private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
+        return Observable.from(pendingRequests)
+                .map(AcceptedRequestViewCell::new)
+                .toList()
+                .toBlocking()
+                .firstOrDefault(new ArrayList<>());
+    }
+
+    private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
+        return Observable.from(confirmedRequests)
+                .map(ConfirmedRequestViewCell::new)
+                .toList()
+                .toBlocking()
+                .firstOrDefault(new ArrayList<>());
     }
 }

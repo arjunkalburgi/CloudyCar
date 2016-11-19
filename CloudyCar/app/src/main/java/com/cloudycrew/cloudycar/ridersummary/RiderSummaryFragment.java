@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.RouteSelector;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -38,7 +37,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private RecyclerView requestView;
     private ViewCellAdapter viewCellAdapter;
 
-    private SectionWithHeaderViewCell confirmedRequestsSections;
+    private SectionWithHeaderViewCell confirmedRequestsSection;
     private SectionWithHeaderViewCell acceptedRequestsSection;
     private SectionWithHeaderViewCell pendingRequestsSection;
 
@@ -90,9 +89,10 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     private void setUpRecyclerView() {
         viewCellAdapter = new ViewCellAdapter();
+        viewCellAdapter.setHasStableIds(true);
 
-        confirmedRequestsSections = new SectionWithHeaderViewCell();
-        confirmedRequestsSections.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
+        confirmedRequestsSection = new SectionWithHeaderViewCell();
+        confirmedRequestsSection.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
 
         acceptedRequestsSection = new SectionWithHeaderViewCell();
         acceptedRequestsSection.setSectionHeader(new HeaderViewCell("Accepted Requests"));
@@ -100,7 +100,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         pendingRequestsSection = new SectionWithHeaderViewCell();
         pendingRequestsSection.setSectionHeader(new HeaderViewCell("Pending Requests"));
 
-        viewCellAdapter.add(confirmedRequestsSections);
+        viewCellAdapter.add(confirmedRequestsSection);
         viewCellAdapter.add(acceptedRequestsSection);
         viewCellAdapter.add(pendingRequestsSection);
 
@@ -131,8 +131,9 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         viewCellAdapter.notifyDataSetChanged();
     }
 
+    @Override
     public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
-        confirmedRequestsSections.setAll(getConfirmedRequestViewCells(confirmedRequests));
+        confirmedRequestsSection.setAll(getConfirmedRequestViewCells(confirmedRequests));
         viewCellAdapter.notifyDataSetChanged();
     }
 
