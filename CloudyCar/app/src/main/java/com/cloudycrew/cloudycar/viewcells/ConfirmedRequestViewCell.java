@@ -27,9 +27,9 @@ public class ConfirmedRequestViewCell extends GenericSingleViewCell<ConfirmedReq
     public void bindViewCell(ViewHolder viewHolder) {
         ConfirmedRequest request = getModel();
 
-        viewHolder.requestDest.setText(request.getRoute().getEndingPoint().getDescription());
-        viewHolder.requestSrc.setText("from " + request.getRoute().getStartingPoint().getDescription());
-        viewHolder.requestAcceptedBy.setText("Accepted by: " + request.getDriverUsername());
+        viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
+        viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
+        viewHolder.setAcceptedDriver("Accepted by: " + request.getDriverUsername());
     }
 
     public static class ViewHolder extends BaseRequestViewHolder {
@@ -41,6 +41,10 @@ public class ConfirmedRequestViewCell extends GenericSingleViewCell<ConfirmedReq
             requestDest = (TextView) view.findViewById(R.id.accepted_request_dest);
             requestSrc = (TextView) view.findViewById(R.id.accepted_request_src);
             requestAcceptedBy = (TextView) view.findViewById(R.id.accepted_request_acceptedby);
+        }
+
+        public void setAcceptedDriver(String driverUsername) {
+            requestAcceptedBy.setText(driverUsername);
         }
     }
 }

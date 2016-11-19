@@ -8,7 +8,6 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
 import java.util.List;
 
-import ca.antonious.viewcelladapter.BaseViewHolder;
 import ca.antonious.viewcelladapter.GenericSingleViewCell;
 
 /**
@@ -30,23 +29,24 @@ public class AcceptedRequestViewCell extends GenericSingleViewCell<AcceptedReque
     public void bindViewCell(ViewHolder viewHolder) {
         PendingRequest request = getModel();
 
-        viewHolder.requestDest.setText(request.getRoute().getEndingPoint().getDescription());
-        viewHolder.requestSrc.setText("from " + request.getRoute().getStartingPoint().getDescription());
-        viewHolder.requestAcceptedBy.setText(getAcceptedDescription());
+        viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
+        viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
+        viewHolder.setAcceptedByDescription(getAcceptedByDescription());
     }
 
-    private String getAcceptedDescription() {
+    private String getAcceptedByDescription() {
         List<String> drivers = getModel().getDriversWhoAccepted();
 
         String driversText = "Accepted by " + drivers.get(0);
         for (String driver : drivers.subList(1, drivers.size())) {
             driversText += ", " + driver;
         }
+
         return driversText;
     }
 
     public static class ViewHolder extends BaseRequestViewHolder {
-        public TextView requestAcceptedBy;
+        private TextView requestAcceptedBy;
 
         public ViewHolder(View view) {
             super(view);
@@ -54,6 +54,10 @@ public class AcceptedRequestViewCell extends GenericSingleViewCell<AcceptedReque
             requestDest = (TextView) view.findViewById(R.id.accepted_request_dest);
             requestSrc = (TextView) view.findViewById(R.id.accepted_request_src);
             requestAcceptedBy = (TextView) view.findViewById(R.id.accepted_request_acceptedby);
+        }
+
+        public void setAcceptedByDescription(String acceptedByDescription) {
+            requestAcceptedBy.setText(acceptedByDescription);
         }
     }
 }

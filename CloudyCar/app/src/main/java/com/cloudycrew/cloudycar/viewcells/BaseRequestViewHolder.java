@@ -10,10 +10,18 @@ import ca.antonious.viewcelladapter.BaseViewHolder;
  */
 
 public class BaseRequestViewHolder extends BaseViewHolder {
-    public TextView requestDest;
-    public TextView requestSrc;
+    protected TextView requestDest;
+    protected TextView requestSrc;
 
     public BaseRequestViewHolder(View itemView) {
         super(itemView);
+    }
+
+    public void setRequestDestination(String destination) {
+        requestDest.setText(destination);
+    }
+
+    public void setRequestSource(String source) {
+        requestSrc.setText(source);
     }
 }
