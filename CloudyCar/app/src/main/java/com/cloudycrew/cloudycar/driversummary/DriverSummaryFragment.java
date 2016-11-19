@@ -21,6 +21,7 @@ import com.cloudycrew.cloudycar.search.SearchActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.DriverAcceptedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
 
 import java.util.ArrayList;
@@ -151,9 +152,9 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     };
 
 
-    private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
+    private List<DriverAcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                         .map(AcceptedRequestViewCell::new)
+                         .map(DriverAcceptedRequestViewCell::new)
                          .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()

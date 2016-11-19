@@ -59,6 +59,11 @@ public class AcceptedRequestViewCell extends BaseRequestViewCell<AcceptedRequest
 
         public void setAcceptedByDescription(String acceptedByDescription) {
             requestAcceptedBy.setText(acceptedByDescription);
+            requestAcceptedBy.setVisibility(View.VISIBLE);
+        }
+
+        public void hideAcceptedDriversDescription() {
+            requestAcceptedBy.setVisibility(View.GONE);
         }
     }
 }
