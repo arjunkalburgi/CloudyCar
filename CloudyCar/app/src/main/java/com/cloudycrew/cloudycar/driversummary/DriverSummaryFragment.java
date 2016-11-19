@@ -12,17 +12,14 @@ import android.view.ViewGroup;
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
-import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 import com.cloudycrew.cloudycar.search.SearchActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
-import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
 import java.util.ArrayList;
 import java.util.List;
