@@ -12,6 +12,7 @@ import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
@@ -96,7 +97,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     }
 
     private void launchRequestDetailsActivity(String requestId) {
-        Intent intent = new Intent(this, RiderRequestDetailsActivity.class);
+        Intent intent = new Intent(this, DriverRequestDetailsActivity.class);
         intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
         startActivity(intent);
     }
