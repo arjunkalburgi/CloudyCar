@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -12,10 +16,9 @@ import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.RequestAdapter;
-import com.cloudycrew.cloudycar.driversummary.DriverSummaryFragment;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.List;
 
@@ -33,6 +36,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected ProgressBar searchProgressBar;
     @BindView(R.id.search_results_recycler_view)
     protected RecyclerView searchRecyclerView;
+    @BindView(R.id.search_bar)
+    protected MaterialSearchView searchView;
 
     private RequestAdapter requestAdapter;
     private SearchController searchController;
@@ -49,10 +54,47 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_search, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
+        searchView.showSearch(false);
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.closeSearch();
+                searchController.searchByKeyword(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                toolbar.setTitleTextColor(0xFFFFFFFF);
+            }
+        });
+
+        return true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         searchController.attachView(this);
-        searchController.searchByPoint(null);
     }
 
     @Override

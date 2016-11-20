@@ -65,4 +65,5 @@ dependencies {
     compile 'com.szagurskii:patternedtextwatcher:0.5.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.google.maps:google-maps-services:0.1.16'
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 }

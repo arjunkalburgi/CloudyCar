@@ -28,4 +28,6 @@
     <string name="havent_accepted_ride">You have not accepted this ride</string>
     <string name="waiting_for_confirm">Waiting for the rider to confirm</string>
 
+    <string name="search_title">Search a keyword</string>
+
 </resources>

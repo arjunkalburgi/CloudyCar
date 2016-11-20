@@ -51,7 +51,16 @@ public class SearchService implements ISearchService {
 
     @Override
     public List<PendingRequest> searchWithKeyword(String keyword) {
-        List<Request> requests = requestElasticSearchService.getAll();
+        String searchJSON =
+                "{ " +
+                    "\"size\" : 100, " +
+                    "\"filter\": { " +
+                        "\"term\": { " +
+                            "\"description\": \"" + keyword + "\"" +
+                        "} " +
+                    "} " +
+                "}";
+        List<Request> requests = requestElasticSearchService.search(searchJSON);
         requestStore.addAll(requests);
 
         return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
