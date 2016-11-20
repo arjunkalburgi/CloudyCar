@@ -2,7 +2,7 @@ package com.cloudycrew.cloudycar.users;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.email.Email;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import java.util.List;
 
