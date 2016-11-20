@@ -100,9 +100,11 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         viewCellAdapter.setHasStableIds(true);
 
         confirmedRequestsSection = new SectionWithHeaderViewCell();
+        confirmedRequestsSection.setShowHeaderIfEmpty(false);
         confirmedRequestsSection.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
 
         acceptedRequestsSection = new SectionWithHeaderViewCell();
+        acceptedRequestsSection.setShowHeaderIfEmpty(false);
         acceptedRequestsSection.setSectionHeader(new HeaderViewCell("Accepted Requests"));
 
         viewCellAdapter.add(confirmedRequestsSection);

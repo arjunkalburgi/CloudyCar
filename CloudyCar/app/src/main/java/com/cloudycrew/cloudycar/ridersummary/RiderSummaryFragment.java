@@ -102,12 +102,15 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         viewCellAdapter.setHasStableIds(true);
 
         confirmedRequestsSection = new SectionWithHeaderViewCell();
+        confirmedRequestsSection.setShowHeaderIfEmpty(false);
         confirmedRequestsSection.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
 
         acceptedRequestsSection = new SectionWithHeaderViewCell();
+        acceptedRequestsSection.setShowHeaderIfEmpty(false);
         acceptedRequestsSection.setSectionHeader(new HeaderViewCell("Accepted Requests"));
 
         pendingRequestsSection = new SectionWithHeaderViewCell();
+        pendingRequestsSection.setShowHeaderIfEmpty(false);
         pendingRequestsSection.setSectionHeader(new HeaderViewCell("Pending Requests"));
 
         viewCellAdapter.add(confirmedRequestsSection);
