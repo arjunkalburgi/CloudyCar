@@ -11,13 +11,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ca.antonious.viewcelladapter.BaseViewHolder;
 import ca.antonious.viewcelladapter.GenericSingleViewCell;
+import ca.antonious.viewcelladapter.ListenerCollection;
 
 /**
  * Created by George on 2016-11-19.
  */
 
 public class AcceptedDriverViewCell extends GenericSingleViewCell<AcceptedDriverViewCell.ViewHolder, String> {
-    private OnConfirmClickedListener onConfirmClickedListener;
 
     public AcceptedDriverViewCell(String model) {
         super(model);
@@ -30,33 +30,27 @@ public class AcceptedDriverViewCell extends GenericSingleViewCell<AcceptedDriver
 
     @Override
     public void bindViewCell(ViewHolder viewHolder) {
-        final String username = getModel();
-
         viewHolder.reset();
-        viewHolder.setUsername(username);
+        viewHolder.setUsername(getModel());
+    }
 
-        viewHolder.setOnConfirmClickedListener(v -> {
-            viewHolder.showLoading();
-            dispatchOnConfirmClicked(username);
-        });
+    @Override
+    public void bindListeners(ViewHolder viewHolder, ListenerCollection listeners) {
+        super.bindListeners(viewHolder, listeners);
+        bindOnConfirmClickedListener(viewHolder, listeners.getListener(OnConfirmClickedListener.class));
+    }
+
+    private void bindOnConfirmClickedListener(ViewHolder viewHolder, OnConfirmClickedListener onConfirmClickedListener) {
+        if (onConfirmClickedListener != null) {
+            viewHolder.setOnConfirmClickedListener(v -> {
+                viewHolder.showLoading();
+                onConfirmClickedListener.onConfirm(getModel());
+            });
+        }
     }
 
     public interface OnConfirmClickedListener {
         void onConfirm(String username);
-    }
-
-    public OnConfirmClickedListener getOnConfirmClickedListener() {
-        return onConfirmClickedListener;
-    }
-
-    public void setOnConfirmClickedListener(OnConfirmClickedListener onConfirmClickedListener) {
-        this.onConfirmClickedListener = onConfirmClickedListener;
-    }
-
-    public void dispatchOnConfirmClicked(String username) {
-        if (getOnConfirmClickedListener() != null) {
-            getOnConfirmClickedListener().onConfirm(username);
-        }
     }
 
     public static class ViewHolder extends BaseViewHolder {

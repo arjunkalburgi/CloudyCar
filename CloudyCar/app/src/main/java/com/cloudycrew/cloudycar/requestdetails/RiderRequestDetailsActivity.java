@@ -49,6 +49,8 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         viewCellAdapter = new ViewCellAdapter();
         viewCellAdapter.setHasStableIds(true);
 
+        viewCellAdapter.addListener(onConfirmClickedListener);
+
         acceptedDriversRecyclerView.setAdapter(viewCellAdapter);
         acceptedDriversRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -108,7 +110,6 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
     private List<AcceptedDriverViewCell> getAcceptedDriverViewCells(List<? extends String> usernames) {
         return Observable.from(usernames)
                          .map(AcceptedDriverViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnConfirmClickedListener(onConfirmClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());

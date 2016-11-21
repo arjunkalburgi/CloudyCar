@@ -25,8 +25,6 @@ public class ConfirmedRequestViewCell extends BaseRequestViewCell<ConfirmedReque
 
     @Override
     public void bindViewCell(ViewHolder viewHolder) {
-        super.bindViewCell(viewHolder);
-
         ConfirmedRequest request = getModel();
         viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
         viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());

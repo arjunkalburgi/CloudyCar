@@ -117,6 +117,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         viewCellAdapter.add(acceptedRequestsSection);
         viewCellAdapter.add(pendingRequestsSection);
 
+        viewCellAdapter.addListener(onRequestClickedListener);
+
         requestView.setAdapter(viewCellAdapter);
         requestView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -171,7 +173,6 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
                          .map(PendingRequestViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -180,7 +181,6 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
                          .map(AcceptedRequestViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -189,7 +189,6 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
         return Observable.from(confirmedRequests)
                          .map(ConfirmedRequestViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());

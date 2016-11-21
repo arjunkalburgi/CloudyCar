@@ -110,6 +110,8 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         viewCellAdapter.add(confirmedRequestsSection);
         viewCellAdapter.add(acceptedRequestsSection);
 
+        viewCellAdapter.addListener(onRequestClickedListener);
+
         requestView.setAdapter(viewCellAdapter);
         requestView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -157,7 +159,6 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     private List<DriverAcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
                          .map(DriverAcceptedRequestViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -166,7 +167,6 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
         return Observable.from(confirmedRequests)
                          .map(ConfirmedRequestViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());

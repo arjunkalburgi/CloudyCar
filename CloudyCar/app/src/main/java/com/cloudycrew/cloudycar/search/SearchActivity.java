@@ -78,6 +78,7 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         searchResultsSection = new SectionViewCell();
 
         viewCellAdapter.add(searchResultsSection);
+        viewCellAdapter.addListener(onRequestClickedListener);
 
         searchRecyclerView.setAdapter(viewCellAdapter);
         searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -109,7 +110,6 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
                          .map(PendingRequestViewCell::new)
-                         .doOnNext(viewCell -> viewCell.setOnRequestClickedListener(onRequestClickedListener))
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
