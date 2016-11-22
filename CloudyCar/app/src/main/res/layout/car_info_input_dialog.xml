@@ -2,6 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/inputDialog">
-
+    android:id="@+id/carInfoInputDialog">
+    <EditText
+        android:id="@+id/CarInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="What type of car will you be giving rides with?"
+        android:inputType="text" />
 </LinearLayout>
