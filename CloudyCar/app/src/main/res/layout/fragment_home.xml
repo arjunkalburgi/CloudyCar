@@ -18,9 +18,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.makeramen.roundedimageview.RoundedImageView
+            <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_gravity="top"
                 android:src="@drawable/home_rider"
                 style="@style/CardImageView"/>
 
@@ -64,7 +66,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.makeramen.roundedimageview.RoundedImageView
+            <ImageView
                 android:id="@+id/imageViewDriver"
                 android:layout_width="match_parent"
                 android:src="@drawable/home_driver"
