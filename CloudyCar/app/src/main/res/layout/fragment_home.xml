@@ -21,7 +21,7 @@
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:src="@drawable/splash_screen"
+                android:src="@drawable/home_rider"
                 style="@style/CardImageView"/>
 
             <LinearLayout
@@ -67,7 +67,7 @@
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imageViewDriver"
                 android:layout_width="match_parent"
-                android:src="@drawable/splash_screen"
+                android:src="@drawable/home_driver"
                 style="@style/CardImageView"/>
 
             <LinearLayout
