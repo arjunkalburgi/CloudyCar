@@ -7,8 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="265dp"
-        android:layout_above="@id/EditCard">
+        android:layout_height="265dp">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
