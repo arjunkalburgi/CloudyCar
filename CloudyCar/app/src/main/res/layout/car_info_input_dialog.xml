@@ -7,6 +7,6 @@
         android:id="@+id/CarInfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="What type of car will you be giving rides with?"
+        android:hint="What car will you give rides with?"
         android:inputType="text" />
 </LinearLayout>
