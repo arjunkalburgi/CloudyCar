@@ -47,8 +47,12 @@ public class SignUpCompleteActivity extends BaseActivity {
     private void startDriverSummary() {
         Intent intent = new Intent(this, SummaryActivity.class);
         intent.putExtra("mode", "driver");
+        // TODO implment logic!! 
+//         if (user.hasCarDescription()) {
+//             startActivity(intent);
+//         } else {
         startAddVehicleDescription();
-//        startActivity(intent);
+//         }
     }
 
     private void startAddVehicleDescription() {
