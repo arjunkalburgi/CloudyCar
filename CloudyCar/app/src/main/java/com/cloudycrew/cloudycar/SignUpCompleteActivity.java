@@ -53,6 +53,7 @@ public class SignUpCompleteActivity extends BaseActivity {
 
     private void startAddVehicleDescription() {
         final View inputView = LayoutInflater.from(this).inflate(R.layout.car_info_input_dialog, null);
+        Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without a description of your car", Toast.LENGTH_LONG);
         Activity a = this;
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Set Car information")
@@ -63,7 +64,10 @@ public class SignUpCompleteActivity extends BaseActivity {
 
                         Log.d("SignUpCompleteActivity", "Thing");
                         EditText carDescription = (EditText) inputView.findViewById(R.id.CarInfo);
-                        if (carDescription.getText().toString().trim() == "") {return;}
+                        if (carDescription.getText().toString().trim() == "") {
+                            toast.show();
+                            return;
+                        }
 
                         // TODO: add car description to user.
 
@@ -75,7 +79,6 @@ public class SignUpCompleteActivity extends BaseActivity {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
                         toast.show();
                     }
                 })
