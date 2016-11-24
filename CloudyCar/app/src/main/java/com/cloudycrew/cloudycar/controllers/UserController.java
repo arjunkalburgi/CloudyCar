@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.users.DuplicateUserException;
+import com.cloudycrew.cloudycar.users.IUserHistoryService;
 import com.cloudycrew.cloudycar.users.IUserService;
 import com.cloudycrew.cloudycar.users.IncompleteUserException;
 import com.cloudycrew.cloudycar.users.UserDoesNotExistException;
@@ -11,14 +12,16 @@ import com.cloudycrew.cloudycar.users.UserDoesNotExistException;
  */
 public class UserController {
     private IUserService userService;
+    private IUserHistoryService userHistoryService;
 
     /**
      * Instantiates a new User controller.
      *
      * @param userService the user service
      */
-    public UserController(IUserService userService) {
+    public UserController(IUserService userService, IUserHistoryService userHistoryService) {
         this.userService = userService;
+        this.userHistoryService = userHistoryService;
     }
 
     /**
@@ -75,4 +78,13 @@ public class UserController {
      * @param user the user
      */
     public void updateCurrentUser(User user) { userService.updateCurrentUser(user); }
+
+    /**
+     * Marks a request as read for the current user
+     *
+     * @param requestId the request being read
+     */
+    public void markRequestAsRead(String requestId) {
+        userHistoryService.markRequestAsRead(requestId);
+    }
 }

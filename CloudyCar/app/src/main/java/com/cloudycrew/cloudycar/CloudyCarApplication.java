@@ -30,8 +30,10 @@ import com.cloudycrew.cloudycar.search.SearchService;
 import com.cloudycrew.cloudycar.signup.SignUpController;
 import com.cloudycrew.cloudycar.userprofile.EditProfileController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
+import com.cloudycrew.cloudycar.users.IUserHistoryService;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.users.IUserService;
+import com.cloudycrew.cloudycar.users.UserHistoryService;
 import com.cloudycrew.cloudycar.users.UserPreferences;
 import com.cloudycrew.cloudycar.users.UserService;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
@@ -121,12 +123,16 @@ public class CloudyCarApplication extends Application {
         return new UserService(getUserElasticSearchService(), getUserPreferences());
     }
 
+    private IUserHistoryService getUserHistoryService() {
+        return new UserHistoryService(getFileService());
+    }
+
     public IUserPreferences getUserPreferences() {
         return new UserPreferences(getApplicationContext());
     }
 
     public UserController getUserController() {
-        return new UserController(getUserService());
+        return new UserController(getUserService(), getUserHistoryService());
     }
 
     public DriverSummaryController getDriverSummaryController() {

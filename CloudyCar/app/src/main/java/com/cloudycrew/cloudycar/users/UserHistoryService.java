@@ -15,17 +15,19 @@ import java.util.Map;
  * Created by George on 2016-11-23.
  */
 
-public class UserHistory {
+public class UserHistoryService implements IUserHistoryService {
     private IFileService fileService;
 
-    public UserHistory(IFileService fileService) {
+    public UserHistoryService(IFileService fileService) {
         this.fileService = fileService;
     }
 
+    @Override
     public void markRequestAsRead(String requestId) {
         markRequestAsRead(requestId, new Date());
     }
 
+    @Override
     public void markRequestAsRead(String requestId, Date timeRead) {
         Map<String, Date> historyMap = loadHistory();
         historyMap.put(requestId, timeRead);
@@ -33,6 +35,7 @@ public class UserHistory {
         saveHistory(historyMap);
     }
 
+    @Override
     public Date getLastReadTime(String requestId) {
         return loadHistory().get(requestId);
     }
