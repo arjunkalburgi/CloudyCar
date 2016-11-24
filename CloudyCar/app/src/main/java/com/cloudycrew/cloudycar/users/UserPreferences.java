@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.utils.StringUtils;
+import com.google.gson.Gson;
 
 /**
  * Created by Ryan on 2016-11-10.
@@ -18,6 +20,7 @@ public class UserPreferences implements IUserPreferences {
     public static final String USERNAME_KEY = "user_name";
     public static final String EMAIL_KEY = "email";
     public static final String PHONENUMBER_KEY = "phone_number";
+    public static final String USER_KEY = "user";
 
     private static final String USER_PREFS = UserPreferences.class.getSimpleName();
     private SharedPreferences sharedPrefs;
@@ -44,10 +47,23 @@ public class UserPreferences implements IUserPreferences {
     }
 
     @Override
+    public User getUser() {
+        String serializedUser = sharedPrefs.getString(USER_KEY, "");
+
+        if (!StringUtils.isNullOrEmpty(serializedUser)) {
+            return new Gson().fromJson(serializedUser, User.class);
+        }
+        return null;
+    }
+
+    @Override
     public void saveUser(User user) {
+        String serializedUser = new Gson().toJson(user);
+
         preferencesEditor.putString(USERNAME_KEY, user.getUsername());
         preferencesEditor.putString(EMAIL_KEY, user.getEmail().getEmail());
         preferencesEditor.putString(PHONENUMBER_KEY, user.getPhoneNumber().getPhoneNumber());
+        preferencesEditor.putString(USER_KEY, serializedUser);
         preferencesEditor.commit();
     }
 }

@@ -27,6 +27,13 @@ public interface IUserPreferences {
     String getPhoneNumber();
 
     /**
+     * Gets the local user
+     *
+     * @return the local user
+     */
+    User getUser();
+
+    /**
      * Saves the local user
      * @param user
      */
