@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
+
 public class SignUpCompleteActivity extends AppCompatActivity {
 
     @Override

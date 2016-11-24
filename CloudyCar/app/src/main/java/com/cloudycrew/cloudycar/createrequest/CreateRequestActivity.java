@@ -4,17 +4,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.SummaryActivity;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.cloudycrew.cloudycar.models.Route;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.DistanceMatrixApi;
-import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DistanceMatrix;
 

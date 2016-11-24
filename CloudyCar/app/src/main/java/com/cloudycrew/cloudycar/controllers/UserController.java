@@ -7,6 +7,8 @@ import com.cloudycrew.cloudycar.users.IUserService;
 import com.cloudycrew.cloudycar.users.IncompleteUserException;
 import com.cloudycrew.cloudycar.users.UserDoesNotExistException;
 
+import java.util.Date;
+
 /**
  * Created by George on 2016-10-23.
  */
@@ -86,5 +88,9 @@ public class UserController {
      */
     public void markRequestAsRead(String requestId) {
         userHistoryService.markRequestAsRead(requestId);
+    }
+
+    public Date getLastReadTime(String requestId) {
+        return userHistoryService.getLastReadTime(requestId);
     }
 }
