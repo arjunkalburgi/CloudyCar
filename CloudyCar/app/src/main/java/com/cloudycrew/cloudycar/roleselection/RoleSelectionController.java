@@ -19,6 +19,14 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
         this.schedulerProvider = schedulerProvider;
     }
 
+    public void selectDriverRole() {
+        if (userController.getCurrentUser().hasCarDescription()) {
+            dispatchDisplayDriverSummary();
+        } else {
+            dispatchDisplayAddCarDescription();
+        }
+    }
+
     public void addCarDescription(String carDescription) {
         User currentUser = userController.getCurrentUser();
         currentUser.setCarDescription(carDescription);
@@ -32,6 +40,18 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
     private void dispatchOnCarDescriptionAdded() {
         if (isViewAttached()) {
             getView().onCarDescriptionAdded();
+        }
+    }
+
+    private void dispatchDisplayAddCarDescription() {
+        if (isViewAttached()) {
+            getView().displayAddCarDescription();
+        }
+    }
+
+    private void dispatchDisplayDriverSummary() {
+        if (isViewAttached()) {
+            getView().displayDriverSummary();
         }
     }
 }

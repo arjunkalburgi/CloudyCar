@@ -5,5 +5,7 @@ package com.cloudycrew.cloudycar.roleselection;
  */
 
 public interface IRoleSelectionView {
+    void displayAddCarDescription();
+    void displayDriverSummary();
     void onCarDescriptionAdded();
 }

@@ -11,13 +11,11 @@ import android.widget.Toast;
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.SummaryActivity;
-import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RoleSelectionActivity extends BaseActivity {
-    private IUserPreferences userPreferences;
+public class RoleSelectionActivity extends BaseActivity implements IRoleSelectionView {
     private RoleSelectionController roleSelectionController;
 
     @Override
@@ -28,9 +26,16 @@ public class RoleSelectionActivity extends BaseActivity {
         resolveDependencies();
     }
 
-    private void resolveDependencies() {
-        this.userPreferences = getCloudyCarApplication().getUserPreferences();
-        this.roleSelectionController = getCloudyCarApplication().getRoleSelectionController();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        roleSelectionController.attachView(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        roleSelectionController.detachView();
     }
 
     @OnClick(R.id.rider_card)
@@ -40,26 +45,15 @@ public class RoleSelectionActivity extends BaseActivity {
 
     @OnClick(R.id.driver_card)
     protected void onDriverCardClick() {
-//        if (user.hasCarDescription()) {
-//            startActivity(intent);
-//        } else {
-//            startAddVehicleDescription();
-//        }
+        roleSelectionController.selectDriverRole();
     }
 
-    private void startRiderSummary() {
-        Intent intent = new Intent(this, SummaryActivity.class);
-        intent.putExtra("mode", "rider");
-        startActivity(intent);
+    private void resolveDependencies() {
+        this.roleSelectionController = getCloudyCarApplication().getRoleSelectionController();
     }
 
-    private void startDriverSummary() {
-        Intent intent = new Intent(this, SummaryActivity.class);
-        intent.putExtra("mode", "driver");
-        startActivity(intent);
-    }
-
-    private void startAddVehicleDescription() {
+    @Override
+    public void displayAddCarDescription() {
         final View inputView = LayoutInflater.from(this).inflate(R.layout.car_info_input_dialog, null);
 
         new AlertDialog.Builder(this)
@@ -75,5 +69,27 @@ public class RoleSelectionActivity extends BaseActivity {
                 })
                 .create()
                 .show();
+    }
+
+    @Override
+    public void displayDriverSummary() {
+        startDriverSummary();
+    }
+
+    @Override
+    public void onCarDescriptionAdded() {
+        startDriverSummary();
+    }
+
+    private void startRiderSummary() {
+        Intent intent = new Intent(this, SummaryActivity.class);
+        intent.putExtra("mode", "rider");
+        startActivity(intent);
+    }
+
+    private void startDriverSummary() {
+        Intent intent = new Intent(this, SummaryActivity.class);
+        intent.putExtra("mode", "driver");
+        startActivity(intent);
     }
 }
