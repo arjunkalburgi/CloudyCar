@@ -1,5 +1,7 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
+import android.net.ConnectivityManager;
+
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
@@ -51,7 +53,23 @@ public class CompositeRequestService implements IRequestService {
         localRequestService.deleteRequest(requestId);
     }
 
+    /**
+     * To sync the local state we want to
+     * A) Delete any requests which can no longer be found on the server (Cancelled requests)
+     *    --Take care not to delete newly created ones from offline.. maybe we should keep them
+     *    --in a separate list?
+     * B) Perform any state transitions from the server
+     *    i) From pending to confirmed
+     *    ii) From confirmed to completed
+     *    iii) From pending to completed
+     * D) For any remaining pending requests merge the list of driversWhoAccepted/set as accepted if
+     *    accepted offline
+     * E) Perform any state transitions that happened offline
+     *    i) From pending to confirmed
+     *    ii) From confirmed to completed
+     */
     private void syncLocalState() {
 
     }
+
 }
