@@ -1,12 +1,8 @@
 package com.cloudycrew.cloudycar.roleselection;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -15,30 +11,40 @@ import android.widget.Toast;
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.SummaryActivity;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RoleSelectionActivity extends BaseActivity {
+    private IUserPreferences userPreferences;
+    private RoleSelectionController roleSelectionController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_selection);
+        ButterKnife.bind(this);
+        resolveDependencies();
+    }
 
-        CardView riderCV = (CardView)findViewById(R.id.rider_card);
-        riderCV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startRiderSummary();
-            }
-        });
+    private void resolveDependencies() {
+        this.userPreferences = getCloudyCarApplication().getUserPreferences();
+        this.roleSelectionController = getCloudyCarApplication().getRoleSelectionController();
+    }
 
-        CardView driverCV = (CardView)findViewById(R.id.driver_card);
-        driverCV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startDriverSummary();
-            }
-        });
+    @OnClick(R.id.rider_card)
+    protected void onRiderCardClick() {
+        startRiderSummary();
+    }
 
+    @OnClick(R.id.driver_card)
+    protected void onDriverCardClick() {
+//        if (user.hasCarDescription()) {
+//            startActivity(intent);
+//        } else {
+//            startAddVehicleDescription();
+//        }
     }
 
     private void startRiderSummary() {
@@ -50,44 +56,24 @@ public class RoleSelectionActivity extends BaseActivity {
     private void startDriverSummary() {
         Intent intent = new Intent(this, SummaryActivity.class);
         intent.putExtra("mode", "driver");
-        // TODO implment logic!! 
-//         if (user.hasCarDescription()) {
-//             startActivity(intent);
-//         } else {
-        startAddVehicleDescription();
-//         }
+        startActivity(intent);
     }
 
     private void startAddVehicleDescription() {
         final View inputView = LayoutInflater.from(this).inflate(R.layout.car_info_input_dialog, null);
-        Activity a = this;
-        AlertDialog dialog = new AlertDialog.Builder(this)
+
+        new AlertDialog.Builder(this)
                 .setTitle("Set Car information")
                 .setView(inputView)
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Log.d("RoleSelectionActivity", "Thing");
-                        EditText carDescription = (EditText) inputView.findViewById(R.id.CarInfo);
-                        if (carDescription.getText().toString().trim() == "") {return;}
-
-                        // TODO: add car description to user.
-
-                        Intent intent = new Intent(a, SummaryActivity.class);
-                        intent.putExtra("mode", "driver");
-                        startActivity(intent);
-                    }
+                .setPositiveButton("Add", (dialog, which) -> {
+                    EditText carDescription = (EditText) inputView.findViewById(R.id.CarInfo);
+                    roleSelectionController.addCarDescription(carDescription.getText().toString().trim());
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
-                        toast.show();
-                    }
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
+                    toast.show();
                 })
-                .create();
-        dialog.show();
+                .create()
+                .show();
     }
-
 }
