@@ -19,12 +19,16 @@ import com.cloudycrew.cloudycar.driversummary.DriverSummaryFragment;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryFragment;
 import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
 
-public class SummaryActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class SummaryActivity extends BaseActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        ISummaryMenuView {
 
+    private NavigationView navigationView;
     private RiderSummaryFragment riderSummaryFragment;
     private DriverSummaryFragment driverSummaryFragment;
+
     private UserController userController;
+    private SummaryMenuController summaryMenuController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class SummaryActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         ((TextView) header.findViewById(R.id.nav_header_name))
@@ -62,6 +66,19 @@ public class SummaryActivity extends BaseActivity
 
     private void resolveDependencies() {
         this.userController = getCloudyCarApplication().getUserController();
+        this.summaryMenuController = getCloudyCarApplication().getSummaryMenuController();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        summaryMenuController.attachView(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        summaryMenuController.detachView();
     }
 
     @Override
@@ -99,5 +116,21 @@ public class SummaryActivity extends BaseActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.summary_content, fragment)
                 .commit();
+    }
+
+    @Override
+    public void displayTotalUnreadRiderRequests(int numberUnread) {
+        setMenuCounter(R.id.nav_rider, numberUnread);
+    }
+
+    @Override
+    public void displayTotalUnreadDriverRequests(int numberUnread) {
+        setMenuCounter(R.id.nav_driver, numberUnread);
+    }
+
+    // from: http://stackoverflow.com/a/33709256
+    private void setMenuCounter(int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
     }
 }
