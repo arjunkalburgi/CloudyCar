@@ -56,13 +56,13 @@ public class SummaryActivity extends BaseActivity
         if (mode.equals("rider")) {
             setFragment(riderSummaryFragment);
         } else if (mode.equals("driver")) {
-//            if (user.hasCarDescription()) {
+            if (userController.getCurrentUser().hasCarDescription()) {
                 setFragment(driverSummaryFragment);
-//            } else {
-//                Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without a description of your car. Please press the 'Be a Driver' button to write a description.", Toast.LENGTH_LONG);
-//                toast.show();
-//                finish();
-//            }
+            } else {
+                Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without a description of your car. Please press the 'Be a Driver' button to write a description.", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+            }
         }
     }
 
