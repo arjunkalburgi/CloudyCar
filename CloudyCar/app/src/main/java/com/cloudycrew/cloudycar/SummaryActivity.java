@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.driversummary.DriverSummaryFragment;
@@ -55,7 +56,13 @@ public class SummaryActivity extends BaseActivity
         if (mode.equals("rider")) {
             setFragment(riderSummaryFragment);
         } else if (mode.equals("driver")) {
-            setFragment(driverSummaryFragment);
+//            if (user.hasCarDescription()) {
+                setFragment(driverSummaryFragment);
+//            } else {
+//                Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without a description of your car. Please press the 'Be a Driver' button to write a description.", Toast.LENGTH_LONG);
+//                toast.show();
+//                finish();
+//            }
         }
     }
 
