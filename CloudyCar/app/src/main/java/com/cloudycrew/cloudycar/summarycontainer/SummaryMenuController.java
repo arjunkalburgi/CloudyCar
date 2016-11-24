@@ -53,14 +53,14 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
 
     private int getTotalUnreadDriverRequests() {
         return Observable.from(requestStore.getRequests())
-                         .filter(r -> isDriverForRequest(r))
+                         .filter(r -> isCurrentUserADriverForRequest(r))
                          .filter(r -> !isRequestRead(r))
                          .count()
                          .toBlocking()
                          .first();
     }
 
-    private boolean isDriverForRequest(Request request) {
+    private boolean isCurrentUserADriverForRequest(Request request) {
         if (request instanceof PendingRequest) {
             PendingRequest pendingRequest = (PendingRequest) request;
             return pendingRequest.hasBeenAcceptedBy(getCurrentUsername());
