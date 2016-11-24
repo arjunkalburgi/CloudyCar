@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.SignUpCompleteActivity;
+import com.cloudycrew.cloudycar.RoleSelectionActivity;
 import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumberTextWatcher;
 
 import butterknife.BindView;
@@ -71,7 +71,7 @@ public class SignUpActivity extends BaseActivity implements ISignUpView {
 
     @Override
     public void onSuccessfulRegistration() {
-        Intent intent = new Intent(this, SignUpCompleteActivity.class);
+        Intent intent = new Intent(this, RoleSelectionActivity.class);
         startActivity(intent);
         finish();
     }

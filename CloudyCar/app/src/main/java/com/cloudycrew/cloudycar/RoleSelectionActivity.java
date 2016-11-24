@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -13,12 +12,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SignUpCompleteActivity extends BaseActivity {
+public class RoleSelectionActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_complete);
+        setContentView(R.layout.activity_role_selection);
 
         CardView riderCV = (CardView)findViewById(R.id.rider_card);
         riderCV.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +64,7 @@ public class SignUpCompleteActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Log.d("SignUpCompleteActivity", "Thing");
+                        Log.d("RoleSelectionActivity", "Thing");
                         EditText carDescription = (EditText) inputView.findViewById(R.id.CarInfo);
                         if (carDescription.getText().toString().trim() == "") {return;}
 
