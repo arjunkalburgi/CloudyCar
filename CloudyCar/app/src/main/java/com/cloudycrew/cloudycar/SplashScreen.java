@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.content.Intent;
 
 import com.cloudycrew.cloudycar.controllers.UserController;
+import com.cloudycrew.cloudycar.roleselection.RoleSelectionActivity;
 import com.cloudycrew.cloudycar.signup.SignUpActivity;
 import com.cloudycrew.cloudycar.users.UserDoesNotExistException;
 

@@ -1,4 +1,4 @@
-package com.cloudycrew.cloudycar;
+package com.cloudycrew.cloudycar.roleselection;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -11,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.SummaryActivity;
 
 public class RoleSelectionActivity extends BaseActivity {
 

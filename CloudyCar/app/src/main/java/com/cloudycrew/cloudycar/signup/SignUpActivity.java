@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.RoleSelectionActivity;
+import com.cloudycrew.cloudycar.roleselection.RoleSelectionActivity;
 import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumberTextWatcher;
 
 import butterknife.BindView;
