@@ -16,6 +16,7 @@ public abstract class Request implements Identifiable {
     private Route route;
     private double price;
     private Date lastUpdated;
+    private transient boolean hasBeenReadByUser;
 
     /**
      * The Id.
@@ -92,5 +93,13 @@ public abstract class Request implements Identifiable {
 
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public boolean isHasBeenReadByUser() {
+        return hasBeenReadByUser;
+    }
+
+    public void setHasBeenReadByUser(boolean hasBeenReadByUser) {
+        this.hasBeenReadByUser = hasBeenReadByUser;
     }
 }
