@@ -63,9 +63,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
-        android:gravity="center_vertical|center_horizontal"
         android:text="Complete Request"
+        android:textColor="@color/colorPrimaryDark"
         android:background="@color/white" />
 
 </RelativeLayout>

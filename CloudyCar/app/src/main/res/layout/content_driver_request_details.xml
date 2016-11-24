@@ -43,7 +43,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:text="@string/accept_request"
-        android:background="@color/white" />
+        android:theme="@style/Button" />
 
 
 
