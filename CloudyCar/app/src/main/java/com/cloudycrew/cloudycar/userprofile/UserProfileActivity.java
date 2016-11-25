@@ -7,19 +7,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.controllers.UserController;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
-import com.cloudycrew.cloudycar.signup.SignUpActivity;
 
 
 /**
@@ -172,10 +169,9 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
             case REQUEST_PHONE_PERMISSIONS: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Phone permission granted", Toast.LENGTH_SHORT).show();
                     this.recreate();
                 } else {
-                    Toast.makeText(this, "No phone permissions", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "To make phone calls please enable phone permissions in settings.", Toast.LENGTH_SHORT).show();
                 }
 
             }

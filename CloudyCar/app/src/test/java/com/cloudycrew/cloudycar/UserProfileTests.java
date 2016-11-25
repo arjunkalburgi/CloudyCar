@@ -2,7 +2,7 @@ package com.cloudycrew.cloudycar;
 
 import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchService;
 import com.cloudycrew.cloudycar.email.Email;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.users.DuplicateUserException;
 import com.cloudycrew.cloudycar.users.IUserService;

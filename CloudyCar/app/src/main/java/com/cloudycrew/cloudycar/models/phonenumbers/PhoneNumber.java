@@ -1,4 +1,4 @@
-package com.cloudycrew.cloudycar.models;
+package com.cloudycrew.cloudycar.models.phonenumbers;
 
 /**
  * Created by George on 2016-10-13.

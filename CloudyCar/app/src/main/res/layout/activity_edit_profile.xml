@@ -50,6 +50,8 @@
                     style="@style/CardListDetails"
                     android:gravity="center_vertical"
                     android:text="..."
+                    android:maxLength="14"
+                    android:inputType="phone"
                     android:id="@+id/phonenumber_edit"/>
             </LinearLayout>
 
@@ -76,6 +78,7 @@
                     style="@style/CardListDetails"
                     android:gravity="center_vertical"
                     android:text="..."
+                    android:inputType="textEmailAddress"
                     android:id="@+id/emailaddress_edit"/>
             </LinearLayout>
             <View

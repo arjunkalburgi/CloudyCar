@@ -4,18 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.email.Email;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
-import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumberTextWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,9 +70,8 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
         editedUser = user;
         usernameTextView.setText(user.getUsername());
         emailEditText.setText(user.getEmail().getEmail());
-        phoneEditText.addTextChangedListener(new PatternedTextWatcher("(###)-###-####"));
+        phoneEditText.addTextChangedListener(new PhoneNumberTextWatcher(phoneEditText));
         phoneEditText.setText(user.getPhoneNumber().getPhoneNumber());
-        phoneEditText.setSelection(user.getPhoneNumber().prettyPrint().length());
     }
 
     @Override

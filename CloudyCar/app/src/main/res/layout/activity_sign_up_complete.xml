@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/backgroundGrey"
     tools:context="com.cloudycrew.cloudycar.SignUpCompleteActivity">
 
     <android.support.v7.widget.CardView
@@ -22,9 +23,8 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-
+                android:src="@drawable/home_rider"
                 style="@style/CardImageView"/>
-            <!--android:src="@drawable/splash_screen"-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -69,9 +69,8 @@
             <ImageView
                 android:id="@+id/imageViewDriver"
                 android:layout_width="match_parent"
-
+                android:src="@drawable/home_driver"
                 style="@style/CardImageView"/>
-            <!--android:src="@drawable/splash_screen"-->
 
             <LinearLayout
                 android:layout_width="match_parent"

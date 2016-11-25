@@ -3,14 +3,12 @@ package com.cloudycrew.cloudycar.signup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.EditText;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.SignUpCompleteActivity;
-import com.szagurskii.patternedtextwatcher.PatternedTextWatcher;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumberTextWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +29,7 @@ public class SignUpActivity extends BaseActivity implements ISignUpView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-        phoneEditText.addTextChangedListener(new PatternedTextWatcher("(###)-###-####"));
+        phoneEditText.addTextChangedListener(new PhoneNumberTextWatcher(phoneEditText));
         resolveDependencies();
     }
 

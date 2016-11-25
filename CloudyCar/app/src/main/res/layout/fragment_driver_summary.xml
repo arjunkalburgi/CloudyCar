@@ -7,65 +7,18 @@
     android:fitsSystemWindows="true"
     android:background="@color/backgroundGrey">
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/driver_summary_swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <!-- Card that's optional -->
-        <!--<android.support.v7.widget.CardView-->
-            <!--android:id="@+id/confirmed_card"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="200dp"-->
-            <!--style="@style/CardViewStyle">-->
-            <!--<LinearLayout-->
-                <!--style="@style/CardLayoutStyle"-->
-                <!--android:id="@+id/CardTopLayout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:orientation="vertical"-->
-                <!--android:layout_height="match_parent">-->
-                <!--<TextView-->
-                    <!--style="@style/CardTitleText"-->
-                    <!--android:id="@+id/CardTitleText"-->
-                    <!--android:text="Steve has confirmed!"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"/>-->
-                <!--<TextView-->
-                    <!--style="@style/CardDetailsText"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:text="Steve would like to be taken to West Edmonton Mall for $20. Let's start!"-->
-                    <!--android:layout_height="wrap_content" />-->
-            <!--</LinearLayout>-->
-            <!--<LinearLayout-->
-                <!--android:orientation="vertical"-->
-                <!--android:layout_gravity="bottom"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-                <!--<Button-->
-                    <!--android:id="@+id/button1"-->
-                    <!--style="@style/CardActionButton"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:gravity="left|center_vertical|center_horizontal"-->
-                    <!--android:text="LET'S GO!" />-->
-            <!--</LinearLayout>-->
-        <!--</android.support.v7.widget.CardView>-->
+        android:layout_height="match_parent">
 
-        <!--&lt;!&ndash; Text &ndash;&gt;-->
-        <!--<TextView-->
-            <!--android:id="@+id/acceptedOffersLabel"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--style="@style/blueSubtitle"-->
-            <!--android:text="Offers you've accepted"/>-->
-
-        <!-- List -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/accepted_offers_list"
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <!--android:layout_below="@+id/confirmed_card"-->
+            android:layout_height="match_parent" />
 
-    </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -73,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/white"
         app:srcCompat="@android:drawable/ic_search_category_default" />
 
 </android.support.design.widget.CoordinatorLayout>
