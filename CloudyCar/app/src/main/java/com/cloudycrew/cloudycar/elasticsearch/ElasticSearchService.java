@@ -47,7 +47,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
                 return extractItemsFromHits(result.getHits(typeClass));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ElasticSearchConnectivityException();
         }
 
         return new ArrayList<>();
@@ -73,7 +73,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
         try {
             jestClient.execute(delete);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ElasticSearchConnectivityException();
         }
     }
 
@@ -96,7 +96,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
         try {
             jestClient.execute(documentIndex);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ElasticSearchConnectivityException();
         }
     }
 
