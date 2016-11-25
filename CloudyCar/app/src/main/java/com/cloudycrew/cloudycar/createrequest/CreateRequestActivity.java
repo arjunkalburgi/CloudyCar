@@ -92,7 +92,7 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         }else{
             price = Double.parseDouble(suggestedPrice.getText().toString().substring(1));
         }
-        createRequestController.saveRequest(userRoute,price);
+        createRequestController.saveRequest(userRoute,price,"");
     }
     /**
      * Apply descriptions from the start and end point to the startText and endText view

@@ -36,8 +36,8 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
      * @param userRoute the user route
      * @param price     the price
      */
-    public void saveRequest(Route userRoute, double price) {
-        ObservableUtils.fromFunction(requestController::createRequest, userRoute, price)
+    public void saveRequest(Route userRoute, double price, String description) {
+        ObservableUtils.fromFunction(requestController::createRequest, userRoute, price, description)
                        .doOnNext(r -> userController.markRequestAsRead(r.getId()))
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())

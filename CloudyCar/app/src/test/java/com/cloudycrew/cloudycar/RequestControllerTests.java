@@ -91,7 +91,7 @@ public class RequestControllerTests {
 
         Route route = new Route(startingPoint,endingPoint);
 
-        requestController.createRequest(route, 3.5);
+        requestController.createRequest(route, 3.5, testDescription);
 
         verify(requestStore).addRequest(request1);
         verify(requestService).createRequest(request1);
