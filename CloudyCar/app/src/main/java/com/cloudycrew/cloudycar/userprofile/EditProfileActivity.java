@@ -30,6 +30,8 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
     protected EditText emailEditText;
     @BindView(R.id.phonenumber_edit)
     protected EditText phoneEditText;
+    @BindView(R.id.cardescription_edit)
+    protected EditText carDescriptionEditText;
 
 
     @Override
@@ -72,6 +74,12 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
         emailEditText.setText(user.getEmail().getEmail());
         phoneEditText.addTextChangedListener(new PhoneNumberTextWatcher(phoneEditText));
         phoneEditText.setText(user.getPhoneNumber().getPhoneNumber());
+
+        if (user.hasCarDescription()) {
+            carDescriptionEditText.setText(user.getCarDescription());
+        } else {
+            carDescriptionEditText.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -97,6 +105,9 @@ public class EditProfileActivity extends BaseActivity implements IEditProfileVie
     public void commitChanges(View v) {
         editedUser.setEmail(new Email(emailEditText.getText().toString()));
         editedUser.setPhoneNumber(new PhoneNumber(phoneEditText.getText().toString()));
+        if (carDescriptionEditText.getVisibility() != View.GONE) {
+            editedUser.setCarDescription(carDescriptionEditText.getText().toString());
+        }
         editProfileController.updateUser(editedUser);
     }
 

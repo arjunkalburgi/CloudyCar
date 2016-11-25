@@ -22,6 +22,7 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
 import com.cloudycrew.cloudycar.requeststorage.RequestStore;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryController;
+import com.cloudycrew.cloudycar.roleselection.RoleSelectionController;
 import com.cloudycrew.cloudycar.scheduling.AndroidSchedulerProvider;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.ISearchService;
@@ -172,4 +173,7 @@ public class CloudyCarApplication extends Application {
         return new SummaryMenuController(getUserController(), getRequestStore());
     }
 
+    public RoleSelectionController getRoleSelectionController() {
+        return new RoleSelectionController(getUserController(), getSchedulerProvider());
+    }
 }
