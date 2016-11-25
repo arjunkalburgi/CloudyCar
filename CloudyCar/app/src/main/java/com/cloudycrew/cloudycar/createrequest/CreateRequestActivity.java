@@ -90,7 +90,7 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         if(userPrice.getText().length()>0){
             price = Double.parseDouble(userPrice.getText().toString());
         }else{
-            price = Double.parseDouble(suggestedPrice.getText().toString());
+            price = Double.parseDouble(suggestedPrice.getText().toString().substring(1));
         }
         createRequestController.saveRequest(userRoute,price);
     }
