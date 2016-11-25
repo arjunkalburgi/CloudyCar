@@ -75,7 +75,6 @@
             android:id="@+id/set_description"
             android:gravity="left|center_vertical"
             android:paddingLeft="15dp"
-            android:inputType="numberDecimal"
             android:hint="Description" />
     </android.support.v7.widget.CardView>
 
