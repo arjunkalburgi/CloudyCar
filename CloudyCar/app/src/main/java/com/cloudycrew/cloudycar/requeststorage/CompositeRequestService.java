@@ -3,6 +3,8 @@ package com.cloudycrew.cloudycar.requeststorage;
 import android.net.ConnectivityManager;
 
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
+import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchConnectivityException;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;
@@ -20,30 +22,49 @@ public class CompositeRequestService implements IRequestService {
      */
     private IConnectivityService connectivityService;
 
+    private List<Request> createQueue;
+    private List<Request> updateQueue;
+
     public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService, IConnectivityService connectivityService) {
         this.cloudRequestService = cloudRequestService;
         this.localRequestService = localRequestService;
         this.connectivityService = connectivityService;
+
+        this.connectivityService.setOnConnectivityChangedListener(isConnected -> {
+            if (isConnected) {
+                syncLocalState();
+            }
+        });
     }
 
     @Override
     public List<Request> getRequests() {
         try {
             return cloudRequestService.getRequests();
-        } catch (Exception e) {
+        } catch (ElasticSearchConnectivityException e) {
             return localRequestService.getRequests();
         }
+
     }
 
     @Override
     public void createRequest(Request request) {
-        cloudRequestService.createRequest(request);
+        try {
+            cloudRequestService.createRequest(request);
+        }
+        catch (ElasticSearchConnectivityException e){
+            this.createQueue.add(request);
+        }
         localRequestService.createRequest(request);
     }
 
     @Override
     public void updateRequest(Request request) {
-        cloudRequestService.updateRequest(request);
+        try {
+            cloudRequestService.updateRequest(request);
+        } catch (ElasticSearchConnectivityException e) {
+            this.updateQueue.add(request);
+        }
         localRequestService.updateRequest(request);
     }
 
@@ -55,9 +76,7 @@ public class CompositeRequestService implements IRequestService {
 
     /**
      * To sync the local state we want to
-     * A) Delete any requests which can no longer be found on the server (Cancelled requests)
-     *    --Take care not to delete newly created ones from offline.. maybe we should keep them
-     *    --in a separate list?
+     * A) Cancel any local requests that are cancelled on the server
      * B) Perform any state transitions from the server
      *    i) From pending to confirmed
      *    ii) From confirmed to completed
@@ -70,6 +89,17 @@ public class CompositeRequestService implements IRequestService {
      */
     private void syncLocalState() {
 
+        for (Request request: createQueue) {
+            this.createRequest(request); //If we have a hash collision we deserve it
+        }
+
+        List<Request> cloudRequests = this.cloudRequestService.getRequests();
+
+        for (Request request: updateQueue) {
+            //do stuff
+        }
+
     }
+
 
 }
