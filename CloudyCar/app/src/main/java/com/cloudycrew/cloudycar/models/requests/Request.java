@@ -17,6 +17,7 @@ public abstract class Request implements Identifiable {
     private double price;
     private Date lastUpdated;
     private transient boolean hasBeenReadByUser;
+    private String description;
 
     /**
      * The Id.
@@ -31,11 +32,12 @@ public abstract class Request implements Identifiable {
      * @param route         the route
      * @param price         the price
      */
-    public Request(String type, String riderUsername, Route route, double price) {
+    public Request(String type, String riderUsername, Route route, double price, String description) {
         this.requestType = type;
         this.riderUsername = riderUsername;
         this.route = route;
         this.price = price;
+        this.description = description;
         this.lastUpdated = new Date();
     }
 
@@ -101,5 +103,13 @@ public abstract class Request implements Identifiable {
 
     public void setHasBeenReadByUser(boolean hasBeenReadByUser) {
         this.hasBeenReadByUser = hasBeenReadByUser;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
