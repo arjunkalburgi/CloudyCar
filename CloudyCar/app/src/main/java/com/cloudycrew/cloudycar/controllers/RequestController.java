@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.controllers;
 
 import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -60,13 +61,20 @@ public class RequestController {
     }
 
     /**
-     * Cancels a request.
+     * Cancels a request. No change will occur if no request can be found
+     * matching the specified id
      *
      * @param requestId the request id
      */
     public void cancelRequest(String requestId) {
-        requestService.deleteRequest(requestId);
-        requestStore.deleteRequest(requestId);
+        PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
+
+        if(pendingRequest != null) {
+            CancelledRequest cancelledRequest = pendingRequest.cancel();
+
+            requestService.updateRequest(cancelledRequest);
+            requestStore.updateRequest(cancelledRequest);
+        }
     }
 
     /**
