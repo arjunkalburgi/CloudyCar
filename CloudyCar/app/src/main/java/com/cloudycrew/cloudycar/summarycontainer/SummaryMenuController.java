@@ -3,7 +3,7 @@ package com.cloudycrew.cloudycar.summarycontainer;
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
-import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
@@ -53,20 +53,17 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
 
     private int getTotalUnreadDriverRequests() {
         return Observable.from(requestStore.getRequests())
-                         .filter(r -> isCurrentUserADriverForRequest(r))
+                         .filter(r -> shouldDriverRequestBeNotified(r))
                          .filter(r -> !isRequestRead(r))
                          .count()
                          .toBlocking()
                          .first();
     }
 
-    private boolean isCurrentUserADriverForRequest(Request request) {
-        if (request instanceof PendingRequest) {
-            PendingRequest pendingRequest = (PendingRequest) request;
-            return pendingRequest.hasBeenAcceptedBy(getCurrentUsername());
-        } else if (request instanceof CompletedRequest) {
-            CompletedRequest completedRequest = (CompletedRequest) request;
-            return completedRequest.getDriverUsername().equals(getCurrentUsername());
+    private boolean shouldDriverRequestBeNotified(Request request) {
+        if (request instanceof ConfirmedRequest) {
+            ConfirmedRequest confirmedRequest = (ConfirmedRequest) request;
+            return confirmedRequest.getDriverUsername().equals(getCurrentUsername());
         }
         return false;
     }
@@ -74,8 +71,8 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
     private boolean isRequestRead(Request request) {
         Date lastUserReadTime = userController.getLastReadTime(request.getId());
 
-        return lastUserReadTime == null ||
-                request.getLastUpdated().compareTo(lastUserReadTime) > 0;
+        return lastUserReadTime != null &&
+                lastUserReadTime.compareTo(request.getLastUpdated()) > 0;
     }
 
     private String getCurrentUsername() {
