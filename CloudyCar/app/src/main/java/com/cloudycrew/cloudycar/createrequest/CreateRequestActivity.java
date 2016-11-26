@@ -33,6 +33,8 @@ import butterknife.OnClick;
 public class CreateRequestActivity extends BaseActivity implements ICreateRequestView {
     @BindView(R.id.set_price)
     protected EditText userPrice;
+    @BindView(R.id.set_description)
+    protected EditText requestDescription;
     @BindView(R.id.suggested_price)
     protected TextView suggestedPrice;
     @BindView(R.id.display_route_start)
@@ -92,7 +94,7 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         }else{
             price = Double.parseDouble(suggestedPrice.getText().toString().substring(1));
         }
-        createRequestController.saveRequest(userRoute,price);
+        createRequestController.saveRequest(userRoute, price, requestDescription.getText().toString().trim());
     }
     /**
      * Apply descriptions from the start and end point to the startText and endText view

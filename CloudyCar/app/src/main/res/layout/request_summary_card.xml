@@ -35,7 +35,7 @@
                     android:id="@+id/request_details_to"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="95dp"
                     android:text="University of Alberta"
                     android:textSize="16sp"
                     android:textColor="@color/grey_700"/>
@@ -60,7 +60,7 @@
                     android:id="@+id/request_details_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="95dp"
                     android:text="Table top Cafe"
                     android:textSize="16sp"
                     android:textColor="@color/grey_700"/>
@@ -86,7 +86,7 @@
                     android:id="@+id/request_details_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="95dp"
                     android:text="$10"
                     android:textSize="16sp"
                     android:textColor="@color/grey_700"/>
@@ -111,8 +111,33 @@
                     android:id="@+id/request_details_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="95dp"
                     android:text="Waiting for a driver"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/request_details_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="95dp"
+                    android:text="Cheap ride to school"
                     android:textSize="16sp"
                     android:textColor="@color/grey_700"/>
 
@@ -137,7 +162,7 @@
                     android:id="@+id/request_details_rider"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="95dp"
                     android:text="Gerg"
                     android:textSize="16sp"
                     android:textColor="@color/grey_700"/>
@@ -165,7 +190,7 @@
                     android:id="@+id/request_details_driver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
+                    android:layout_marginStart="95dp"
                     android:text="snack"
                     android:textSize="16sp"
                     android:textColor="@color/grey_700"/>

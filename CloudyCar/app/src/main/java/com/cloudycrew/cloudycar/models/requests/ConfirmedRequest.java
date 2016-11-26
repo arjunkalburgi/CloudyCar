@@ -18,7 +18,7 @@ public class ConfirmedRequest extends Request {
      * @param driverUsername the driver username
      */
     public ConfirmedRequest(PendingRequest pendingRequest, String driverUsername) {
-        super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute(), pendingRequest.getPrice());
+        super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute(), pendingRequest.getPrice(), pendingRequest.getDescription());
         this.id = pendingRequest.getId();
         this.driverUsername = driverUsername;
     }
@@ -58,6 +58,7 @@ public class ConfirmedRequest extends Request {
         ConfirmedRequest otherConfirmedRequest = (ConfirmedRequest) obj;
 
         return getId().equals(otherConfirmedRequest.getId()) &&
+                getDescription().equals(otherConfirmedRequest.getDescription()) &&
                 getDriverUsername().equals(otherConfirmedRequest.getDriverUsername()) &
                 getRider().equals(otherConfirmedRequest.getRider()) &&
                 getRoute().equals(otherConfirmedRequest.getRoute()) &&

@@ -54,8 +54,8 @@ public class RequestController {
      *
      * @return pendingRequest the created request
      */
-    public PendingRequest createRequest(Route route, double price) {
-        PendingRequest pendingRequest = new PendingRequest(userPreferences.getUserName(), route, price);
+    public PendingRequest createRequest(Route route, double price, String description) {
+        PendingRequest pendingRequest = new PendingRequest(userPreferences.getUserName(), route, price, description);
 
         requestService.createRequest(pendingRequest);
         requestStore.addRequest(pendingRequest);
