@@ -72,7 +72,7 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
         Date lastUserReadTime = userController.getLastReadTime(request.getId());
 
         return lastUserReadTime != null &&
-                lastUserReadTime.compareTo(request.getLastUpdated()) > 0;
+                lastUserReadTime.compareTo(request.getLastUpdated()) >= 0;
     }
 
     private String getCurrentUsername() {
