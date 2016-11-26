@@ -4,18 +4,16 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
 import com.cloudycrew.cloudycar.models.Point;
-import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -41,6 +39,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LocationSearchActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    public static final int EXPECTED_CITY_RADIUS = 20000;
+    public static final int CAMERA_ZOOM_PADDING = 150;
     @BindView(R.id.map_search_card)
     protected CardView searchCard;
 
@@ -59,6 +59,8 @@ public class LocationSearchActivity extends FragmentActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
         ButterKnife.bind(this);
+
+        radius = this.getIntent().getExtras().getDouble("radius");
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -84,7 +86,6 @@ public class LocationSearchActivity extends FragmentActivity implements OnMapRea
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        radius = 500; //Draw from prev activity
     }
     public void onPlaceSelected(GoogleMap mMap, LatLng latLng) {
         reDrawMarkerAndRadius(mMap, latLng);
@@ -138,10 +139,10 @@ public class LocationSearchActivity extends FragmentActivity implements OnMapRea
         mMap.setMyLocationEnabled(true);
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation,radius), CAMERA_ZOOM_PADDING));
         onPlaceSelected(mMap, myLocation);
 
-        autocompleteFragment.setBoundsBias(toBounds(myLocation,20000));
+        autocompleteFragment.setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS));
     }
 
     //http://stackoverflow.com/a/31029389/4880644
