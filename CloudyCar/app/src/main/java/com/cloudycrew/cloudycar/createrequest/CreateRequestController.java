@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.createrequest;
 
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
@@ -11,6 +12,7 @@ import com.cloudycrew.cloudycar.utils.ObservableUtils;
  */
 public class CreateRequestController extends ViewController<ICreateRequestView> {
     private RequestController requestController;
+    private UserController userController;
     private ISchedulerProvider schedulerProvider;
 
     /**
@@ -19,8 +21,11 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
      * @param requestController the request controller
      * @param schedulerProvider the scheduler provider
      */
-    public CreateRequestController(RequestController requestController, ISchedulerProvider schedulerProvider) {
+    public CreateRequestController(RequestController requestController,
+                                   UserController userController,
+                                   ISchedulerProvider schedulerProvider) {
         this.requestController = requestController;
+        this.userController = userController;
         this.schedulerProvider = schedulerProvider;
     }
 
@@ -31,8 +36,9 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
      * @param userRoute the user route
      * @param price     the price
      */
-    public void saveRequest(Route userRoute, double price) {
-        ObservableUtils.fromAction(requestController::createRequest, userRoute, price)
+    public void saveRequest(Route userRoute, double price, String description) {
+        ObservableUtils.fromFunction(requestController::createRequest, userRoute, price, description)
+                       .doOnNext(r -> userController.markRequestAsRead(r.getId()))
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe(nothing -> dispatchOnRequestCreated());

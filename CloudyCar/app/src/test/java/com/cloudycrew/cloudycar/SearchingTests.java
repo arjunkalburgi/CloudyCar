@@ -35,10 +35,13 @@ public class SearchingTests {
     private PendingRequest request1;
     private PendingRequest request2;
     private String testDescription;
+    private String requestDescription;
 
     @Before
     public void set_up() {
         testDescription = "test description";
+        requestDescription = "description";
+
         Point startingPoint1 = new Point(48.1472373, 11.5673969,testDescription);
         Point endingPoint1 = new Point(48.1258551, 11.5121003,testDescription);
 
@@ -52,8 +55,8 @@ public class SearchingTests {
         User user= new User("SomeUser");
         double price = 2.5;
 
-        request1 = new PendingRequest(user.getUsername(), route1, price);
-        request2 = new PendingRequest(user.getUsername(), route2, price);
+        request1 = new PendingRequest(user.getUsername(), route1, price, requestDescription);
+        request2 = new PendingRequest(user.getUsername(), route2, price, requestDescription);
 
         when(requestStore.getRequests()).thenReturn(Arrays.asList(request1, request2));
     }
