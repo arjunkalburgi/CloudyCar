@@ -7,8 +7,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +35,8 @@ import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
 import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
+import ca.antonious.viewcelladapter.ViewCell;
 import ca.antonious.viewcelladapter.ViewCellAdapter;
 import rx.Observable;
 
@@ -69,7 +75,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         setUpRecyclerView();
         setUpSwipeRefreshLayout();
 
-        setUpItemTouchHelper();
+        setUpItemTouchHelper(view);
         setUpAnimationDecoratorHelper();
 
         return view;
@@ -205,7 +211,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     // standard support library way of implementing "swipe to delete"
-    private void setUpItemTouchHelper() {
+    private void setUpItemTouchHelper(View v) {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -214,6 +220,16 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             Drawable xMark;
             int xMarkMargin;
             boolean initiated;
+            Snackbar snackbar = Snackbar
+                    .make(v, "Undo Removed Request", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            pendingRequestsSection.add(pendingRemoval);
+                            viewCellAdapter.notifyDataSetChanged();
+                        }
+                    });
+            ViewCell pendingRemoval;
 
             private void init() {
                 background = new ColorDrawable(Color.RED);
@@ -241,16 +257,19 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int swipedPosition = viewHolder.getAdapterPosition();
-
-                // use position to get the request and delete only if it's a pending request
+                ViewCell viewCell = viewCellAdapter.get(viewHolder.getAdapterPosition());
+                if (viewCell instanceof PendingRequestViewCell) {
+                    snackbar.show();
+                    viewCellAdapter.remove(viewHolder.getAdapterPosition());
+                    viewCellAdapter.notifyDataSetChanged();
+                    pendingRemoval = viewCell;
+                }
             }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
 
-                // not sure why, but this method get's called for viewholder that are already swiped away
                 if (viewHolder.getAdapterPosition() == -1) {
                     // not interested in those
                     return;
