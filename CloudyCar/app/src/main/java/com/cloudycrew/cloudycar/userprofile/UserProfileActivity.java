@@ -28,8 +28,9 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     private UserProfileController userProfileController;
     private UserController userController;
 
-    private String username,email;
+    private String username,email,carDescription;
     private PhoneNumber phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,12 +139,21 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         TextView usernameView = (TextView)findViewById(R.id.username);
         TextView phoneNumberView = (TextView)findViewById(R.id.PhoneNumberText);
         TextView emailAddressView = (TextView)findViewById(R.id.emailAddressText);
+        TextView carDescriptionView = (TextView)findViewById(R.id.driverCarText);
 
         usernameView.setText(user.getUsername());
         phoneNumber = user.getPhoneNumber();
         phoneNumberView.setText(phoneNumber.prettyPrint());
         email = user.getEmail().getEmail();
         emailAddressView.setText(email);
+
+        carDescription = null;
+        if (user.hasCarDescription()) {
+            carDescription = user.getCarDescription();
+            carDescriptionView.setText(carDescription);
+        } else {
+            carDescriptionView.setVisibility(View.GONE);
+        }
 
         //Probably set the image here
     }

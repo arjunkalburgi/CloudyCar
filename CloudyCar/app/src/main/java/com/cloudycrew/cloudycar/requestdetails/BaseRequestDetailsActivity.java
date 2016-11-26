@@ -26,6 +26,8 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
     protected TextView toTextView;
     @BindView(R.id.request_details_price)
     protected TextView priceTextView;
+    @BindView(R.id.request_details_description)
+    protected TextView descriptionTextView;
     @BindView(R.id.request_details_status)
     protected TextView statusTextView;
     @BindView(R.id.request_details_driver_label)
@@ -73,8 +75,11 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
 
         fromTextView.setText(request.getRoute().getStartingPoint().getDescription());
         toTextView.setText(request.getRoute().getEndingPoint().getDescription());
+        descriptionTextView.setText(request.getDescription());
         priceTextView.setText(String.format(Locale.getDefault(), "$%.2f", request.getPrice()));
         riderTextView.setText(request.getRider());
+
+        requestDetailsController.markRequestAsRead();
     }
 
     protected void setDriver(String driver) {

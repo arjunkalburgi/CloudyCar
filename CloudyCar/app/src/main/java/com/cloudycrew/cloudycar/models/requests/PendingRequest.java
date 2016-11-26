@@ -24,8 +24,8 @@ public class PendingRequest extends Request {
      * @param route         the route
      * @param price         the price
      */
-    public PendingRequest(String riderUsername, Route route, double price) {
-        super(TYPE_NAME, riderUsername, route, price);
+    public PendingRequest(String riderUsername, Route route, double price, String description) {
+        super(TYPE_NAME, riderUsername, route, price, description);
         this.id = UUID.randomUUID().toString();
         this.driversWhoAccepted = new ArrayList<>();
     }
@@ -88,7 +88,7 @@ public class PendingRequest extends Request {
             throw new DriverAlreadyAcceptedException();
         }
 
-        PendingRequest pendingRequest = new PendingRequest(getRider(), getRoute(), getPrice());
+        PendingRequest pendingRequest = new PendingRequest(getRider(), getRoute(), getPrice(), getDescription());
         pendingRequest.id = getId();
         pendingRequest.driversWhoAccepted.addAll(getDriversWhoAccepted());
         pendingRequest.driversWhoAccepted.add(driverUsername);
@@ -110,6 +110,7 @@ public class PendingRequest extends Request {
         return getId().equals(otherPendingRequest.getId()) &&
                 getRider().equals(otherPendingRequest.getRider()) &&
                 getRoute().equals(otherPendingRequest.getRoute()) &&
+                getDescription().equals(otherPendingRequest.getDescription()) &&
                 getDriversWhoAccepted().equals(otherPendingRequest.getDriversWhoAccepted()) &&
                 getPrice() == otherPendingRequest.getPrice();
     }

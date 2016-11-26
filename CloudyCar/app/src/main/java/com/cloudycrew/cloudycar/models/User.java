@@ -12,6 +12,7 @@ public class User implements Identifiable {
     private Email email;
     private PhoneNumber phoneNumber;
     private String firstName;
+    private String carDescription;
 
     /**
      * Instantiates a new User.
@@ -101,6 +102,33 @@ public class User implements Identifiable {
      */
     public boolean verifyContactInformation() {
         return this.email != null && this.phoneNumber != null;
+    }
+
+
+    /**
+     * Gets car description.
+     *
+     * @return the carDescription
+     */
+    public String getCarDescription() {
+        return carDescription;
+    }
+
+    /**
+     * Sets car description.
+     *
+     * @param carDescription the first name
+     */
+    public void setCarDescription(String carDescription) {
+        this.carDescription = carDescription;
+    }
+    /**
+     * Verify car description boolean.
+     *
+     * @return the boolean
+     */
+    public boolean hasCarDescription() {
+        return this.carDescription != null;
     }
 
     @Override
