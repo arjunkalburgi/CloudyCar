@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.cloudycrew.cloudycar.createrequest.RouteSelector"
-        android:layout_above="@+id/submit_route_from_map" />
+        />
 
     <Button
         android:layout_width="match_parent"

@@ -1,8 +1,8 @@
 package com.cloudycrew.cloudycar.search;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,9 +13,16 @@ import android.support.v7.widget.CardView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.createrequest.CreateRequestActivity;
+import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,24 +31,34 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
-import org.slf4j.MarkerFactory;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LocationSearchActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    @BindView(R.id.map_search_card)
+    protected CardView searchCard;
+
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private Marker currentMarker;
     private Circle currentRadius;
     private MarkerOptions markerOptions;
     private double radius;
+    private LatLng selectedLocation;
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
+    private PlaceAutocompleteFragment autocompleteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
+        ButterKnife.bind(this);
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -51,15 +68,36 @@ public class LocationSearchActivity extends FragmentActivity implements OnMapRea
         }
         mGoogleApiClient.connect();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                LocationSearchActivity.this.onPlaceSelected(mMap,place.getLatLng());
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         radius = 500; //Draw from prev activity
     }
+    public void onPlaceSelected(GoogleMap mMap, LatLng latLng) {
+        reDrawMarkerAndRadius(mMap, latLng);
+        selectedLocation = latLng;
+    }
 
-    public void drawMarkerAndRange(GoogleMap mMap, LatLng latLng){
-        if(currentMarker != null){currentMarker.remove();}
-        if(currentRadius != null){currentRadius.remove();}
+    private void reDrawMarkerAndRadius(GoogleMap mMap, LatLng latLng) {
+        if (currentMarker != null) {
+            currentMarker.remove();
+        }
+        if (currentRadius != null) {
+            currentRadius.remove();
+        }
         currentRadius = mMap.addCircle(new CircleOptions().center(latLng).radius(radius));
         currentMarker = mMap.addMarker(markerOptions.position(latLng));
     }
@@ -83,39 +121,57 @@ public class LocationSearchActivity extends FragmentActivity implements OnMapRea
             }
         }
     }
+
     /**
      * The GoogleMaps API has connected, so now LocationServices can be used to access user location
      * and place the initial start marker
+     *
      * @param bundle
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSIONS);
-
             return;
         }
-        markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp)).anchor(0.5f,0.5f);
+        markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp)).anchor(0.5f, 0.5f);
         mMap.setMyLocationEnabled(true);
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-        drawMarkerAndRange(mMap,myLocation);
+        onPlaceSelected(mMap, myLocation);
+
+        autocompleteFragment.setBoundsBias(toBounds(myLocation,20000));
     }
 
+    //http://stackoverflow.com/a/31029389/4880644
+    public LatLngBounds toBounds(LatLng center, double radius) {
+        LatLng southwest = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 225);
+        LatLng northeast = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 45);
+        return new LatLngBounds(southwest, northeast);
+    }
+
+    @OnClick(R.id.submit_selected_location)
+    public void submitSelectedLocation(){
+        Intent intent = new Intent(this,SearchActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("location",new Point(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        CardView searchCard = (CardView) findViewById(R.id.map_search_card);
-        mMap.setPadding(0,searchCard.getHeight()+15,0,0);
-        mMap.setOnMapClickListener(latLng -> drawMarkerAndRange(mMap,latLng));
+        mMap.setPadding(0, searchCard.getHeight() + 15, 0, 0);
+        mMap.setOnMapClickListener(latLng -> onPlaceSelected(mMap, latLng));
     }
 
     @Override
     public void onConnectionSuspended(int i) {
 
     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
