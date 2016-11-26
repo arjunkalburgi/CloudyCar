@@ -18,7 +18,7 @@ public class CompletedRequest extends Request {
      * @param confirmedRequest the confirmed request
      */
     public CompletedRequest(ConfirmedRequest confirmedRequest) {
-        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute(), confirmedRequest.getPrice());
+        super(TYPE_NAME, confirmedRequest.getRider(), confirmedRequest.getRoute(), confirmedRequest.getPrice(), confirmedRequest.getDescription());
         this.id = confirmedRequest.getId();
         this.driverUsername = confirmedRequest.getDriverUsername();
     }
@@ -49,6 +49,7 @@ public class CompletedRequest extends Request {
         CompletedRequest otherCompletedRequest = (CompletedRequest) obj;
 
         return getId().equals(otherCompletedRequest.getId()) &&
+                getDescription().equals(otherCompletedRequest.getDescription()) &&
                 getDriverUsername().equals(otherCompletedRequest.getDriverUsername()) &
                 getRider().equals(otherCompletedRequest.getRider()) &&
                 getRoute().equals(otherCompletedRequest.getRoute()) &&

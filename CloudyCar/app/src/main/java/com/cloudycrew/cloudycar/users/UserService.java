@@ -62,16 +62,10 @@ public class UserService implements IUserService
 
     @Override
     public User getCurrentUser() {
-        String username = userPrefs.getUserName();
-        if (username.equals("")) {
+        if (userPrefs.getUserName().equals("")) {
             throw new UserDoesNotExistException();
-        }
-        else
-        {
-            User currentUser = new User(username);
-            currentUser.setEmail(new Email(userPrefs.getEmail()));
-            currentUser.setPhoneNumber(new PhoneNumber(userPrefs.getPhoneNumber()));
-            return currentUser;
+        } else {
+            return userPrefs.getUser();
         }
     }
 

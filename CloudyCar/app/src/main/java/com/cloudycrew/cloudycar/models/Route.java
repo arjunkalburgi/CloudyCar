@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class Route implements Serializable{
     private Point start;
     private Point end;
+    private long meters;
 
     /**
      * Instantiates a new Route.
@@ -46,6 +47,7 @@ public class Route implements Serializable{
         Route route = (Route) o;
 
         if (start != null ? !start.equals(route.start) : route.start != null) return false;
+        if(meters != route.getMeters()) return false;
         return end != null ? end.equals(route.end) : route.end == null;
 
     }
@@ -55,5 +57,13 @@ public class Route implements Serializable{
         int result = start != null ? start.hashCode() : 0;
         result = 31 * result + (end != null ? end.hashCode() : 0);
         return result;
+    }
+
+    public long getMeters() {
+        return meters;
+    }
+
+    public void setMeters(long meters) {
+        this.meters = meters;
     }
 }

@@ -40,7 +40,7 @@ public class LocalRequestServiceTests {
 
         double price = 3.5;
 
-        pendingRequest = new PendingRequest("rider", route, price);
+        pendingRequest = new PendingRequest("rider", route, price, "description");
         acceptedRequest = pendingRequest.accept("driver");
         confirmedRequest = acceptedRequest.confirmRequest("driver");
 

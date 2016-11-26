@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.createrequest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -123,12 +126,15 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                 }
             }
         });
+
         mMap.setOnMapClickListener(latLng -> {
             if (end == null) {
                 mMap.addMarker(new MarkerOptions()
                         .title(endName)
                         .position(latLng)
-                        .draggable(true))
+                        .draggable(true)
+
+                )
                         .showInfoWindow();
                 end = latLng;
             }
@@ -177,6 +183,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                 .title(startName)
                 .position(myLocation)
                 .draggable(true)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp))
         ).showInfoWindow();
         start = myLocation;
 

@@ -3,20 +3,17 @@ package com.cloudycrew.cloudycar.createrequest;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.SummaryActivity;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.cloudycrew.cloudycar.models.Route;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.DistanceMatrixApi;
-import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.DistanceMatrixElement;
 
 import java.util.Locale;
 
@@ -36,6 +33,8 @@ import butterknife.OnClick;
 public class CreateRequestActivity extends BaseActivity implements ICreateRequestView {
     @BindView(R.id.set_price)
     protected EditText userPrice;
+    @BindView(R.id.set_description)
+    protected EditText requestDescription;
     @BindView(R.id.suggested_price)
     protected TextView suggestedPrice;
     @BindView(R.id.display_route_start)
@@ -71,8 +70,10 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         com.google.maps.model.LatLng end = new com.google.maps.model.LatLng(userRoute.getEndingPoint().getLatitude(),userRoute.getEndingPoint().getLongitude());
         try {
             DistanceMatrix matrix = DistanceMatrixApi.newRequest(geoApiContext).origins(start).destinations(end).await();
-            long duration = matrix.rows[0].elements[0].duration.inSeconds;
-            Log.d("Duration in seconds",String.valueOf(duration));
+            DistanceMatrixElement element = matrix.rows[0].elements[0];
+            long duration = element.duration.inSeconds;
+            long distance = element.distance.inMeters;
+            userRoute.setMeters(distance);
             Double doubleDuration = new Double(duration);
             double fairFare = (doubleDuration/(60*60))*20;
             result = String.format(Locale.getDefault(),"%.2f",fairFare);
@@ -91,9 +92,9 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
         if(userPrice.getText().length()>0){
             price = Double.parseDouble(userPrice.getText().toString());
         }else{
-            price = Double.parseDouble(suggestedPrice.getText().toString());
+            price = Double.parseDouble(suggestedPrice.getText().toString().substring(1));
         }
-        createRequestController.saveRequest(userRoute,price);
+        createRequestController.saveRequest(userRoute, price, requestDescription.getText().toString().trim());
     }
     /**
      * Apply descriptions from the start and end point to the startText and endText view
