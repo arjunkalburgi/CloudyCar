@@ -105,6 +105,7 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
                 .position(start)
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp))
+                .anchor(.5f,.5f)
         ));
         markers.add(mMap.addMarker(new MarkerOptions()
                 .title("End")

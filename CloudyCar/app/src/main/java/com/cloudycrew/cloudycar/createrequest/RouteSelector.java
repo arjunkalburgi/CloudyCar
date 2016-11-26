@@ -184,6 +184,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                 .position(myLocation)
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp))
+                .anchor(.5f,.5f)
         ).showInfoWindow();
         start = myLocation;
 

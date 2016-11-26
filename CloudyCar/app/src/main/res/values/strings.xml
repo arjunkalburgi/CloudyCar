@@ -28,5 +28,6 @@
     <string name="rider_wants_pickup">The rider wants you to pick them up.</string>
     <string name="havent_accepted_ride">You have not accepted this ride</string>
     <string name="waiting_for_confirm">Waiting for the rider to confirm</string>
+    <string name="title_activity_location_search">Map</string>
 
 </resources>

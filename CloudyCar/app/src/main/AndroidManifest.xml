@@ -64,6 +64,7 @@
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".search.LocationSearchActivity"/>
     </application>
 
 </manifest>
