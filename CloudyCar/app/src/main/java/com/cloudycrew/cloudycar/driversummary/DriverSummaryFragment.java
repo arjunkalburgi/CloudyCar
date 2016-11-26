@@ -117,7 +117,9 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @OnClick(R.id.fab)
     protected void onSearchRequestsClicked() {
-        startActivity(new Intent(getActivity(), LocationSearchActivity.class));
+        Bundle b = new Bundle();
+        b.putDouble("radius",1000);
+        startActivity(new Intent(getActivity(), LocationSearchActivity.class).putExtras(b)); //Sample code to call intent.
     }
 
     private void launchRequestDetailsActivity(String requestId) {
