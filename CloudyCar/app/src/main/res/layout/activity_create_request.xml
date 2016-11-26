@@ -53,12 +53,36 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <TextView
+        android:id="@+id/description_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/routeSummary"
+        style="@style/blueSubtitle"
+        android:text="@string/request_description_header" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/description_customizer"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/description_header"
+        style="@style/CardViewStyle">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/set_description"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="15dp"
+            android:hint="Description" />
+    </android.support.v7.widget.CardView>
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/routeSummary"
+        android:layout_below="@+id/description_customizer"
         style="@style/blueSubtitle"
         android:text="@string/your_estimated_fare_is" />
 

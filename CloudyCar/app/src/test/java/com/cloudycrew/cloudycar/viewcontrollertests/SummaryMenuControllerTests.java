@@ -47,6 +47,7 @@ public class SummaryMenuControllerTests {
 
     private Route route;
     private double price;
+    private String requestDescription;
 
     @Before
     public void set_up() {
@@ -55,6 +56,7 @@ public class SummaryMenuControllerTests {
 
         route = new Route(new Point(0, 0, "start"), new Point(0, 0, "end"));
         price = 20.30;
+        requestDescription = "description";
 
         schedulerProvider = new TestSchedulerProvider();
         requestStore = new RequestStore(schedulerProvider);
@@ -72,9 +74,9 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifRiderNoHasUnreadRequests_thenDisplayZeroUnreadRiderRequests() {
-        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price);
+        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price, requestDescription);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername);
 
@@ -95,9 +97,9 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifRiderHasRequestsThatHaveNeverBeenRead_thenDisplaysTotalUnread() {
-        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price);
+        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price, requestDescription);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername);
 
@@ -118,9 +120,9 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifRiderHasRequestsThatHaveBeenReadBeforeAnUpdate_thenDisplaysThoseRequestsAsUnread() {
-        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price);
+        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price, requestDescription);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername);
 
@@ -141,9 +143,9 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_onlyCountUnreadRiderRequestsForRequestsARiderIsInvolvedWith() {
-        PendingRequest pendingRequest = new PendingRequest(driverUsername, route, price);
+        PendingRequest pendingRequest = new PendingRequest(driverUsername, route, price, requestDescription);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername);
 
@@ -172,10 +174,10 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifDriverHasNoUnreadRequests_thenDisplayZeroUnreadDriverRequests() {
-        PendingRequest acceptedRequest = new PendingRequest(riderUsername, route, price)
+        PendingRequest acceptedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername);
 
@@ -196,7 +198,7 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_doNotIncludePendingRequests_whenDeterminingDriverUnreadCount() {
-        PendingRequest acceptedRequest = new PendingRequest(riderUsername, route, price)
+        PendingRequest acceptedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername);
 
         acceptedRequest.setLastUpdated(new Date(5));
@@ -214,7 +216,7 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_doNotIncludeCompletedRequests_whenDeterminingDriverUnreadCount() {
-        CompletedRequest acceptedRequest = new PendingRequest(riderUsername, route, price)
+        CompletedRequest acceptedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername)
                 .completeRequest();
@@ -234,7 +236,7 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_doNotIncludeDriverRequestsThatDoNotBelongToTheCurrentUser() {
-        ConfirmedRequest confirmedRequest = new PendingRequest(driverUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(driverUsername, route, price, requestDescription)
                 .accept(riderUsername)
                 .confirmRequest(riderUsername);
 
@@ -253,7 +255,7 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifDriverHasUnreadRequests_thenCallsDisplayTotalUnreadRequestsWithTotalUnread() {
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price)
+        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
                 .accept(driverUsername)
                 .confirmRequest(driverUsername);
 
