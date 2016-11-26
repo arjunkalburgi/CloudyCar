@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.SummaryActivity;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.cloudycrew.cloudycar.models.Route;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;

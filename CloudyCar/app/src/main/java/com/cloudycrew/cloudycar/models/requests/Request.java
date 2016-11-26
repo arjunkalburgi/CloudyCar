@@ -4,6 +4,7 @@ import com.cloudycrew.cloudycar.Identifiable;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -14,6 +15,9 @@ public abstract class Request implements Identifiable {
     private String riderUsername;
     private Route route;
     private double price;
+    private Date lastUpdated;
+    private transient boolean hasBeenReadByUser;
+
     /**
      * The Id.
      */
@@ -32,6 +36,7 @@ public abstract class Request implements Identifiable {
         this.riderUsername = riderUsername;
         this.route = route;
         this.price = price;
+        this.lastUpdated = new Date();
     }
 
     /**
@@ -80,5 +85,21 @@ public abstract class Request implements Identifiable {
      */
     public void setRiderUsername(String name) {
         this.riderUsername = name;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public boolean isHasBeenReadByUser() {
+        return hasBeenReadByUser;
+    }
+
+    public void setHasBeenReadByUser(boolean hasBeenReadByUser) {
+        this.hasBeenReadByUser = hasBeenReadByUser;
     }
 }

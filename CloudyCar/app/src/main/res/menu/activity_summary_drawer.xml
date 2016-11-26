@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
@@ -11,10 +12,12 @@
         <menu>
             <item
                 android:id="@+id/nav_rider"
-                android:title="Be a Rider" />
+                android:title="Be a Rider"
+                app:actionLayout="@layout/unread_counter" />
             <item
                 android:id="@+id/nav_driver"
-                android:title="Be a Driver" />
+                android:title="Be a Driver"
+                app:actionLayout="@layout/unread_counter"/>
         </menu>
     </item>
 
