@@ -27,28 +27,14 @@ public class SearchController extends ViewController<ISearchView> {
     }
 
     /**
-     * Asynchronously searches for requests within a point
+     * Asynchronously searches for requests that match the search context
      *
-     * @param point the point
+     * @param searchContext the context of the Search
      */
-    public void searchByPoint(Point point) {
+    public void search(SearchContext searchContext) {
         dispatchShowLoading();
 
-        ObservableUtils.fromFunction(searchService::searchWithPoint, point)
-                       .subscribeOn(schedulerProvider.ioScheduler())
-                       .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(this::dispatchShowSearchResults);
-    }
-
-    /**
-     * Asynchronously searches for requests close to a keyword
-     *
-     * @param keyword the keyword
-     */
-    public void searchByKeyword(String keyword) {
-        dispatchShowLoading();
-        
-        ObservableUtils.fromFunction(searchService::searchWithKeyword, keyword)
+        ObservableUtils.fromFunction(searchService::search, searchContext)
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe(this::dispatchShowSearchResults);

@@ -11,6 +11,7 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.search.ISearchService;
+import com.cloudycrew.cloudycar.search.SearchContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,38 +60,38 @@ public class SearchingTests {
 
     @Test
     public void test_searchByGeoLocation_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        Point pointFarFromAllRequests = new Point(0, 0,testDescription);
+        SearchContext searchContext = new SearchContext().withLocation(0 , 0, 5);
 
-        List<PendingRequest> searchResults = searchService.searchWithPoint(pointFarFromAllRequests);
+        List<PendingRequest> searchResults = searchService.search(searchContext);
 
         assertTrue(searchResults.isEmpty());
     }
 
     @Test
     public void test_searchByGeoLocation_ifThereAreMatchingResults_thenReturnsResults() {
-        Point pointFarFromAllRequests = new Point(48.1472373, 11.5673969,testDescription);
+        SearchContext searchContext = new SearchContext().withLocation(0 , 0, 5);
 
         List<PendingRequest> expectedSearchResults = Arrays.asList(request1);
-        List<PendingRequest> actualSearchResults = searchService.searchWithPoint(pointFarFromAllRequests);
+        List<PendingRequest> searchResults = searchService.search(searchContext);
 
-        assertEquals(expectedSearchResults, actualSearchResults);
+        assertEquals(expectedSearchResults, searchResults);
     }
 
     @Test
     public void test_searchByKeyword_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        String keyword = "pacific ocean";
+        SearchContext searchContext = new SearchContext().withKeyword("expensive");
 
-        List<PendingRequest> searchResults = searchService.searchWithKeyword(keyword);
+        List<PendingRequest> searchResults = searchService.search(searchContext);
 
         assertTrue(searchResults.isEmpty());
     }
 
     @Test
     public void test_searchByKeyword_ifThereAreMatchingResults_thenReturnsResults() {
-        String keyword = "west edmonton mall";
+        SearchContext searchContext = new SearchContext().withKeyword("cheap");
 
         List<PendingRequest> expectedSearchResults = Arrays.asList(request2);
-        List<PendingRequest> actualSearchResults = searchService.searchWithKeyword(keyword);
+        List<PendingRequest> actualSearchResults = searchService.search(searchContext);
 
         assertEquals(expectedSearchResults, actualSearchResults);
     }

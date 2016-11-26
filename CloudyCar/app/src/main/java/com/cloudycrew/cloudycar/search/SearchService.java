@@ -42,18 +42,16 @@ public class SearchService implements ISearchService {
     }
 
     @Override
-    public List<PendingRequest> searchWithPoint(Point point) {
-        List<Request> requests = requestElasticSearchService.getAll();
+    public List<PendingRequest> search(SearchContext searchContext) {
+        String searchQuery = getQueryBuilder().buildQuery(searchContext);
+
+        List<Request> requests = requestElasticSearchService.search(searchQuery);
         requestStore.addAll(requests);
 
         return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
     }
 
-    @Override
-    public List<PendingRequest> searchWithKeyword(String keyword) {
-        List<Request> requests = requestElasticSearchService.getAll();
-        requestStore.addAll(requests);
-
-        return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
+    private ElasticSearchQueryBuilder getQueryBuilder() {
+        return new ElasticSearchQueryBuilder();
     }
 }
