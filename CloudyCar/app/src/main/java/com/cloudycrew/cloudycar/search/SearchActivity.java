@@ -39,8 +39,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected ProgressBar searchProgressBar;
     @BindView(R.id.search_results_recycler_view)
     protected RecyclerView searchRecyclerView;
-    @BindView(R.id.search_bar)
-    protected MaterialSearchView searchView;
+//    @BindView(R.id.search_bar)
+//    protected MaterialSearchView searchView;
 
     private ViewCellAdapter viewCellAdapter;
     private SectionViewCell searchResultsSection;
@@ -56,44 +56,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         setSupportActionBar(toolbar);
         resolveDependencies();
         setUpRecyclerView();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_search, menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
-
-        searchView.showSearch(false);
-
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.closeSearch();
-                searchController.searchByKeyword(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                toolbar.setTitleTextColor(0xFFFFFFFF);
-            }
-        });
-
-        return true;
+        toolbar.setTitleTextColor(0xFFFFFFFF);
     }
 
     @Override

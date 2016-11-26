@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.cloudycrew.cloudycar">
+    package="com.cloudycrew.cloudycar">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".CloudyCarApplication"
@@ -25,24 +25,24 @@
             android:name=".SplashScreen"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".signup.SignUpActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".SignUpCompleteActivity"/>
-        <activity android:name=".createrequest.CreateRequestActivity"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SignUpCompleteActivity" />
+        <activity android:name=".createrequest.CreateRequestActivity" />
         <activity
             android:name=".SummaryActivity"
             android:label="@string/title_activity_summary"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".userprofile.UserProfileActivity"
-            android:theme="@style/UserDetailsTheme"/>
+            android:theme="@style/UserDetailsTheme" />
         <activity
             android:name=".requestdetails.RiderRequestDetailsActivity"
             android:label="@string/title_activity_request_details"
@@ -50,24 +50,25 @@
         <activity
             android:name=".requestdetails.DriverRequestDetailsActivity"
             android:label="@string/title_activity_request_details"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".createrequest.RouteSelector"
-            android:label="@string/title_activity_route_selector"/>
-        <activity android:name=".userprofile.EditProfileActivity">
-        </activity>
+            android:label="@string/title_activity_route_selector" />
+        <activity android:name=".userprofile.EditProfileActivity"></activity>
         <activity
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+        <activity android:name=".search.SearchParamsActivity"></activity>
     </application>
 
 </manifest>
