@@ -20,6 +20,7 @@ import com.cloudycrew.cloudycar.requeststorage.CompositeRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
+import com.cloudycrew.cloudycar.requeststorage.PersistentRequestQueue;
 import com.cloudycrew.cloudycar.requeststorage.RequestStore;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryController;
 import com.cloudycrew.cloudycar.scheduling.AndroidSchedulerProvider;
@@ -106,7 +107,12 @@ public class CloudyCarApplication extends Application {
     private IRequestService getRequestService() {
         return new CompositeRequestService(getCloudRequestService(),
                 getLocalRequestService(),
-                getConnectivityService());
+                getConnectivityService(),
+                getPersistentRequestQueue());
+    }
+
+    private PersistentRequestQueue getPersistentRequestQueue() {
+        return new PersistentRequestQueue(getFileService());
     }
 
     private ISchedulerProvider getSchedulerProvider() {
