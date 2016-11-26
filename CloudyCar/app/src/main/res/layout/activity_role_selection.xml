@@ -1,0 +1,103 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/lib/com.cloudycrew.cloudycar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.cloudycrew.cloudycar.roleselection.RoleSelectionActivity">
+    android:background="@color/backgroundGrey">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/rider_card"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:clickable="true"
+        style="@style/CardViewStyle"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:src="@drawable/home_rider"
+                style="@style/CardImageView"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:text="Be A Rider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_700"
+                    android:textSize="18sp"
+                    android:layout_below="@id/imageView"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pick a price, get a ride"
+                    android:textColor="@color/grey_500"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/driver_card"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        style="@style/CardViewStyle"
+        android:layout_gravity="center"
+        android:layout_below="@+id/rider_card">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewDriver"
+                android:layout_width="match_parent"
+                android:src="@drawable/home_driver"
+                style="@style/CardImageView"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:text="Be A Driver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/grey_700"
+                    android:textSize="18sp"
+                    android:layout_below="@id/imageView"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose from a list of rides"
+                    android:textColor="@color/grey_500"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>

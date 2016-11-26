@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,43 +21,53 @@ import android.view.ViewGroup;
 import com.cloudycrew.cloudycar.BaseFragment;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.RequestAdapter;
 import com.cloudycrew.cloudycar.createrequest.RouteSelector;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
+import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
+import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
+import ca.antonious.viewcelladapter.ViewCellAdapter;
+import rx.Observable;
 
 /**
  * Created by George on 2016-11-05.
  */
 
 public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryView {
+    @BindView(R.id.rider_requests)
+    protected RecyclerView requestView;
+    @BindView(R.id.rider_summary_swipe_container)
+    protected SwipeRefreshLayout swipeRefreshLayout;
+
+    private ViewCellAdapter viewCellAdapter;
+
+    private SectionWithHeaderViewCell confirmedRequestsSection;
+    private SectionWithHeaderViewCell acceptedRequestsSection;
+    private SectionWithHeaderViewCell pendingRequestsSection;
+
     private RiderSummaryController riderSummaryController;
-    private RecyclerView requestView;
-    private RequestAdapter requestAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rider_summary, container, false);
+        ButterKnife.bind(this, view);
+
         resolveDependencies();
-
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener((v) -> startRequestActivity(v));
-
-        layoutManager = new LinearLayoutManager(getActivity());
-
-        requestView = (RecyclerView) view.findViewById(R.id.rider_requests);
-        requestAdapter = new RequestAdapter(); // Create adapter passing in the sample user data
-        requestView.setAdapter(requestAdapter); // Attach the adapter to the recyclerview to populate items
-        requestView.setLayoutManager(layoutManager); // Set layout manager to position the items
-
-        requestAdapter.setClickListener((view1, request) -> {
-            // do nothing for now
-        });
+        setUpRecyclerView();
+        setUpSwipeRefreshLayout();
 
         setUpItemTouchHelper();
         setUpAnimationDecoratorHelper();
@@ -64,22 +75,21 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         return view;
     }
 
-    private void startRequestActivity(View view) {
-        Intent intent = new Intent(getActivity(), RouteSelector.class);
-        startActivity(intent);
-    }
-
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.rider_summary_header);
-        requestAdapter.setClickListener((v, r) -> launchRequestDetailsActivity(r.getId()));
+        setActivityTitle(R.string.rider_summary_header);
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         riderSummaryController.attachView(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onFirstResume() {
+        super.onFirstResume();
         riderSummaryController.refreshRequests();
     }
 
@@ -93,6 +103,42 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         riderSummaryController = getCloudyCarApplication().getRiderSummaryController();
     }
 
+    private void setUpSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(() -> riderSummaryController.refreshRequests());
+    }
+
+    private void setUpRecyclerView() {
+        viewCellAdapter = new ViewCellAdapter();
+        viewCellAdapter.setHasStableIds(true);
+
+        confirmedRequestsSection = new SectionWithHeaderViewCell();
+        confirmedRequestsSection.setShowHeaderIfEmpty(false);
+        confirmedRequestsSection.setSectionHeader(new HeaderViewCell("Confirmed Requests"));
+
+        acceptedRequestsSection = new SectionWithHeaderViewCell();
+        acceptedRequestsSection.setShowHeaderIfEmpty(false);
+        acceptedRequestsSection.setSectionHeader(new HeaderViewCell("Accepted Requests"));
+
+        pendingRequestsSection = new SectionWithHeaderViewCell();
+        pendingRequestsSection.setShowHeaderIfEmpty(false);
+        pendingRequestsSection.setSectionHeader(new HeaderViewCell("Pending Requests"));
+
+        viewCellAdapter.add(confirmedRequestsSection);
+        viewCellAdapter.add(acceptedRequestsSection);
+        viewCellAdapter.add(pendingRequestsSection);
+
+        viewCellAdapter.addListener(onRequestClickedListener);
+
+        requestView.setAdapter(viewCellAdapter);
+        requestView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    @OnClick(R.id.fab)
+    protected void startRequestActivity() {
+        Intent intent = new Intent(getActivity(), RouteSelector.class);
+        startActivity(intent);
+    }
+
     private void launchRequestDetailsActivity(String requestId) {
         Intent intent = new Intent(getActivity(), RiderRequestDetailsActivity.class);
         intent.putExtra(Constants.EXTRA_REQUEST_ID, requestId);
@@ -101,21 +147,61 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     @Override
     public void displayLoading() {
-        
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
+    }
+
+    public void stopLoading() {
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void displayPendingRequests(List<PendingRequest> pendingRequests) {
-        requestAdapter.setPendingRequests(pendingRequests);
+        stopLoading();
+        pendingRequestsSection.setAll(getPendingRequestViewCells(pendingRequests));
+        viewCellAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void displayAcceptedRequests(List<PendingRequest> acceptedRequests) {
-        requestAdapter.setAcceptedRequests(acceptedRequests);
+        stopLoading();
+        acceptedRequestsSection.setAll(getAcceptedRequestViewCells(acceptedRequests));
+        viewCellAdapter.notifyDataSetChanged();
     }
 
+    @Override
     public void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
-        requestAdapter.setConfirmedRequests(confirmedRequests);
+        stopLoading();
+        confirmedRequestsSection.setAll(getConfirmedRequestViewCells(confirmedRequests));
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
+        launchRequestDetailsActivity(request.getId());
+    };
+
+    private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
+        return Observable.from(pendingRequests)
+                         .map(PendingRequestViewCell::new)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
+
+    private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
+        return Observable.from(pendingRequests)
+                         .map(AcceptedRequestViewCell::new)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
+
+    private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
+        return Observable.from(confirmedRequests)
+                         .map(ConfirmedRequestViewCell::new)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 
     // standard support library way of implementing "swipe to delete"
@@ -156,11 +242,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-//                TestAdapter adapter = (TestAdapter)requestView.getAdapter();
-                RequestAdapter adapter = (RequestAdapter) requestView.getAdapter();
-                adapter.remove(swipedPosition);
-                Request r = adapter.get(swipedPosition);
-                riderSummaryController.deleteRequest(r.getId());
+
+                // use position to get the request and delete only if it's a pending request
             }
 
             @Override

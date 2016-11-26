@@ -1,11 +1,10 @@
 package com.cloudycrew.cloudycar;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 
 import com.cloudycrew.cloudycar.controllers.UserController;
-import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
+import com.cloudycrew.cloudycar.roleselection.RoleSelectionActivity;
 import com.cloudycrew.cloudycar.signup.SignUpActivity;
 import com.cloudycrew.cloudycar.users.UserDoesNotExistException;
 
@@ -37,7 +36,7 @@ public class SplashScreen extends BaseActivity {
     }
 
     private void startRolePickerActivity() {
-        Intent intent = new Intent(SplashScreen.this, SignUpCompleteActivity.class);
+        Intent intent = new Intent(SplashScreen.this, RoleSelectionActivity.class);
         startActivity(intent);
         finish();
     }

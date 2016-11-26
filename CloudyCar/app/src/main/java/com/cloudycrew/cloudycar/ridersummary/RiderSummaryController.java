@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.ridersummary;
 
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
@@ -66,7 +67,16 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     private IObserver<IRequestStore> requestStoreObserver = store -> {
         dispatchDisplayPendingRequests(getPendingRequestsThatHaveNotBeenAccepted());
         dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
+        dispatchDisplayConfirmedRequests(getConfirmedRequestsForRider());
     };
+
+    private List<ConfirmedRequest> getConfirmedRequestsForRider() {
+        return Observable.from(requestStore.getRequests(ConfirmedRequest.class))
+                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
+    }
 
     private List<PendingRequest> getPendingRequestsThatHaveNotBeenAccepted() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
@@ -92,6 +102,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
 
         }
     }
+
     private void dispatchDisplayPendingRequests(List<PendingRequest> pendingRequests) {
         if (getView() != null) {
             getView().displayPendingRequests(pendingRequests);
@@ -101,6 +112,12 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     private void dispatchDisplayAcceptedRequests(List<PendingRequest> acceptedRequests) {
         if (getView() != null) {
             getView().displayAcceptedRequests(acceptedRequests);
+        }
+    }
+
+    private void dispatchDisplayConfirmedRequests(List<ConfirmedRequest> confirmedRequests) {
+        if (getView() != null) {
+            getView().displayConfirmedRequests(confirmedRequests);
         }
     }
 }

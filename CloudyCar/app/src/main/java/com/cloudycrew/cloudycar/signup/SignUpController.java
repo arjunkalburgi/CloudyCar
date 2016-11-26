@@ -3,7 +3,7 @@ package com.cloudycrew.cloudycar.signup;
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.email.Email;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;

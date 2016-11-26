@@ -12,6 +12,10 @@ import java.util.List;
 public class CompositeRequestService implements IRequestService {
     private IRequestService cloudRequestService;
     private IRequestService localRequestService;
+    /**
+     * Kiuwan suggests removing this unused private member. We should either remove it or determine
+     * why it was stubbed out and use it if the case is still viable.
+     */
     private IConnectivityService connectivityService;
 
     public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService, IConnectivityService connectivityService) {

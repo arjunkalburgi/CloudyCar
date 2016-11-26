@@ -2,7 +2,7 @@ package com.cloudycrew.cloudycar.users;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.email.Email;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
 import java.util.List;
 
@@ -62,16 +62,10 @@ public class UserService implements IUserService
 
     @Override
     public User getCurrentUser() {
-        String username = userPrefs.getUserName();
-        if (username.equals("")) {
+        if (userPrefs.getUserName().equals("")) {
             throw new UserDoesNotExistException();
-        }
-        else
-        {
-            User currentUser = new User(username);
-            currentUser.setEmail(new Email(userPrefs.getEmail()));
-            currentUser.setPhoneNumber(new PhoneNumber(userPrefs.getPhoneNumber()));
-            return currentUser;
+        } else {
+            return userPrefs.getUser();
         }
     }
 

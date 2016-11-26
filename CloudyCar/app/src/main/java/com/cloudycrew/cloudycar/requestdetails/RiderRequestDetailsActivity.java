@@ -11,9 +11,15 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.viewcells.AcceptedDriverViewCell;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ca.antonious.viewcelladapter.ViewCellAdapter;
+import rx.Observable;
 
 /**
  * Created by George on 2016-11-05.
@@ -27,7 +33,7 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
     @BindView(R.id.no_accepted_drivers)
     protected TextView noAcceptedDriversIndicator;
 
-    private AcceptedDriversAdapter acceptedDriversAdapter;
+    private ViewCellAdapter viewCellAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +46,13 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
     }
 
     private void setUpRecyclerView() {
-        acceptedDriversAdapter = new AcceptedDriversAdapter();
-        acceptedDriversRecyclerView.setAdapter(acceptedDriversAdapter);
-        acceptedDriversRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        viewCellAdapter = new ViewCellAdapter();
+        viewCellAdapter.setHasStableIds(true);
+
+        viewCellAdapter.addListener(onConfirmClickedListener);
+
+        acceptedDriversRecyclerView.setAdapter(viewCellAdapter);
+        acceptedDriversRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -64,9 +74,8 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
 
         if (pendingRequest.hasBeenAccepted()) {
             acceptedDriversRecyclerView.setVisibility(View.VISIBLE);
-            acceptedDriversAdapter.setAll(pendingRequest.getDriversWhoAccepted());
-            acceptedDriversAdapter.notifyDataSetChanged();
-            acceptedDriversAdapter.setOnConfirmClickedListener((i, username) -> requestDetailsController.confirmRequest(username));
+            viewCellAdapter.setAll(getAcceptedDriverViewCells(pendingRequest.getDriversWhoAccepted()));
+            viewCellAdapter.notifyDataSetChanged();
         } else {
             noAcceptedDriversIndicator.setVisibility(View.VISIBLE);
         }
@@ -92,5 +101,17 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         statusTextView.setText("Completed");
         updateButton.setText(R.string.confirm_request_button_text);
         setDriver(completedRequest.getDriverUsername());
+    }
+
+    private AcceptedDriverViewCell.OnConfirmClickedListener onConfirmClickedListener = username -> {
+        requestDetailsController.confirmRequest(username);
+    };
+
+    private List<AcceptedDriverViewCell> getAcceptedDriverViewCells(List<? extends String> usernames) {
+        return Observable.from(usernames)
+                         .map(AcceptedDriverViewCell::new)
+                         .toList()
+                         .toBlocking()
+                         .firstOrDefault(new ArrayList<>());
     }
 }

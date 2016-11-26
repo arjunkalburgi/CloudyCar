@@ -7,19 +7,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.controllers.UserController;
-import com.cloudycrew.cloudycar.models.PhoneNumber;
+import com.cloudycrew.cloudycar.models.phonenumbers.PhoneNumber;
 import com.cloudycrew.cloudycar.models.User;
-import com.cloudycrew.cloudycar.signup.SignUpActivity;
 
 
 /**
@@ -31,8 +28,9 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
     private UserProfileController userProfileController;
     private UserController userController;
 
-    private String username,email;
+    private String username,email,carDescription;
     private PhoneNumber phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +104,7 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_PERMISSIONS);
             return;
         }
-        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber.getPhoneNumber()));
         try {
             startActivity(callIntent);
         }
@@ -141,12 +139,21 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
         TextView usernameView = (TextView)findViewById(R.id.username);
         TextView phoneNumberView = (TextView)findViewById(R.id.PhoneNumberText);
         TextView emailAddressView = (TextView)findViewById(R.id.emailAddressText);
+        TextView carDescriptionView = (TextView)findViewById(R.id.driverCarText);
 
         usernameView.setText(user.getUsername());
         phoneNumber = user.getPhoneNumber();
         phoneNumberView.setText(phoneNumber.prettyPrint());
         email = user.getEmail().getEmail();
         emailAddressView.setText(email);
+
+        carDescription = null;
+        if (user.hasCarDescription()) {
+            carDescription = user.getCarDescription();
+            carDescriptionView.setText(carDescription);
+        } else {
+            carDescriptionView.setVisibility(View.GONE);
+        }
 
         //Probably set the image here
     }
@@ -164,14 +171,17 @@ public class UserProfileActivity extends BaseActivity implements IUserProfileVie
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        /**
+         * Kiuwan suggests that this should have a defualt in the switch. After closer inspection
+         * this should probably just be an if since we don't actually look for any other cases.
+         */
         switch (requestCode) {
             case REQUEST_PHONE_PERMISSIONS: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Phone permission granted", Toast.LENGTH_SHORT).show();
                     this.recreate();
                 } else {
-                    Toast.makeText(this, "No phone permissions", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "To make phone calls please enable phone permissions in settings.", Toast.LENGTH_SHORT).show();
                 }
 
             }

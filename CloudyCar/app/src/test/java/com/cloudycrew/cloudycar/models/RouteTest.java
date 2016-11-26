@@ -21,6 +21,7 @@ public class RouteTest {
         startingPoint = new Point(48.1472373, 11.5673969,testDescription);
         endingPoint = new Point(48.1258551, 11.5121003,testDescription);
         route = new Route(startingPoint,endingPoint);
+        route.setMeters(1000);
     }
     @Test
     public void getStartingPoint() throws Exception {
@@ -30,6 +31,11 @@ public class RouteTest {
     @Test
     public void getEndingPoint() throws Exception {
         Assert.assertEquals("Did not retrieve correct ending point",endingPoint,route.getEndingPoint());
+    }
+
+    @Test
+    public void getMeters(){
+        Assert.assertEquals("Did not retrieve correct distance",1000,route.getMeters());
     }
 
 }

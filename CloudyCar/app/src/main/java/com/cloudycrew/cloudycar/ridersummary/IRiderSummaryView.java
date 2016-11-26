@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.ridersummary;
 
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 
 import java.util.List;
@@ -26,4 +27,11 @@ public interface IRiderSummaryView {
      * @param acceptedRequests the accepted requests
      */
     void displayAcceptedRequests(List<PendingRequest> acceptedRequests);
+
+    /**
+     * Callback called when confirmed requests are successfully fetched.
+     *
+     * @param confirmedRequests the accepted requests
+     */
+    void displayConfirmedRequests(List<ConfirmedRequest> confirmedRequests);
 }

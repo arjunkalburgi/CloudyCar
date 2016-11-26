@@ -11,7 +11,7 @@
         android:layout_height="300dp">
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="match_parent"
             android:background="@color/backgroundBlue"
             android:id="@+id/userImage"/>
         <View
@@ -75,7 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/CardListItem"
-                android:layout_below="@+id/Email"
+                android:layout_below="@+id/Phone"
+                android:id="@+id/Email"
                 android:onClick="initiateEmail">
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -89,6 +90,33 @@
                     android:gravity="center_vertical"
                     android:text="..."
                     android:id="@+id/emailAddressText"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/backgroundGrey"></View>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/CardListItem"
+                android:id="@+id/Car"
+                android:layout_below="@+id/Email"
+                android:onClick="initiateEmail">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/CardListIcon"
+                    android:src="@drawable/ic_directions_car_black_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/CardListDetails"
+                    android:gravity="center_vertical"
+                    android:text="..."
+                    android:id="@+id/driverCarText"/>
             </LinearLayout>
         </LinearLayout>
 
