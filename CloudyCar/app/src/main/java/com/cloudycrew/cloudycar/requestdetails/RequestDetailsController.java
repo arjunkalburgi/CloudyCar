@@ -2,6 +2,7 @@ package com.cloudycrew.cloudycar.requestdetails;
 
 import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -19,6 +20,7 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
     private IRequestStore requestStore;
     private ISchedulerProvider schedulerProvider;
     private RequestController requestController;
+    private UserController userController;
 
     /**
      * Instantiates a new Request details controller.
@@ -28,9 +30,14 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
      * @param schedulerProvider the scheduler provider
      * @param requestStore      the request store
      */
-    public RequestDetailsController(String requestId, RequestController requestController, ISchedulerProvider schedulerProvider, IRequestStore requestStore) {
+    public RequestDetailsController(String requestId,
+                                    RequestController requestController,
+                                    UserController userController,
+                                    ISchedulerProvider schedulerProvider,
+                                    IRequestStore requestStore) {
         this.requestId = requestId;
         this.requestController = requestController;
+        this.userController = userController;
         this.schedulerProvider = schedulerProvider;
         this.requestStore = requestStore;
     }
@@ -65,6 +72,10 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe();
+    }
+
+    public void markRequestAsRead() {
+        userController.markRequestAsRead(requestId);
     }
 
     @Override

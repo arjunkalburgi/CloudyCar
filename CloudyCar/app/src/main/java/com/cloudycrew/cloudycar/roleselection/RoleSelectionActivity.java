@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.SummaryActivity;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
