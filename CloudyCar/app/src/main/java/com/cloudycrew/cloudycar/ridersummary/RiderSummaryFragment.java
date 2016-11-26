@@ -225,11 +225,20 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            pendingRequestsSection.add(pendingRemoval);
+                            for (ViewCell pendingRemoval : pendingRemovals) {
+                                pendingRequestsSection.add(pendingRemoval);
+                            }
+                            pendingRemovals.clear();
                             viewCellAdapter.notifyDataSetChanged();
                         }
+                    })
+                    .setCallback(new Snackbar.Callback() {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event){
+                            pendingRemovals.clear();
+                        }
                     });
-            ViewCell pendingRemoval;
+            ArrayList<ViewCell> pendingRemovals = new ArrayList<ViewCell>();
 
             private void init() {
                 background = new ColorDrawable(Color.RED);
@@ -262,7 +271,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                     snackbar.show();
                     viewCellAdapter.remove(viewHolder.getAdapterPosition());
                     viewCellAdapter.notifyDataSetChanged();
-                    pendingRemoval = viewCell;
+                    pendingRemovals.add(viewCell);
                 }
             }
 
