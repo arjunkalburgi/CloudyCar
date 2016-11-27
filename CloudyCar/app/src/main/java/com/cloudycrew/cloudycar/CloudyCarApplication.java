@@ -106,7 +106,7 @@ public class CloudyCarApplication extends MultiDexApplication {
         return new CloudRequestService(getUserPreferences(), getRequestElasticSearchService());
     }
 
-    private IConnectivityService getConnectivityService() {
+    public IConnectivityService getConnectivityService() {
         return new AndroidConnectivityService(getApplicationContext());
     }
 

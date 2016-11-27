@@ -7,27 +7,39 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.widget.Toast;
 
+import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.cloudycrew.cloudycar.Constants.EXPECTED_CITY_RADIUS;
+import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
 /**
  * This class is responsible for the view containing the map that the rider selects his route on.
@@ -35,7 +47,9 @@ import butterknife.OnClick;
  * is placed on their current location. They can then touch anywhere on the map to place an "End" marker.
  * The user can move placed markers by long pressing a marker and dragging it a new location.
  */
-public class RouteSelector extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class RouteSelector extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    @BindView(R.id.map_search_card)
+    CardView searchCard;
 
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
     private static final String startName = "Start";
@@ -45,6 +59,8 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     private LatLng start;
     private LatLng end;
     private GeoDecoder geoDecoder;
+    private Marker currentEnd;
+    private PlaceAutocompleteFragment autocompleteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +76,33 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                     .build();
         }
         mGoogleApiClient.connect();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                RouteSelector.this.onPlaceSelected(mMap,place.getLatLng());
+            }
+
+            @Override
+            public void onError(Status status) {
+
+            }
+        });
+    }
+
+    private void onPlaceSelected(GoogleMap mMap, LatLng latLng) {
+                if(currentEnd!=null){currentEnd.remove();}
+                currentEnd = mMap.addMarker(new MarkerOptions()
+                        .title(endName)
+                        .position(latLng)
+                        .draggable(true)
+                );
+                currentEnd.showInfoWindow();
+                end = latLng;
     }
 
     /**
@@ -90,8 +129,15 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
      */
     @NonNull
     private Route getRoute() {
-        Location startLocation = new Location(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
-        Location endLocation = new Location(end.longitude,end.latitude, geoDecoder.decodeLatLng(end.longitude,end.latitude));
+        String startDescription = "Your start point";
+        String endDescription = "Your end point";
+        IConnectivityService connectivityService = getCloudyCarApplication().getConnectivityService();
+        if(connectivityService.isInternetAvailable()) {
+            startDescription = geoDecoder.decodeLatLng(start.longitude, start.latitude);
+            endDescription = geoDecoder.decodeLatLng(end.longitude, end.latitude);
+        }
+        Location startLocation = new Location(start.longitude,start.latitude, startDescription);
+        Location endLocation = new Location(end.longitude,end.latitude, endDescription);
         return new Route(startLocation, endLocation);
     }
 
@@ -103,6 +149,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setPadding(0, searchCard.getHeight() + 15, 0, 0);
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -123,29 +170,12 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                 }
             }
         });
-
-        mMap.setOnMapClickListener(latLng -> {
-            if (end == null) {
-                mMap.addMarker(new MarkerOptions()
-                        .title(endName)
-                        .position(latLng)
-                        .draggable(true)
-
-                )
-                        .showInfoWindow();
-                end = latLng;
-            }
-        });
-
+        mMap.setOnMapClickListener(latLng -> onPlaceSelected(mMap,latLng));
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        /**
-         * Kiuwan suggests that this should have a defualt in the switch. After closer inspection
-         * this should probably just be an if since we don't actually look for any other cases.
-         */
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS: {
                 if (grantResults.length > 0
@@ -181,10 +211,13 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
                 .position(myLocation)
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp))
+                .anchor(.5f,.5f)
         ).showInfoWindow();
         start = myLocation;
-
+        autocompleteFragment.setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS));
     }
+
+
 
     @Override
     public void onConnectionSuspended(int i) {
