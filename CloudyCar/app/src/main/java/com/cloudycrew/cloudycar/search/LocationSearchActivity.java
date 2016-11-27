@@ -146,7 +146,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
 
     @OnClick(R.id.submit_selected_location)
     public void submitSelectedLocation(){
-        Intent intent = new Intent(this,SearchActivity.class);
+        Intent intent = new Intent(this,SearchParamsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("location",new Location(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
         intent.putExtras(bundle);
