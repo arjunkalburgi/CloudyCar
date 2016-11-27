@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.requeststorage;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.fileservices.IFileService;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.search.SearchContext;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
 import com.cloudycrew.cloudycar.utils.StringUtils;
 import com.google.gson.Gson;
@@ -43,10 +44,8 @@ public class LocalRequestService implements IRequestService {
     public void updateRequest(Request request) {
         Map<String, Request> requests = loadRequests();
 
-        if (requests.containsKey(request.getId())) {
-            requests.put(request.getId(), request);
-            saveRequests(requests);
-        }
+        requests.put(request.getId(), request);
+        saveRequests(requests);
     }
 
     @Override
@@ -57,6 +56,11 @@ public class LocalRequestService implements IRequestService {
             requests.remove(requestId);
             saveRequests(requests);
         }
+    }
+
+    @Override
+    public List<Request> search(SearchContext searchContext) {
+        return this.getRequests();
     }
 
     private Map<String, Request> loadRequests() {

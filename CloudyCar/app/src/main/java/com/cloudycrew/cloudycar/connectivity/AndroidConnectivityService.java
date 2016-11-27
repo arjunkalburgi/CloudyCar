@@ -37,6 +37,7 @@ public class AndroidConnectivityService implements IConnectivityService {
     @Override
     public void setOnConnectivityChangedListener(OnConnectivityChangedListener onConnectivityChangedListener) {
         this.onConnectivityChangedListener = onConnectivityChangedListener;
+        dispatchConnectivityChange();
     }
 
     private void registerConnectivityListener() {
