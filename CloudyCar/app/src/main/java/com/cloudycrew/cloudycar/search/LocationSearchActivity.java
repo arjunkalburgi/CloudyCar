@@ -155,6 +155,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         bundle.putSerializable("location",new Point(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     @Override
