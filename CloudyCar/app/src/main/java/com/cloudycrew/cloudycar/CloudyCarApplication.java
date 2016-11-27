@@ -21,6 +21,7 @@ import com.cloudycrew.cloudycar.requeststorage.CompositeRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
+import com.cloudycrew.cloudycar.requeststorage.PersistentRequestQueue;
 import com.cloudycrew.cloudycar.requeststorage.RequestStore;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryController;
 import com.cloudycrew.cloudycar.roleselection.RoleSelectionController;
@@ -51,6 +52,7 @@ import io.searchbox.client.JestClient;
 
 public class CloudyCarApplication extends MultiDexApplication {
     private IRequestStore requestStore;
+    private IRequestService requestService;
 
     private IRequestStore getRequestStore() {
         if (requestStore == null) {
@@ -97,7 +99,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private ISearchService getSearchService() {
-        return new SearchService(getUserPreferences(), getRequestStore(), getRequestElasticSearchService());
+        return new SearchService(getUserPreferences(), getRequestStore(), getRequestService());
     }
 
     private IRequestService getCloudRequestService() {
@@ -108,10 +110,23 @@ public class CloudyCarApplication extends MultiDexApplication {
         return new AndroidConnectivityService(getApplicationContext());
     }
 
-    private IRequestService getRequestService() {
-        return new CompositeRequestService(getCloudRequestService(),
-                getLocalRequestService(),
-                getConnectivityService());
+    public IRequestService getRequestService() {
+        if (requestService != null) {
+            return requestService;
+        }
+        else {
+            requestService = new CompositeRequestService(getCloudRequestService(),
+                    getLocalRequestService(),
+                    getConnectivityService(),
+                    getPersistentRequestQueue(),
+                    getSchedulerProvider(),
+                    getGeoDecoder());
+            return  requestService;
+        }
+    }
+
+    private PersistentRequestQueue getPersistentRequestQueue() {
+        return new PersistentRequestQueue(getFileService());
     }
 
     private ISchedulerProvider getSchedulerProvider() {
@@ -176,5 +191,9 @@ public class CloudyCarApplication extends MultiDexApplication {
 
     public RoleSelectionController getRoleSelectionController() {
         return new RoleSelectionController(getUserController(), getSchedulerProvider());
+    }
+
+    public GeoDecoder getGeoDecoder() {
+        return new GeoDecoder(getBaseContext());
     }
 }
