@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.search.SearchContext;
 
 import java.util.List;
 
@@ -36,5 +37,11 @@ public interface IRequestService {
      */
     void deleteRequest(String requestId);
 
-    List<Request> search();
+
+    /**
+     * Search for requests.
+     *
+     * @param searchContext the search context
+     */
+    List<Request> search(SearchContext searchContext);
 }

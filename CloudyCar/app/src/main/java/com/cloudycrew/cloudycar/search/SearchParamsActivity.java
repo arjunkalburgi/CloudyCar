@@ -1,15 +1,13 @@
 package com.cloudycrew.cloudycar.search;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.models.Point;
-import com.google.android.gms.maps.model.LatLng;
+import com.cloudycrew.cloudycar.models.Location;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +19,7 @@ public class SearchParamsActivity extends AppCompatActivity {
     @BindView(R.id.radius_entry)
     protected EditText radiusEntry;
 
-    private Point userSelectedLocation;
+    private Location userSelectedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class SearchParamsActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         if(getIntent().hasExtra("location")){
-            userSelectedLocation= (Point)getIntent().getExtras().get("location");
+            userSelectedLocation= (Location)getIntent().getExtras().get("location");
         }
     }
 

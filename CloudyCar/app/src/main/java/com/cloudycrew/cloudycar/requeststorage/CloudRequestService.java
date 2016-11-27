@@ -2,6 +2,8 @@ package com.cloudycrew.cloudycar.requeststorage;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.search.ElasticSearchQueryBuilder;
+import com.cloudycrew.cloudycar.search.SearchContext;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.List;
@@ -49,7 +51,12 @@ public class CloudRequestService implements IRequestService {
     }
 
     @Override
-    public List<Request> search() {
-        return this.getRequests();
+    public List<Request> search(SearchContext searchContext) {
+        String query = getQueryBuilder().buildQuery(searchContext);
+        return elasticSearchService.search(query);
+    }
+
+    private ElasticSearchQueryBuilder getQueryBuilder() {
+        return new ElasticSearchQueryBuilder();
     }
 }

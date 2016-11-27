@@ -3,18 +3,16 @@ package com.cloudycrew.cloudycar.search;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.widget.Toast;
 
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.models.Point;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -30,10 +28,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.SphericalUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -140,7 +136,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         }
         markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp)).anchor(0.5f, 0.5f);
         mMap.setMyLocationEnabled(true);
-        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        android.location.Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation,radius), CAMERA_ZOOM_PADDING));
         onPlaceSelected(mMap, myLocation);
@@ -152,7 +148,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     public void submitSelectedLocation(){
         Intent intent = new Intent(this,SearchActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("location",new Point(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
+        bundle.putSerializable("location",new Location(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
         intent.putExtras(bundle);
         startActivity(intent);
         finish();

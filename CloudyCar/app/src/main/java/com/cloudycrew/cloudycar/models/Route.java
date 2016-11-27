@@ -6,8 +6,8 @@ import java.io.Serializable;
  * Created by George on 2016-10-13.
  */
 public class Route implements Serializable{
-    private Point start;
-    private Point end;
+    private Location start;
+    private Location end;
     private long meters;
 
     /**
@@ -16,7 +16,7 @@ public class Route implements Serializable{
      * @param start the start
      * @param end   the end
      */
-    public Route(Point start,Point end){
+    public Route(Location start, Location end){
         this.start=start;
         this.end=end;
     }
@@ -26,7 +26,7 @@ public class Route implements Serializable{
      *
      * @return the starting point
      */
-    public Point getStartingPoint() {
+    public Location getStartingPoint() {
         return this.start;
     }
 
@@ -35,7 +35,7 @@ public class Route implements Serializable{
      *
      * @return the ending point
      */
-    public Point getEndingPoint() {
+    public Location getEndingPoint() {
         return this.end;
     }
 

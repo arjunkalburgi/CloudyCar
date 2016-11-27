@@ -3,7 +3,6 @@ package com.cloudycrew.cloudycar.createrequest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +14,7 @@ import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -137,9 +136,9 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
             startDescription = geoDecoder.decodeLatLng(start.longitude, start.latitude);
             endDescription = geoDecoder.decodeLatLng(end.longitude, end.latitude);
         }
-        Point startPoint = new Point(start.longitude,start.latitude, startDescription);
-        Point endPoint = new Point(end.longitude,end.latitude, endDescription);
-        return new Route(startPoint,endPoint);
+        Location startLocation = new Location(start.longitude,start.latitude, startDescription);
+        Location endLocation = new Location(end.longitude,end.latitude, endDescription);
+        return new Route(startLocation, endLocation);
     }
 
     /**
@@ -204,7 +203,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
             return;
         }
         mMap.setMyLocationEnabled(true);
-        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        android.location.Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
         mMap.addMarker(new MarkerOptions()
