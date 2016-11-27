@@ -210,6 +210,11 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                          .firstOrDefault(new ArrayList<>());
     }
 
+    private boolean isViewCellSwipeable(ViewCell viewCell) {
+        return viewCell instanceof PendingRequestViewCell ||
+                viewCell instanceof AcceptedRequestViewCell;
+    }
+
     // standard support library way of implementing "swipe to delete"
     private void setUpItemTouchHelper(View v) {
 
@@ -221,8 +226,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             int xMarkMargin;
             boolean initiated;
             Snackbar snackbar = Snackbar
-                    .make(v, "Undo Removed Request", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", new View.OnClickListener() {
+                    .make(v, "Request Canceled", Snackbar.LENGTH_LONG)
+                    .setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             for (ViewCell pendingRemoval : pendingRemovals) {
@@ -257,10 +262,12 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
-//                TestAdapter testAdapter = (TestAdapter)recyclerView.getAdapter();
-//                if (testAdapter.isPendingRemoval(position)) {
-//                    return 0;
-//                }
+                ViewCell viewCell = viewCellAdapter.get(position);
+
+                if (!isViewCellSwipeable(viewCell)) {
+                    return 0;
+                }
+
                 return super.getSwipeDirs(recyclerView, viewHolder);
             }
 
