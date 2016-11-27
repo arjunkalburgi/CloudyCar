@@ -4,13 +4,13 @@ package com.cloudycrew.cloudycar;
  * Created by George on 2016-10-12.
  */
 
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.search.ISearchService;
+import com.cloudycrew.cloudycar.search.SearchContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,15 +41,15 @@ public class SearchingTests {
         testDescription = "test description";
         requestDescription = "description";
 
-        Point startingPoint1 = new Point(48.1472373, 11.5673969,testDescription);
-        Point endingPoint1 = new Point(48.1258551, 11.5121003,testDescription);
+        Location startingLocation1 = new Location(48.1472373, 11.5673969,testDescription);
+        Location endingLocation1 = new Location(48.1258551, 11.5121003,testDescription);
 
-        Route route1 = new Route(startingPoint1,endingPoint1);
+        Route route1 = new Route(startingLocation1, endingLocation1);
 
-        Point startingPoint2 = new Point(53.5225, 113.6242,testDescription);
-        Point endingPoint2 = new Point(53.5232, 113.5263,testDescription);
+        Location startingLocation2 = new Location(53.5225, 113.6242,testDescription);
+        Location endingLocation2 = new Location(53.5232, 113.5263,testDescription);
 
-        Route route2 = new Route(startingPoint2,endingPoint2);
+        Route route2 = new Route(startingLocation2, endingLocation2);
 
         User user= new User("SomeUser");
         double price = 2.5;
@@ -62,38 +62,38 @@ public class SearchingTests {
 
     @Test
     public void test_searchByGeoLocation_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        Point pointFarFromAllRequests = new Point(0, 0,testDescription);
+        SearchContext searchContext = new SearchContext().withLocation(0 , 0, 5);
 
-        List<PendingRequest> searchResults = searchService.searchWithPoint(pointFarFromAllRequests);
+        List<PendingRequest> searchResults = searchService.search(searchContext);
 
         assertTrue(searchResults.isEmpty());
     }
 
     @Test
     public void test_searchByGeoLocation_ifThereAreMatchingResults_thenReturnsResults() {
-        Point pointFarFromAllRequests = new Point(48.1472373, 11.5673969,testDescription);
+        SearchContext searchContext = new SearchContext().withLocation(0 , 0, 5);
 
         List<PendingRequest> expectedSearchResults = Arrays.asList(request1);
-        List<PendingRequest> actualSearchResults = searchService.searchWithPoint(pointFarFromAllRequests);
+        List<PendingRequest> searchResults = searchService.search(searchContext);
 
-        assertEquals(expectedSearchResults, actualSearchResults);
+        assertEquals(expectedSearchResults, searchResults);
     }
 
     @Test
     public void test_searchByKeyword_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        String keyword = "pacific ocean";
+        SearchContext searchContext = new SearchContext().withKeyword("expensive");
 
-        List<PendingRequest> searchResults = searchService.searchWithKeyword(keyword);
+        List<PendingRequest> searchResults = searchService.search(searchContext);
 
         assertTrue(searchResults.isEmpty());
     }
 
     @Test
     public void test_searchByKeyword_ifThereAreMatchingResults_thenReturnsResults() {
-        String keyword = "west edmonton mall";
+        SearchContext searchContext = new SearchContext().withKeyword("cheap");
 
         List<PendingRequest> expectedSearchResults = Arrays.asList(request2);
-        List<PendingRequest> actualSearchResults = searchService.searchWithKeyword(keyword);
+        List<PendingRequest> actualSearchResults = searchService.search(searchContext);
 
         assertEquals(expectedSearchResults, actualSearchResults);
     }

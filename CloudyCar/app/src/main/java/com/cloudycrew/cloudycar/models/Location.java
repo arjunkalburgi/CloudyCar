@@ -1,20 +1,37 @@
 package com.cloudycrew.cloudycar.models;
 
-import com.cloudycrew.cloudycar.GeoDecoder;
-
 import java.io.Serializable;
 
 /**
  * Created by George on 2016-10-13.
  */
-public class Point implements Serializable {
+public class Location implements Serializable {
+    private String description;
+    private GeoPoint point;
+
+    /**
+     * Instantiates a new Location.
+     *
+     * @param longitude   the longitude
+     * @param latitude    the latitude
+     * @param description the description
+     */
+    public Location(double longitude, double latitude, String description) {
+        this.point = new GeoPoint(latitude, longitude);
+        if(description.length() > 1){
+            this.description = description;
+        }else{
+            this.description = this.toString();
+        }
+    }
+
     /**
      * Gets longitude.
      *
      * @return the longitude
      */
     public double getLongitude() {
-        return longitude;
+        return point.getLon();
     }
 
     /**
@@ -23,28 +40,7 @@ public class Point implements Serializable {
      * @return the latitude
      */
     public double getLatitude() {
-        return latitude;
-    }
-
-    private String description;
-    private double longitude;
-    private double latitude;
-
-    /**
-     * Instantiates a new Point.
-     *
-     * @param longitude   the longitude
-     * @param latitude    the latitude
-     * @param description the description
-     */
-    public Point(double longitude, double latitude, String description) {
-        this.latitude=latitude;
-        this.longitude=longitude;
-        if(description.length() > 1){
-            this.description = description;
-        }else{
-            this.description = this.toString();
-        }
+        return point.getLat();
     }
 
     @Override
@@ -52,10 +48,10 @@ public class Point implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Point point = (Point) o;
+        Location location = (Location) o;
 
-        if (Double.compare(point.getLongitude(), getLongitude()) != 0) return false;
-        return Double.compare(point.getLatitude(), getLatitude()) == 0;
+        if (Double.compare(location.getLongitude(), getLongitude()) != 0) return false;
+        return Double.compare(location.getLatitude(), getLatitude()) == 0;
 
     }
 
@@ -71,7 +67,7 @@ public class Point implements Serializable {
     }
     @Override
     public String toString(){
-        return String.format("Long: %5f, Lat: %5f",this.longitude,this.latitude);
+        return String.format("Long: %5f, Lat: %5f", getLongitude(), getLatitude());
     }
 
     /**

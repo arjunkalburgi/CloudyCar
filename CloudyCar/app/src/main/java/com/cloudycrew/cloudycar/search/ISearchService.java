@@ -1,8 +1,6 @@
 package com.cloudycrew.cloudycar.search;
 
-import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
-import com.cloudycrew.cloudycar.models.requests.Request;
 
 import java.util.List;
 
@@ -11,18 +9,10 @@ import java.util.List;
  */
 public interface ISearchService {
     /**
-     * Gets requests within a point
+     * Gets requests that match the search context
      *
-     * @param point the point
-     * @return the requests
+     * @param searchContext the context of the search
+     * @return the matching requests
      */
-    List<PendingRequest> searchWithPoint(Point point);
-
-    /**
-     * Gets requests close to a keyword
-     *
-     * @param keyword the keyword
-     * @return the list
-     */
-    List<PendingRequest> searchWithKeyword(String keyword);
+    List<PendingRequest> search(SearchContext searchContext);
 }

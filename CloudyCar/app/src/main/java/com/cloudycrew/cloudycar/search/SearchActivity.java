@@ -58,7 +58,6 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected void onResume() {
         super.onResume();
         searchController.attachView(this);
-        searchController.searchByPoint(null);
     }
 
     @Override

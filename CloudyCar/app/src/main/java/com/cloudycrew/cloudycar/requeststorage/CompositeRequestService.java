@@ -4,12 +4,13 @@ package com.cloudycrew.cloudycar.requeststorage;
 import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchConnectivityException;
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
+import com.cloudycrew.cloudycar.search.SearchContext;
 
 import java.util.List;
 
@@ -98,8 +99,12 @@ public class CompositeRequestService implements IRequestService {
     }
 
     @Override
-    public List<Request> search() {
-        return this.getRequests();
+    public List<Request> search(SearchContext searchContext) {
+        try {
+            return cloudRequestService.search(searchContext);
+        } catch (Exception e) {
+            return localRequestService.search(searchContext);
+        }
     }
 
     /**
@@ -184,8 +189,8 @@ public class CompositeRequestService implements IRequestService {
     }
 
     private void setDescriptions(Request request) {
-        Point startingPoint = request.getRoute().getStartingPoint();
-        Point endingPoint = request.getRoute().getEndingPoint();
+        Location startingPoint = request.getRoute().getStartingPoint();
+        Location endingPoint = request.getRoute().getEndingPoint();
 
         startingPoint.setDescription(geoDecoder.decodeLatLng(startingPoint.getLongitude(), startingPoint.getLatitude()));
         endingPoint.setDescription(geoDecoder.decodeLatLng(endingPoint.getLongitude(), endingPoint.getLatitude()));
