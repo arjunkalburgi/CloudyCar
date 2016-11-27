@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-05.
@@ -54,14 +55,22 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
         requestStore.removeObserver(requestStoreObserver);
     }
 
-    private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayConfirmedRequests(getRequestsConfirmedForDriver());
-        dispatchDisplayAcceptedRequests(getRequestsAcceptedByDriver());
+    private IObserver<IRequestStore> requestStoreObserver = new IObserver<IRequestStore>() {
+        @Override
+        public void notifyUpdate(IRequestStore observable) {
+            dispatchDisplayConfirmedRequests(getRequestsConfirmedForDriver());
+            dispatchDisplayAcceptedRequests(getRequestsAcceptedByDriver());
+        }
     };
 
     private List<ConfirmedRequest> getRequestsConfirmedForDriver() {
         return Observable.from(requestStore.getRequests(ConfirmedRequest.class))
-                         .filter(r -> r.getDriverUsername().equals(userPreferences.getUserName()))
+                         .filter(new Func1<ConfirmedRequest, Boolean>() {
+                             @Override
+                             public Boolean call(ConfirmedRequest r) {
+                                 return r.getDriverUsername().equals(userPreferences.getUserName());
+                             }
+                         })
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -69,7 +78,12 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
 
     private List<PendingRequest> getRequestsAcceptedByDriver() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(r -> r.hasBeenAcceptedBy(userPreferences.getUserName()))
+                         .filter(new Func1<PendingRequest, Boolean>() {
+                             @Override
+                             public Boolean call(PendingRequest r) {
+                                 return r.hasBeenAcceptedBy(userPreferences.getUserName());
+                             }
+                         })
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());

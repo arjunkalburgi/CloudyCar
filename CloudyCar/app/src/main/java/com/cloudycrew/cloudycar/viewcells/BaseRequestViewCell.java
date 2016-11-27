@@ -1,5 +1,7 @@
 package com.cloudycrew.cloudycar.viewcells;
 
+import android.view.View;
+
 import com.cloudycrew.cloudycar.models.requests.Request;
 
 import ca.antonious.viewcelladapter.GenericSingleViewCell;
@@ -23,7 +25,12 @@ public abstract class BaseRequestViewCell<VH extends BaseRequestViewHolder, T ex
 
     private void bindOnClickListener(VH viewHolder, OnRequestClickedListener onRequestClickedListener) {
         if (onRequestClickedListener != null) {
-            viewHolder.setOnClickListener(v -> onRequestClickedListener.onRequestClicked(getModel()));
+            viewHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRequestClickedListener.onRequestClicked(getModel());
+                }
+            });
         }
     }
 

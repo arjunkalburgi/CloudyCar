@@ -6,6 +6,8 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.functions.Action1;
+
 /**
  * Created by Ryan on 2016-11-12.
  */
@@ -58,8 +60,17 @@ public class EditProfileController extends ViewController<IEditProfileView> {
         ObservableUtils.fromAction(userController::updateCurrentUser, user)
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(nothing -> dispatchOnEditSuccess(),
-                                  throwable -> dispatchOnEditFailure());
+                       .subscribe(new Action1<Void>() {
+                           @Override
+                           public void call(Void nothing) {
+                               dispatchOnEditSuccess();
+                           }
+                       }, new Action1<Throwable>() {
+                           @Override
+                           public void call(Throwable throwable) {
+                               dispatchOnEditFailure();
+                           }
+                       });
     }
 
     private void dispatchOnEditSuccess() {

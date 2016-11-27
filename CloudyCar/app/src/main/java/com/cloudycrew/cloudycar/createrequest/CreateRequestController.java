@@ -4,8 +4,11 @@ import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.Route;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
+
+import rx.functions.Action1;
 
 /**
  * Created by George on 2016-11-05.
@@ -38,7 +41,12 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
      */
     public void saveRequest(Route userRoute, double price, String description) {
         ObservableUtils.fromFunction(requestController::createRequest, userRoute, price, description)
-                       .doOnNext(r -> userController.markRequestAsRead(r.getId()))
+                       .doOnNext(new Action1<PendingRequest>() {
+                           @Override
+                           public void call(PendingRequest pendingRequest) {
+                               userController.markRequestAsRead(pendingRequest.getId());
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe(nothing -> dispatchOnRequestCreated());

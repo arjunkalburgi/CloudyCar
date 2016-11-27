@@ -8,6 +8,8 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.functions.Action1;
+
 
 /**
  * Created by George on 2016-11-09.
@@ -47,11 +49,18 @@ public class SignUpController extends ViewController<ISignUpView> {
         ObservableUtils.fromAction(userController::createUser, user)
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(nothing -> {
-                           registerLocalUser(user);
-                           dispatchOnSuccessfulRegistration();},
-                                  throwable -> dispatchOnDuplicateUsernameFailure());
-
+                       .subscribe(new Action1<Void>() {
+                           @Override
+                           public void call(Void nothing) {
+                               registerLocalUser(user);
+                               dispatchOnSuccessfulRegistration();
+                           }
+                       }, new Action1<Throwable>() {
+                           @Override
+                           public void call(Throwable throwable) {
+                               dispatchOnDuplicateUsernameFailure();
+                           }
+                       });
     }
 
     private void registerLocalUser(User user) {

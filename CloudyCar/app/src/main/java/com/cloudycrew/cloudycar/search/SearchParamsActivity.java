@@ -27,9 +27,11 @@ public class SearchParamsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_params);
         ButterKnife.bind(this);
-        submitButton.setOnClickListener((view) -> {
-            startActivity(new Intent(this, SearchActivity.class));
-        });
+    }
+
+    @OnClick(R.id.search_submit)
+    public void onSubmitClicked() {
+        startActivity(new Intent(this, SearchActivity.class));
     }
 
     @OnClick(R.id.enter_location_search)

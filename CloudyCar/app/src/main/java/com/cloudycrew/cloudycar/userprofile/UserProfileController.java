@@ -6,6 +6,8 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.functions.Action1;
+
 /**
  * Created by George on 2016-11-05.
  */
@@ -30,8 +32,17 @@ public class UserProfileController extends ViewController<IUserProfileView> {
             ObservableUtils.fromFunction(userController::getUser, username)
                             .subscribeOn(schedulerProvider.ioScheduler())
                             .observeOn(schedulerProvider.mainThreadScheduler())
-                            .subscribe(this::dispatchDisplayUser,
-                                        throwable -> dispatchUserDoesNotExist());
+                            .subscribe(new Action1<User>() {
+                                @Override
+                                public void call(User user) {
+                                    dispatchDisplayUser(user);
+                                }
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    dispatchUserDoesNotExist();
+                                }
+                            });
         }
         else {
             this.dispatchDisplayUser(localUser);

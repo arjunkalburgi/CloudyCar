@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-05.
@@ -54,15 +55,23 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
         requestStore.removeObserver(requestStoreObserver);
     }
 
-    private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayPendingRequests(getPendingRequestsThatHaveNotBeenAccepted());
-        dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
-        dispatchDisplayConfirmedRequests(getConfirmedRequestsForRider());
+    private IObserver<IRequestStore> requestStoreObserver = new IObserver<IRequestStore>() {
+        @Override
+        public void notifyUpdate(IRequestStore observable) {
+            dispatchDisplayPendingRequests(getPendingRequestsThatHaveNotBeenAccepted());
+            dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
+            dispatchDisplayConfirmedRequests(getConfirmedRequestsForRider());
+        }
     };
 
     private List<ConfirmedRequest> getConfirmedRequestsForRider() {
         return Observable.from(requestStore.getRequests(ConfirmedRequest.class))
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
+                         .filter(new Func1<ConfirmedRequest, Boolean>() {
+                             @Override
+                             public Boolean call(ConfirmedRequest r) {
+                                 return r.getRider().equals(userPreferences.getUserName());
+                             }
+                         })
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -70,8 +79,13 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
 
     private List<PendingRequest> getPendingRequestsThatHaveNotBeenAccepted() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
-                         .filter(r -> !r.hasBeenAccepted())
+                         .filter(new Func1<PendingRequest, Boolean>() {
+                             @Override
+                             public Boolean call(PendingRequest r) {
+                                 return r.getRider().equals(userPreferences.getUserName()) &&
+                                         !r.hasBeenAccepted();
+                             }
+                         })
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());
@@ -79,8 +93,13 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
 
     private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
         return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
-                         .filter(PendingRequest::hasBeenAccepted)
+                         .filter(new Func1<PendingRequest, Boolean>() {
+                             @Override
+                             public Boolean call(PendingRequest r) {
+                                 return r.getRider().equals(userPreferences.getUserName()) &&
+                                         r.hasBeenAccepted();
+                             }
+                         })
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<>());

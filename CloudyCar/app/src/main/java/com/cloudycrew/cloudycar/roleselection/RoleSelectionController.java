@@ -6,6 +6,8 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.functions.Action1;
+
 /**
  * Created by George on 2016-11-23.
  */
@@ -34,7 +36,12 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
         ObservableUtils.fromAction(userController::updateCurrentUser, currentUser)
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(nothing -> dispatchOnCarDescriptionAdded());
+                       .subscribe(new Action1<Void>() {
+                           @Override
+                           public void call(Void nothing) {
+                               dispatchOnCarDescriptionAdded();
+                           }
+                       });
     }
 
     private void dispatchOnCarDescriptionAdded() {
