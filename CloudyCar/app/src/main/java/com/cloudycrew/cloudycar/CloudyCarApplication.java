@@ -103,7 +103,7 @@ public class CloudyCarApplication extends Application {
         return new CloudRequestService(getUserPreferences(), getRequestElasticSearchService());
     }
 
-    private IConnectivityService getConnectivityService() {
+    public IConnectivityService getConnectivityService() {
         return new AndroidConnectivityService(getApplicationContext());
     }
 

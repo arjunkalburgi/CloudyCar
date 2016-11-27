@@ -12,8 +12,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
+import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.CloudyCarApplication;
 import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
+import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,7 +42,7 @@ import butterknife.OnClick;
  * is placed on their current location. They can then touch anywhere on the map to place an "End" marker.
  * The user can move placed markers by long pressing a marker and dragging it a new location.
  */
-public class RouteSelector extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class RouteSelector extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
     private static final String startName = "Start";
@@ -93,8 +97,15 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
      */
     @NonNull
     private Route getRoute() {
-        Point startPoint = new Point(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
-        Point endPoint = new Point(end.longitude,end.latitude, geoDecoder.decodeLatLng(end.longitude,end.latitude));
+        String startDescription = "Your start point";
+        String endDescription = "Your end point";
+        IConnectivityService connectivityService = getCloudyCarApplication().getConnectivityService();
+        if(connectivityService.isInternetAvailable()) {
+            startDescription = geoDecoder.decodeLatLng(start.longitude, start.latitude);
+            endDescription = geoDecoder.decodeLatLng(end.longitude, end.latitude);
+        }
+        Point startPoint = new Point(start.longitude,start.latitude, startDescription);
+        Point endPoint = new Point(end.longitude,end.latitude, endDescription);
         return new Route(startPoint,endPoint);
     }
 
