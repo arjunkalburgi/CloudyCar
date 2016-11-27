@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.widget.Toast;
 
+import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.Point;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,8 +39,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LocationSearchActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    public static final int EXPECTED_CITY_RADIUS = 20000;
+import static com.cloudycrew.cloudycar.Constants.EXPECTED_CITY_RADIUS;
+import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
+
+public class LocationSearchActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final int CAMERA_ZOOM_PADDING = 150;
     @BindView(R.id.map_search_card)
     protected CardView searchCard;
@@ -143,13 +146,6 @@ public class LocationSearchActivity extends FragmentActivity implements OnMapRea
         onPlaceSelected(mMap, myLocation);
 
         autocompleteFragment.setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS));
-    }
-
-    //http://stackoverflow.com/a/31029389/4880644
-    public LatLngBounds toBounds(LatLng center, double radius) {
-        LatLng southwest = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 225);
-        LatLng northeast = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 45);
-        return new LatLngBounds(southwest, northeast);
     }
 
     @OnClick(R.id.submit_selected_location)
