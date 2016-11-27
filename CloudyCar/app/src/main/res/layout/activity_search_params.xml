@@ -40,6 +40,7 @@
                 android:textSize="18sp"
                 android:gravity="center_vertical" />
             <RadioGroup
+                android:id="@+id/search_filter_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/search_filter_label"
