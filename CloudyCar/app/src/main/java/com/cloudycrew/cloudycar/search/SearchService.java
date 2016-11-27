@@ -1,10 +1,13 @@
 package com.cloudycrew.cloudycar.search;
 
+import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchConnectivityException;
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
+import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.ArrayList;
@@ -20,11 +23,12 @@ public class SearchService implements ISearchService {
     private IUserPreferences userPreferences;
     private IRequestStore requestStore;
     private IElasticSearchService<Request> requestElasticSearchService;
+    private IRequestService requestService;
 
-    public SearchService(IUserPreferences userPreferences, IRequestStore requestStore, IElasticSearchService<Request> requestElasticSearchService) {
+    public SearchService(IUserPreferences userPreferences, IRequestStore requestStore, IRequestService requestService) {
         this.userPreferences = userPreferences;
         this.requestStore = requestStore;
-        this.requestElasticSearchService = requestElasticSearchService;
+        this.requestService = requestService;
     }
 
     private boolean doesRequestBelongToCurrentUser(Request request) {
@@ -43,15 +47,19 @@ public class SearchService implements ISearchService {
 
     @Override
     public List<PendingRequest> searchWithPoint(Point point) {
-        List<Request> requests = requestElasticSearchService.getAll();
-        requestStore.addAll(requests);
+        List<Request> requests;
+
+        requests = requestService.search();
 
         return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
     }
 
     @Override
     public List<PendingRequest> searchWithKeyword(String keyword) {
-        List<Request> requests = requestElasticSearchService.getAll();
+        List<Request> requests;
+
+        requests = requestService.search();
+
         requestStore.addAll(requests);
 
         return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);

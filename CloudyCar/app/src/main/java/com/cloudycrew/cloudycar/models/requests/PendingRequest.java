@@ -96,6 +96,10 @@ public class PendingRequest extends Request {
         return pendingRequest;
     }
 
+    public CancelledRequest cancel() {
+        return new CancelledRequest(this);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

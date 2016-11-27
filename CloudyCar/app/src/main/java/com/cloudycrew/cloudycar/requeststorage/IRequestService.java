@@ -35,4 +35,6 @@ public interface IRequestService {
      * @param requestId the request id
      */
     void deleteRequest(String requestId);
+
+    List<Request> search();
 }
