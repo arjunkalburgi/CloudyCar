@@ -59,13 +59,15 @@ public class ElasticSearchQueryBuilder {
     private Map<Object, Object> getRadiusFilter(SearchContext searchContext) {
         Map<Object, Object> geoPointObject = new HashMap<>();
         Map<Object, Object> geoDistanceObject = new HashMap<>();
+        Map<Object, Object> filterTypeObject = new HashMap<>();
 
         geoPointObject.put("lat", searchContext.getLat());
         geoPointObject.put("lon", searchContext.getLon());
         geoDistanceObject.put("route.start.point", geoPointObject);
         geoDistanceObject.put("distance", searchContext.getRadius() + "km");
+        filterTypeObject.put("geo_distance", geoDistanceObject);
 
-        return geoDistanceObject;
+        return filterTypeObject;
     }
 
     private Map<Object, Object> getQueryObject(List<? extends Map<Object, Object>> queryObjects) {
