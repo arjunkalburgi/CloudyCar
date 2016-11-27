@@ -55,6 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Price per km" />
+
         </RadioGroup>
     </RelativeLayout>
 
@@ -81,5 +82,25 @@
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/search_submit"
         android:theme="@style/Button" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_alignBottom="@+id/enter_location_search"
+        android:layout_alignParentStart="true"
+        android:id="@+id/radius_entry"
+        android:hint="Filter by location in radius" />
+
+    <Button
+        android:text="Choose location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enter_location_search"
+        android:layout_weight="1"
+        android:layout_marginStart="22dp"
+        android:layout_below="@+id/search_price_wrapper"
+        android:layout_toEndOf="@+id/radius_entry" />
 
 </RelativeLayout>
