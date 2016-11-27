@@ -53,11 +53,19 @@ dependencies {
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:recyclerview-v7:23.2.0'
     compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:multidex:1.0.0'
 
-    compile 'com.google.android.gms:play-services:9.8.0'
-    compile 'com.google.maps:google-maps-services:0.1.16'
+    compile 'com.google.android.gms:play-services:9.4.0'
 
-    compile 'io.searchbox:jest-droid:2.0.1'
+    compile ('com.google.maps:google-maps-services:0.1.16') {
+        transitive = true
+        exclude module: 'gson'
+    }
+
+    compile ('io.searchbox:jest-droid:2.0.1') {
+        transitive = true
+        exclude module: 'gson'
+    }
 
     compile 'ca.antonious:viewcelladapter:1.1.1'
     compile 'com.makeramen:roundedimageview:2.2.1'

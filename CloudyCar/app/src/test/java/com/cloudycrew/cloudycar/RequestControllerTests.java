@@ -3,7 +3,7 @@ package com.cloudycrew.cloudycar;
 import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.email.EmailMessage;
 import com.cloudycrew.cloudycar.email.IEmailService;
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
@@ -47,6 +47,8 @@ public class RequestControllerTests {
     private User rider;
     private User driver;
     private String testDescription;
+    private String requestDescription;
+
     private PendingRequest request1;
     private PendingRequest request2;
     private PendingRequest acceptedRequest1;
@@ -58,18 +60,20 @@ public class RequestControllerTests {
         riderUsername = "janedoedoe";
         driverUsername = "driverdood";
         testDescription = "test description";
+        requestDescription = "description";
+
         rider = new User(riderUsername);
         driver = new User(driverUsername);
 
-        Point startingPoint = new Point(48.1472373, 11.5673969,testDescription );
-        Point endingPoint = new Point(48.1258551, 11.5121003,testDescription );
+        Location startingLocation = new Location(48.1472373, 11.5673969,testDescription );
+        Location endingLocation = new Location(48.1258551, 11.5121003,testDescription );
 
-        Route route = new Route(startingPoint,endingPoint);
+        Route route = new Route(startingLocation, endingLocation);
 
         double price = 3.50;
 
-        request1 = new PendingRequest(riderUsername, route, price);
-        request2 = new PendingRequest(riderUsername, route, price);
+        request1 = new PendingRequest(riderUsername, route, price, requestDescription);
+        request2 = new PendingRequest(riderUsername, route, price, requestDescription);
 
         acceptedRequest1 = request1.accept(driverUsername);
 
@@ -82,12 +86,12 @@ public class RequestControllerTests {
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        Point startingPoint = new Point(48.1472373, 11.5673969,testDescription );
-        Point endingPoint = new Point(48.1258551, 11.5121003,testDescription );
+        Location startingLocation = new Location(48.1472373, 11.5673969,testDescription );
+        Location endingLocation = new Location(48.1258551, 11.5121003,testDescription );
 
-        Route route = new Route(startingPoint,endingPoint);
+        Route route = new Route(startingLocation, endingLocation);
 
-        requestController.createRequest(route, 3.5);
+        requestController.createRequest(route, 3.5, testDescription);
 
         verify(requestStore).addRequest(request1);
         verify(requestService).createRequest(request1);

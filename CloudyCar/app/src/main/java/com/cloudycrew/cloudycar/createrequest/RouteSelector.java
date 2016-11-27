@@ -3,8 +3,6 @@ package com.cloudycrew.cloudycar.createrequest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +12,7 @@ import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,7 +21,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -93,9 +90,9 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
      */
     @NonNull
     private Route getRoute() {
-        Point startPoint = new Point(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
-        Point endPoint = new Point(end.longitude,end.latitude, geoDecoder.decodeLatLng(end.longitude,end.latitude));
-        return new Route(startPoint,endPoint);
+        Location startLocation = new Location(start.longitude,start.latitude, geoDecoder.decodeLatLng(start.longitude,start.latitude));
+        Location endLocation = new Location(end.longitude,end.latitude, geoDecoder.decodeLatLng(end.longitude,end.latitude));
+        return new Route(startLocation, endLocation);
     }
 
     /**
@@ -176,7 +173,7 @@ public class RouteSelector extends FragmentActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
-        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        android.location.Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
         mMap.addMarker(new MarkerOptions()

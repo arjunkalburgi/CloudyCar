@@ -1,7 +1,7 @@
 package com.cloudycrew.cloudycar;
 
 import com.cloudycrew.cloudycar.fileservices.IFileService;
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -36,11 +36,11 @@ public class LocalRequestServiceTests {
     @Before
     public void setUp() {
         String testDescription = "test description";
-        Route route = new Route(new Point(0, 0,testDescription), new Point(0, 0,testDescription));
+        Route route = new Route(new Location(0, 0,testDescription), new Location(0, 0,testDescription));
 
         double price = 3.5;
 
-        pendingRequest = new PendingRequest("rider", route, price);
+        pendingRequest = new PendingRequest("rider", route, price, "description");
         acceptedRequest = pendingRequest.accept("driver");
         confirmedRequest = acceptedRequest.confirmRequest("driver");
 

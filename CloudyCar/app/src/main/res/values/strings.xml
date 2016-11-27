@@ -11,6 +11,7 @@
     <string name="request_create_header">Request A Ride</string>
     <string name="ride_details">Ride Details</string>
     <string name="your_estimated_fare_is">Your estimated fare is:</string>
+    <string name="request_description_header">Description:</string>
     <string name="submit">SUBMIT</string>
     <string name="rider_summary_header">Be a Rider</string>
     <string name="title_activity_route_selector">Map</string>

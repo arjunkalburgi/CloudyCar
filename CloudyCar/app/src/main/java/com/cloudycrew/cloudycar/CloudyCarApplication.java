@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
@@ -20,6 +21,7 @@ import com.cloudycrew.cloudycar.requeststorage.CompositeRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
+import com.cloudycrew.cloudycar.requeststorage.PersistentRequestQueue;
 import com.cloudycrew.cloudycar.requeststorage.RequestStore;
 import com.cloudycrew.cloudycar.ridersummary.RiderSummaryController;
 import com.cloudycrew.cloudycar.roleselection.RoleSelectionController;
@@ -29,10 +31,13 @@ import com.cloudycrew.cloudycar.search.ISearchService;
 import com.cloudycrew.cloudycar.search.SearchController;
 import com.cloudycrew.cloudycar.search.SearchService;
 import com.cloudycrew.cloudycar.signup.SignUpController;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryMenuController;
 import com.cloudycrew.cloudycar.userprofile.EditProfileController;
 import com.cloudycrew.cloudycar.userprofile.UserProfileController;
+import com.cloudycrew.cloudycar.users.IUserHistoryService;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.users.IUserService;
+import com.cloudycrew.cloudycar.users.UserHistoryService;
 import com.cloudycrew.cloudycar.users.UserPreferences;
 import com.cloudycrew.cloudycar.users.UserService;
 import com.cloudycrew.cloudycar.utils.RequestUtils;
@@ -45,8 +50,9 @@ import io.searchbox.client.JestClient;
  * Created by George on 2016-10-25.
  */
 
-public class CloudyCarApplication extends Application {
+public class CloudyCarApplication extends MultiDexApplication {
     private IRequestStore requestStore;
+    private IRequestService requestService;
 
     private IRequestStore getRequestStore() {
         if (requestStore == null) {
@@ -77,7 +83,7 @@ public class CloudyCarApplication extends Application {
     private IElasticSearchService<Request> getRequestElasticSearchService() {
         return new ElasticSearchService.Builder<Request>()
                 .setIndex("cmput301f16t12")
-                .setType("request")
+                .setType("request_v2")
                 .setTypeClass(Request.class)
                 .setJestClient(getJestClient())
                 .build();
@@ -93,7 +99,7 @@ public class CloudyCarApplication extends Application {
     }
 
     private ISearchService getSearchService() {
-        return new SearchService(getUserPreferences(), getRequestStore(), getRequestElasticSearchService());
+        return new SearchService(getUserPreferences(), getRequestStore(), getRequestService());
     }
 
     private IRequestService getCloudRequestService() {
@@ -104,10 +110,23 @@ public class CloudyCarApplication extends Application {
         return new AndroidConnectivityService(getApplicationContext());
     }
 
-    private IRequestService getRequestService() {
-        return new CompositeRequestService(getCloudRequestService(),
-                getLocalRequestService(),
-                getConnectivityService());
+    public IRequestService getRequestService() {
+        if (requestService != null) {
+            return requestService;
+        }
+        else {
+            requestService = new CompositeRequestService(getCloudRequestService(),
+                    getLocalRequestService(),
+                    getConnectivityService(),
+                    getPersistentRequestQueue(),
+                    getSchedulerProvider(),
+                    getGeoDecoder());
+            return  requestService;
+        }
+    }
+
+    private PersistentRequestQueue getPersistentRequestQueue() {
+        return new PersistentRequestQueue(getFileService());
     }
 
     private ISchedulerProvider getSchedulerProvider() {
@@ -122,12 +141,16 @@ public class CloudyCarApplication extends Application {
         return new UserService(getUserElasticSearchService(), getUserPreferences());
     }
 
+    private IUserHistoryService getUserHistoryService() {
+        return new UserHistoryService(getFileService());
+    }
+
     public IUserPreferences getUserPreferences() {
         return new UserPreferences(getApplicationContext());
     }
 
     public UserController getUserController() {
-        return new UserController(getUserService());
+        return new UserController(getUserService(), getUserHistoryService());
     }
 
     public DriverSummaryController getDriverSummaryController() {
@@ -139,7 +162,7 @@ public class CloudyCarApplication extends Application {
     }
 
     public RequestDetailsController getRequestDetailsController(String requestId) {
-        return new RequestDetailsController(requestId, getRequestController(), getSchedulerProvider(), getRequestStore());
+        return new RequestDetailsController(requestId, getRequestController(), getUserController(),getSchedulerProvider(), getRequestStore());
     }
 
     public UserProfileController getUserProfileController() {
@@ -155,14 +178,22 @@ public class CloudyCarApplication extends Application {
     }
 
     public CreateRequestController getCreateRequestController() {
-        return new CreateRequestController(getRequestController(), getSchedulerProvider());
+        return new CreateRequestController(getRequestController(), getUserController(), getSchedulerProvider());
     }
 
     public SignUpController getSignUpController() {
         return new SignUpController(getUserController(), getSchedulerProvider());
     }
 
+    public SummaryMenuController getSummaryMenuController() {
+        return new SummaryMenuController(getUserController(), getRequestStore());
+    }
+
     public RoleSelectionController getRoleSelectionController() {
         return new RoleSelectionController(getUserController(), getSchedulerProvider());
+    }
+
+    public GeoDecoder getGeoDecoder() {
+        return new GeoDecoder(getBaseContext());
     }
 }
