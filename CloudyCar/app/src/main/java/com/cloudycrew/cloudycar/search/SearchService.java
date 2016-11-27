@@ -1,7 +1,6 @@
 package com.cloudycrew.cloudycar.search;
 
 import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
-import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;

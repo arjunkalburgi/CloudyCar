@@ -1,7 +1,6 @@
 package com.cloudycrew.cloudycar.search;
 
 import com.cloudycrew.cloudycar.ViewController;
-import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;

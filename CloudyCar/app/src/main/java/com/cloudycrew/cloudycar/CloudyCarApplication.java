@@ -80,7 +80,7 @@ public class CloudyCarApplication extends Application {
     private IElasticSearchService<Request> getRequestElasticSearchService() {
         return new ElasticSearchService.Builder<Request>()
                 .setIndex("cmput301f16t12")
-                .setType("request")
+                .setType("request_v2")
                 .setTypeClass(Request.class)
                 .setJestClient(getJestClient())
                 .build();

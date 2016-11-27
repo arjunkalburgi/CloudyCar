@@ -1,7 +1,7 @@
 package com.cloudycrew.cloudycar.viewcontrollertests;
 
 import com.cloudycrew.cloudycar.controllers.UserController;
-import com.cloudycrew.cloudycar.models.Point;
+import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
@@ -54,7 +54,7 @@ public class SummaryMenuControllerTests {
         riderUsername = "rider";
         driverUsername = "driver";
 
-        route = new Route(new Point(0, 0, "start"), new Point(0, 0, "end"));
+        route = new Route(new Location(0, 0, "start"), new Location(0, 0, "end"));
         price = 20.30;
         requestDescription = "description";
 

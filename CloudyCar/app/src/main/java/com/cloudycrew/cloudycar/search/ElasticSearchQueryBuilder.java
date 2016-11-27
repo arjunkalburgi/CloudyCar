@@ -11,9 +11,9 @@ public class ElasticSearchQueryBuilder {
 
     public String getKeywordQuery(String keyword) {
         return "{\n" +
-                "\"match\": { \n" +
-                "\"description\": \"" + keyword + "\" \n" +
-                "}\n" +
+                    "\"match\": { \n" +
+                        "\"description\": \"" + keyword + "\" \n" +
+                    "}\n" +
                 "}";
     }
 
