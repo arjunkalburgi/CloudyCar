@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -13,7 +15,7 @@ import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
-import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
 
@@ -37,6 +39,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected ProgressBar searchProgressBar;
     @BindView(R.id.search_results_recycler_view)
     protected RecyclerView searchRecyclerView;
+//    @BindView(R.id.search_bar)
+//    protected MaterialSearchView searchView;
 
     private ViewCellAdapter viewCellAdapter;
     private SectionViewCell searchResultsSection;
@@ -52,6 +56,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         setSupportActionBar(toolbar);
         resolveDependencies();
         setUpRecyclerView();
+
+        toolbar.setTitleTextColor(0xFFFFFFFF);
     }
 
     @Override

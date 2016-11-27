@@ -16,7 +16,10 @@ import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
+import com.cloudycrew.cloudycar.search.LocationSearchActivity;
 import com.cloudycrew.cloudycar.search.SearchActivity;
+import com.cloudycrew.cloudycar.search.SearchParamsActivity;
+import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.DriverAcceptedRequestViewCell;
@@ -116,7 +119,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @OnClick(R.id.fab)
     protected void onSearchRequestsClicked() {
-        startActivity(new Intent(getActivity(), SearchActivity.class));
+        startActivity(new Intent(getActivity(), SearchParamsActivity.class));
     }
 
     private void launchRequestDetailsActivity(String requestId) {
