@@ -16,6 +16,7 @@ public class SplashScreen extends BaseActivity {
         resolveDependencies();
 
         try {
+            getCloudyCarApplication().getRequestService(); //Tier 1
             userController.getCurrentUser();
             startRolePickerActivity();
         }

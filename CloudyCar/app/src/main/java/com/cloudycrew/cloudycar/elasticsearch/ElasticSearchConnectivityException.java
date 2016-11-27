@@ -6,4 +6,7 @@ package com.cloudycrew.cloudycar.elasticsearch;
 
 public class ElasticSearchConnectivityException extends RuntimeException
 {
+    public ElasticSearchConnectivityException(Exception e) {
+        super(e);
+    }
 }

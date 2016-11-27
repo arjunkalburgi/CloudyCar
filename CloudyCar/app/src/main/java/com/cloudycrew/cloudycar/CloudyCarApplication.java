@@ -51,6 +51,7 @@ import io.searchbox.client.JestClient;
 
 public class CloudyCarApplication extends Application {
     private IRequestStore requestStore;
+    private IRequestService requestService;
 
     private IRequestStore getRequestStore() {
         if (requestStore == null) {
@@ -97,7 +98,7 @@ public class CloudyCarApplication extends Application {
     }
 
     private ISearchService getSearchService() {
-        return new SearchService(getUserPreferences(), getRequestStore(), getRequestElasticSearchService());
+        return new SearchService(getUserPreferences(), getRequestStore(), getRequestService());
     }
 
     private IRequestService getCloudRequestService() {
@@ -108,12 +109,19 @@ public class CloudyCarApplication extends Application {
         return new AndroidConnectivityService(getApplicationContext());
     }
 
-    private IRequestService getRequestService() {
-        return new CompositeRequestService(getCloudRequestService(),
-                getLocalRequestService(),
-                getConnectivityService(),
-                getPersistentRequestQueue(),
-                getSchedulerProvider());
+    public IRequestService getRequestService() {
+        if (requestService != null) {
+            return requestService;
+        }
+        else {
+            requestService = new CompositeRequestService(getCloudRequestService(),
+                    getLocalRequestService(),
+                    getConnectivityService(),
+                    getPersistentRequestQueue(),
+                    getSchedulerProvider(),
+                    getGeoDecoder());
+            return  requestService;
+        }
     }
 
     private PersistentRequestQueue getPersistentRequestQueue() {
@@ -182,5 +190,9 @@ public class CloudyCarApplication extends Application {
 
     public RoleSelectionController getRoleSelectionController() {
         return new RoleSelectionController(getUserController(), getSchedulerProvider());
+    }
+
+    public GeoDecoder getGeoDecoder() {
+        return new GeoDecoder(getBaseContext());
     }
 }

@@ -47,4 +47,9 @@ public class CloudRequestService implements IRequestService {
 
         elasticSearchService.delete(requestId);
     }
+
+    @Override
+    public List<Request> search() {
+        return this.getRequests();
+    }
 }

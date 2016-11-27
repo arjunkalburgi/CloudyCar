@@ -1,17 +1,16 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
-import android.net.ConnectivityManager;
 
+import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
 import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchConnectivityException;
+import com.cloudycrew.cloudycar.models.Point;
 import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
-import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -27,14 +26,17 @@ public class CompositeRequestService implements IRequestService {
     private IConnectivityService connectivityService;
     private PersistentRequestQueue requestQueue;
     private ISchedulerProvider schedulerProvider;
+    private GeoDecoder geoDecoder;
 
     public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService,
-                                   IConnectivityService connectivityService, PersistentRequestQueue requestQueue, ISchedulerProvider scheduler) {
+                                   IConnectivityService connectivityService, PersistentRequestQueue requestQueue,
+                                   ISchedulerProvider scheduler, GeoDecoder geoDecoder) {
         this.cloudRequestService = cloudRequestService;
         this.localRequestService = localRequestService;
         this.connectivityService = connectivityService;
         this.requestQueue = requestQueue;
         this.schedulerProvider = scheduler;
+        this.geoDecoder = geoDecoder;
 
         this.connectivityService.setOnConnectivityChangedListener(isConnected -> {
             if (isConnected) {
@@ -95,6 +97,11 @@ public class CompositeRequestService implements IRequestService {
         localRequestService.deleteRequest(requestId);
     }
 
+    @Override
+    public List<Request> search() {
+        return this.getRequests();
+    }
+
     /**
      * To sync the local state we want to
      * A) Flush the cancellation, creation, and confirmation queues
@@ -108,14 +115,8 @@ public class CompositeRequestService implements IRequestService {
      */
     private void syncLocalState() {
 
-
-        //for debugging reasons
-        List<Request> create = requestQueue.getCreateQueue();
-        List<PendingRequest> b = requestQueue.getAcceptedQueue();
-        List<CancelledRequest> d = requestQueue.getCancellationQueue();
-        List<ConfirmedRequest> c = requestQueue.getConfirmationQueue();
-
         for (Request request: requestQueue.getCreateQueue()) {
+            setDescriptions(request);
             cloudRequestService.createRequest(request);
             requestQueue.dequeueCreation(request);
         }
@@ -134,7 +135,13 @@ public class CompositeRequestService implements IRequestService {
 
         List<Request> cloudRequests;
 
-        cloudRequests = cloudRequestService.getRequests();
+        try {
+            cloudRequests = cloudRequestService.getRequests();
+        }
+        catch(ElasticSearchConnectivityException e) {
+            e.printStackTrace();
+            return;
+        }
 
         //Add our acceptances... this is pretty dirty
         for (PendingRequest request: requestQueue.getAcceptedQueue()) {
@@ -151,6 +158,7 @@ public class CompositeRequestService implements IRequestService {
                             }
                         }
                         cloudRequestService.updateRequest(updatedRequest);
+                        requestQueue.dequeueAccept(request);
                     }
                 }
             }
@@ -159,11 +167,27 @@ public class CompositeRequestService implements IRequestService {
         //Now that the cloud is synced to our changes we will just set the local service
         //to be equivalent to the cloud service
         cloudRequests.clear();
-        cloudRequests = cloudRequestService.getRequests();
+
+        try {
+            cloudRequests = cloudRequestService.getRequests();
+        }
+        catch(ElasticSearchConnectivityException e) {
+            e.printStackTrace();
+            return;
+        }
+
 
         for(Request request: cloudRequests) {
             localRequestService.updateRequest(request);
         }
 
+    }
+
+    private void setDescriptions(Request request) {
+        Point startingPoint = request.getRoute().getStartingPoint();
+        Point endingPoint = request.getRoute().getEndingPoint();
+
+        startingPoint.setDescription(geoDecoder.decodeLatLng(startingPoint.getLongitude(), startingPoint.getLatitude()));
+        endingPoint.setDescription(geoDecoder.decodeLatLng(endingPoint.getLongitude(), endingPoint.getLatitude()));
     }
 }

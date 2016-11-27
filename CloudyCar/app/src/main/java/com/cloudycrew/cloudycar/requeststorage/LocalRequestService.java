@@ -57,6 +57,11 @@ public class LocalRequestService implements IRequestService {
         }
     }
 
+    @Override
+    public List<Request> search() {
+        return this.getRequests();
+    }
+
     private Map<String, Request> loadRequests() {
         String serializedHabits = fileService.loadFileAsString(Constants.REQUEST_MAP_FILE_NAME);
 
