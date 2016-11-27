@@ -15,6 +15,7 @@ public abstract class Request implements Identifiable {
     private String riderUsername;
     private Route route;
     private double price;
+    private double pricePerKm;
     private Date lastUpdated;
     private transient boolean hasBeenReadByUser;
     private String description;
@@ -38,6 +39,7 @@ public abstract class Request implements Identifiable {
         this.route = route;
         this.price = price;
         this.description = description;
+        this.pricePerKm = price / route.getMeters();
         this.lastUpdated = new Date();
     }
 
@@ -111,5 +113,9 @@ public abstract class Request implements Identifiable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getPricePerKm() {
+        return pricePerKm;
     }
 }

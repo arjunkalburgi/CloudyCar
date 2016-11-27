@@ -6,10 +6,11 @@ package com.cloudycrew.cloudycar.search;
 
 public class SearchContext {
     private String keyword;
-    private double lat;
-    private double lon;
-    private double radius;
-    private double pricePerKm;
+    private double lat = -1;
+    private double lon = -1;
+    private double radius = -1;
+    private double minPricePerKm = -1;
+    private double maxPricePerKm = -1;
 
     public SearchContext withKeyword(String keyword) {
         this.keyword = keyword;
@@ -23,9 +24,22 @@ public class SearchContext {
         return this;
     }
 
-    public SearchContext withPricePerKm(double pricePerKm) {
-        this.pricePerKm = pricePerKm;
+    public SearchContext withPricePerKm(double minPricePerKm, double maxPricePerKm) {
+        this.minPricePerKm = minPricePerKm;
+        this.maxPricePerKm = maxPricePerKm;
         return this;
+    }
+
+    public boolean hasKeyword() {
+        return keyword != null;
+    }
+
+    public boolean hasLocation() {
+        return radius != -1;
+    }
+
+    public boolean hasPricePerKm() {
+        return minPricePerKm != -1;
     }
 
     public String getKeyword() {
@@ -44,7 +58,11 @@ public class SearchContext {
         return radius;
     }
 
-    public double getPricePerKm() {
-        return pricePerKm;
+    public double getMinPricePerKm() {
+        return minPricePerKm;
+    }
+
+    public double getMaxPricePerKm() {
+        return maxPricePerKm;
     }
 }
