@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
 import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
@@ -48,7 +49,7 @@ import io.searchbox.client.JestClient;
  * Created by George on 2016-10-25.
  */
 
-public class CloudyCarApplication extends Application {
+public class CloudyCarApplication extends MultiDexApplication {
     private IRequestStore requestStore;
 
     private IRequestStore getRequestStore() {
