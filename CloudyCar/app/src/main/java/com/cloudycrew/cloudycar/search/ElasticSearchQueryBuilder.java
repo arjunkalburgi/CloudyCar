@@ -25,8 +25,7 @@ public class ElasticSearchQueryBuilder {
         }
 
         if (searchContext.hasLocation()) {
-            Map<Object, Object> geoDistanceObject = getRadiusFilter(searchContext);
-            elasticSearchQuery.put("filter", getFilterObject(geoDistanceObject));
+            elasticSearchQuery.put("filter", getRadiusFilter(searchContext));
         }
 
         elasticSearchQuery.put("query", getQueryObject(queryObjects));
@@ -72,21 +71,12 @@ public class ElasticSearchQueryBuilder {
     private Map<Object, Object> getQueryObject(List<? extends Map<Object, Object>> queryObjects) {
         Map<Object, Object> boolObject = new HashMap<>();
         Map<Object, Object> queryObject = new HashMap<>();
-        Map<Object, Object> queryContainer = new HashMap<>();
 
 
         boolObject.put("must", queryObjects);
         queryObject.put("bool", boolObject);
-        queryContainer.put("query", queryObject);
 
-        return queryContainer;
-    }
-
-    private Map<Object, Object> getFilterObject(Map<Object, Object> filterObject) {
-        Map<Object, Object> filterContainer = new HashMap<>();
-        filterContainer.put("filter", filterObject);
-
-        return filterContainer;
+        return queryObject;
     }
 
     private String serializeQuery(Map<Object, Object> queryObject) {
