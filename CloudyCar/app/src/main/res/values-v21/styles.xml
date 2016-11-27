@@ -6,4 +6,9 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="WhiteBackground">
+        <item name="android:background">@drawable/white_ripple_background</item>
+    </style>
+
 </resources>
