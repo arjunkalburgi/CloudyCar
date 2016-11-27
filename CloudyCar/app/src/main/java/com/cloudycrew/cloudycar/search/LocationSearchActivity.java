@@ -35,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.cloudycrew.cloudycar.Constants.EXPECTED_CITY_RADIUS;
+import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
 public class LocationSearchActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -48,7 +48,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     private Marker currentMarker;
     private Circle currentRadius;
     private MarkerOptions markerOptions;
-    private double radius;
+    private int radius;
     private LatLng selectedLocation;
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
     private PlaceAutocompleteFragment autocompleteFragment;
@@ -59,7 +59,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         setContentView(R.layout.activity_location_search);
         ButterKnife.bind(this);
 
-        radius = this.getIntent().getExtras().getDouble("radius");
+        radius = this.getIntent().getExtras().getInt("radius");
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -141,7 +141,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation,radius), CAMERA_ZOOM_PADDING));
         onPlaceSelected(mMap, myLocation);
 
-        autocompleteFragment.setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS));
+        autocompleteFragment.setBoundsBias(toBounds(myLocation, MAX_RADIUS));
     }
 
     @OnClick(R.id.submit_selected_location)
