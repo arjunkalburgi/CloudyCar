@@ -139,7 +139,6 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
         });
 
         mMap.setOnMapClickListener(latLng -> {
-            if (end == null) {
                 mMap.addMarker(new MarkerOptions()
                         .title(endName)
                         .position(latLng)
@@ -148,7 +147,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
                 )
                         .showInfoWindow();
                 end = latLng;
-            }
+                mMap.setOnMapClickListener(null);
         });
 
     }
