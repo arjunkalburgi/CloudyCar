@@ -43,10 +43,8 @@ public class LocalRequestService implements IRequestService {
     public void updateRequest(Request request) {
         Map<String, Request> requests = loadRequests();
 
-        if (requests.containsKey(request.getId())) {
-            requests.put(request.getId(), request);
-            saveRequests(requests);
-        }
+        requests.put(request.getId(), request);
+        saveRequests(requests);
     }
 
     @Override

@@ -22,13 +22,6 @@ import java.util.Map;
  */
 
 public class PersistentRequestQueue {
-    private List<Request> createQueue;
-    private List<PendingRequest> acceptQueue;
-    private List<CancelledRequest> cancelQueue;
-    private List<ConfirmedRequest> confirmQueue;
-
-    //private Map<String, List<Request>> queueMap;
-
     private static final String MAP_CREATE = "Created";
     private static final String MAP_ACCEPT = "Accepted";
     private static final String MAP_CANCEL = "Cancelled";
@@ -94,6 +87,30 @@ public class PersistentRequestQueue {
             confirmedRequests.add((ConfirmedRequest) request);
         }
         return confirmedRequests;
+    }
+
+    public void dequeueCreation(Request request) {
+        Map<String, List<Request>> queueMap = loadQueues();
+        queueMap.get(MAP_CREATE).remove(request);
+        saveQueues(queueMap);
+    }
+
+    public void dequeueAccept(PendingRequest request) {
+        Map<String, List<Request>> queueMap = loadQueues();
+        queueMap.get(MAP_ACCEPT).remove(request);
+        saveQueues(queueMap);
+    }
+
+    public void dequeueCancellation(CancelledRequest request) {
+        Map<String, List<Request>> queueMap = loadQueues();
+        queueMap.get(MAP_CREATE).remove(request);
+        saveQueues(queueMap);
+    }
+
+    public void dequeueConfirmation(ConfirmedRequest request) {
+        Map<String, List<Request>> queueMap = loadQueues();
+        queueMap.get(MAP_CREATE).remove(request);
+        saveQueues(queueMap);
     }
 
 

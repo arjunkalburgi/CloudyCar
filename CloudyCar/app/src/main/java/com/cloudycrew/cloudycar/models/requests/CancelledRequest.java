@@ -14,7 +14,7 @@ public class CancelledRequest extends Request
     public static final String TYPE_NAME = "cancelled";
 
     public CancelledRequest(PendingRequest pendingRequest) {
-        super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute(), pendingRequest.getPrice());
+        super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute(), pendingRequest.getPrice(), pendingRequest.getDescription());
         this.id = pendingRequest.getId();
     }
 

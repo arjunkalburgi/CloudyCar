@@ -8,8 +8,14 @@ import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
+import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+
 
 /**
  * Created by George on 2016-10-24.
@@ -18,22 +24,24 @@ import java.util.List;
 public class CompositeRequestService implements IRequestService {
     private IRequestService cloudRequestService;
     private IRequestService localRequestService;
-    /**
-     * Kiuwan suggests removing this unused private member. We should either remove it or determine
-     * why it was stubbed out and use it if the case is still viable.
-     */
     private IConnectivityService connectivityService;
     private PersistentRequestQueue requestQueue;
+    private ISchedulerProvider schedulerProvider;
 
-    public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService, IConnectivityService connectivityService, PersistentRequestQueue requestQueue) {
+    public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService,
+                                   IConnectivityService connectivityService, PersistentRequestQueue requestQueue, ISchedulerProvider scheduler) {
         this.cloudRequestService = cloudRequestService;
         this.localRequestService = localRequestService;
         this.connectivityService = connectivityService;
         this.requestQueue = requestQueue;
+        this.schedulerProvider = scheduler;
 
         this.connectivityService.setOnConnectivityChangedListener(isConnected -> {
             if (isConnected) {
-                syncLocalState();
+                Observable.just(null)
+                          .doOnNext(nothing -> syncLocalState())
+                          .subscribeOn(schedulerProvider.ioScheduler())
+                          .subscribe();
             }
         });
     }
@@ -41,7 +49,11 @@ public class CompositeRequestService implements IRequestService {
     @Override
     public List<Request> getRequests() {
         try {
-            return cloudRequestService.getRequests();
+            List<Request> cloudRequests = cloudRequestService.getRequests();
+            for (Request request: cloudRequests) {
+                localRequestService.updateRequest(request);
+            }
+            return cloudRequests;
         } catch (ElasticSearchConnectivityException e) {
             return localRequestService.getRequests();
         }
@@ -96,28 +108,39 @@ public class CompositeRequestService implements IRequestService {
      */
     private void syncLocalState() {
 
+
+        //for debugging reasons
+        List<Request> create = requestQueue.getCreateQueue();
+        List<PendingRequest> b = requestQueue.getAcceptedQueue();
+        List<CancelledRequest> d = requestQueue.getCancellationQueue();
+        List<ConfirmedRequest> c = requestQueue.getConfirmationQueue();
+
         for (Request request: requestQueue.getCreateQueue()) {
-            this.createRequest(request); //If we have a hash collision we deserve it
+            cloudRequestService.createRequest(request);
+            requestQueue.dequeueCreation(request);
         }
 
         //We can safely cancel since we 'own' this request
-        for (Request request: requestQueue.getCancellationQueue()) {
-            this.updateRequest(request);
+        for (CancelledRequest request: requestQueue.getCancellationQueue()) {
+            cloudRequestService.updateRequest(request);
+            requestQueue.dequeueCancellation(request);
         }
 
         //We can safely confirm since we 'own' this request
-        for (Request request: requestQueue.getConfirmationQueue()) {
-            this.updateRequest(request);
+        for (ConfirmedRequest request: requestQueue.getConfirmationQueue()) {
+            cloudRequestService.updateRequest(request);
+            requestQueue.dequeueConfirmation(request);
         }
 
+        List<Request> cloudRequests;
 
-        List<Request> cloudRequests = this.cloudRequestService.getRequests();
+        cloudRequests = cloudRequestService.getRequests();
 
         //Add our acceptances... this is pretty dirty
         for (PendingRequest request: requestQueue.getAcceptedQueue()) {
             for(Request cloudRequest: cloudRequests) {
                 if (cloudRequest.getId().equals(request.getId())) {
-                    PendingRequest updatedRequest = new PendingRequest(cloudRequest.getRider(), cloudRequest.getRoute(), cloudRequest.getPrice());
+                    PendingRequest updatedRequest = new PendingRequest(cloudRequest.getRider(), cloudRequest.getRoute(), cloudRequest.getPrice(), cloudRequest.getDescription());
                     if (cloudRequest instanceof PendingRequest) {
                         for (String driver: request.getDriversWhoAccepted()) {
                             try {
@@ -135,7 +158,10 @@ public class CompositeRequestService implements IRequestService {
 
         //Now that the cloud is synced to our changes we will just set the local service
         //to be equivalent to the cloud service
-        for(Request request: cloudRequestService.getRequests()) {
+        cloudRequests.clear();
+        cloudRequests = cloudRequestService.getRequests();
+
+        for(Request request: cloudRequests) {
             localRequestService.updateRequest(request);
         }
 

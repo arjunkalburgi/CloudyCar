@@ -112,7 +112,8 @@ public class CloudyCarApplication extends Application {
         return new CompositeRequestService(getCloudRequestService(),
                 getLocalRequestService(),
                 getConnectivityService(),
-                getPersistentRequestQueue());
+                getPersistentRequestQueue(),
+                getSchedulerProvider());
     }
 
     private PersistentRequestQueue getPersistentRequestQueue() {
