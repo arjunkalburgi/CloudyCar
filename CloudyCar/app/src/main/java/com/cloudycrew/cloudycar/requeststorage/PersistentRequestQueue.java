@@ -119,10 +119,10 @@ public class PersistentRequestQueue {
 
         if (StringUtils.isNullOrEmpty(serializedHabits)) {
             HashMap<String, List<Request>> map = new HashMap<>();
-            map.put(MAP_CREATE, new ArrayList<>());
-            map.put(MAP_ACCEPT, new ArrayList<>());
-            map.put(MAP_CANCEL, new ArrayList<>());
-            map.put(MAP_CONFIRM, new ArrayList<>());
+            map.put(MAP_CREATE, new ArrayList<Request>());
+            map.put(MAP_ACCEPT, new ArrayList<Request>());
+            map.put(MAP_CANCEL, new ArrayList<Request>());
+            map.put(MAP_CONFIRM, new ArrayList<Request>());
             return map;
         } else {
             return getGson().fromJson(serializedHabits, new TypeToken<Map<String, List<Request>>>() {}.getType());

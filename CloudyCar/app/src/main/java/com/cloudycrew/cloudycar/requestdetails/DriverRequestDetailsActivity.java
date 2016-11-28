@@ -67,7 +67,12 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
         } else {
             statusTextView.setText(R.string.havent_accepted_ride);
             updateButton.setText(R.string.accept_request_button_text);
-            updateButton.setOnClickListener(v -> requestDetailsController.acceptRequest());
+            updateButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestDetailsController.acceptRequest();
+                }
+            });
             updateButton.setVisibility(View.VISIBLE);
         }
     }

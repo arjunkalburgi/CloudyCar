@@ -6,6 +6,10 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func0;
+
 /**
  * Created by Ryan on 2016-11-12.
  */
@@ -23,14 +27,24 @@ public class EditProfileController extends ViewController<IEditProfileView> {
      * Asynchronously loads a user
      * @param username - username of the user to load
      */
-    public void loadUser(String username) {
+    public void loadUser(final String username) {
         dispatchDisplayLoading();
         User localUser = userController.getCurrentUser();
         if( !username.equals(localUser.getUsername()) ) {
-            ObservableUtils.fromFunction(userController::getUser, username)
+            ObservableUtils.create(new Func0<User>() {
+                        @Override
+                        public User call() {
+                            return userController.getUser(username);
+                        }
+                    })
                     .subscribeOn(schedulerProvider.ioScheduler())
                     .observeOn(schedulerProvider.mainThreadScheduler())
-                    .subscribe(this::dispatchDisplayUser);
+                    .subscribe(new Action1<User>() {
+                        @Override
+                        public void call(User user) {
+                            dispatchDisplayUser(user);
+                        }
+                    });
         }
         else {
             this.dispatchDisplayUser(localUser);
@@ -54,12 +68,26 @@ public class EditProfileController extends ViewController<IEditProfileView> {
      * Asynchronously updates a user locally and remotely, calls appropriate callbacks for failures
      * @param user - the user to update
      */
-    public void updateUser(User user) {
-        ObservableUtils.fromAction(userController::updateCurrentUser, user)
+    public void updateUser(final User user) {
+        ObservableUtils.create(new Action0() {
+                           @Override
+                           public void call() {
+                               userController.updateCurrentUser(user);
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(nothing -> dispatchOnEditSuccess(),
-                                  throwable -> dispatchOnEditFailure());
+                       .subscribe(new Action1<Void>() {
+                           @Override
+                           public void call(Void nothing) {
+                               dispatchOnEditSuccess();
+                           }
+                       }, new Action1<Throwable>() {
+                           @Override
+                           public void call(Throwable throwable) {
+                               dispatchOnEditFailure();
+                           }
+                       });
     }
 
     private void dispatchOnEditSuccess() {

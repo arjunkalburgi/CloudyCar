@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.roleselection;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -55,21 +56,27 @@ public class RoleSelectionActivity extends BaseActivity implements IRoleSelectio
     @Override
     public void displayAddCarDescription() {
         final View inputView = LayoutInflater.from(this).inflate(R.layout.car_info_input_dialog, null);
-        Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
+        final Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
 
         new AlertDialog.Builder(this)
                 .setTitle("Set Car information")
                 .setView(inputView)
-                .setPositiveButton("Add", (dialog, which) -> {
-                    EditText carDescription = (EditText) inputView.findViewById(R.id.CarInfo);
-                    if (carDescription.getText().toString().trim() == "") {
-                        toast.show();
-                        return;
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText carDescription = (EditText) inputView.findViewById(R.id.CarInfo);
+                        if (carDescription.getText().toString().trim() == "") {
+                            toast.show();
+                            return;
+                        }
+                        roleSelectionController.addCarDescription(carDescription.getText().toString().trim());
                     }
-                    roleSelectionController.addCarDescription(carDescription.getText().toString().trim());
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    toast.show();
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        toast.show();
+                    }
                 })
                 .create()
                 .show();

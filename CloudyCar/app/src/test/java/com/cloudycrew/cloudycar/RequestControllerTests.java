@@ -9,6 +9,7 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
@@ -114,8 +115,8 @@ public class RequestControllerTests {
 
         requestController.completeRequest(confirmedRequest1.getId());
 
-        verify(requestStore, never()).updateRequest(anyObject());
-        verify(requestService, never()).updateRequest(anyObject());
+        verify(requestStore, never()).updateRequest(any(Request.class));
+        verify(requestService, never()).updateRequest(any(Request.class));
     }
 
     @Test
@@ -135,8 +136,8 @@ public class RequestControllerTests {
 
         requestController.confirmRequest(acceptedRequest1.getId(), driverUsername);
 
-        verify(requestStore, never()).updateRequest(anyObject());
-        verify(requestService, never()).updateRequest(anyObject());
+        verify(requestStore, never()).updateRequest(any(Request.class));
+        verify(requestService, never()).updateRequest(any(Request.class));
     }
 
     @Test
@@ -156,8 +157,8 @@ public class RequestControllerTests {
 
         requestController.acceptRequest(acceptedRequest1.getId());
 
-        verify(requestStore, never()).addRequest(anyObject());
-        verify(requestService, never()).createRequest(anyObject());
+        verify(requestStore, never()).addRequest(any(Request.class));
+        verify(requestService, never()).createRequest(any(Request.class));
     }
 
     @Test

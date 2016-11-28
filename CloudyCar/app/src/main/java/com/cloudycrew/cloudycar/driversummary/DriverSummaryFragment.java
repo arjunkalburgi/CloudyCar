@@ -15,6 +15,7 @@ import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.cloudycrew.cloudycar.search.LocationSearchActivity;
 import com.cloudycrew.cloudycar.search.SearchActivity;
@@ -34,6 +35,7 @@ import butterknife.OnClick;
 import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
 import ca.antonious.viewcelladapter.ViewCellAdapter;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-05.
@@ -93,7 +95,12 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     private void setUpSwipeRefreshLayout() {
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorAccent));
-        swipeRefreshLayout.setOnRefreshListener(() -> driverSummaryController.refreshRequests());
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                driverSummaryController.refreshRequests();
+            }
+        });
     }
 
     private void setUpRecyclerView() {
@@ -130,7 +137,12 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
 
     @Override
     public void displayLoading() {
-        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
     }
 
     public void stopLoading() {
@@ -152,24 +164,37 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         viewCellAdapter.notifyDataSetChanged();
     }
 
-    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
-        launchRequestDetailsActivity(request.getId());
-    };
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = new BaseRequestViewCell.OnRequestClickedListener() {
+        @Override
+        public void onRequestClicked(Request request) {
+            launchRequestDetailsActivity(request.getId());
 
+        }
+    };
 
     private List<DriverAcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                         .map(DriverAcceptedRequestViewCell::new)
+                         .map(new Func1<PendingRequest, DriverAcceptedRequestViewCell>() {
+                             @Override
+                             public DriverAcceptedRequestViewCell call(PendingRequest pendingRequest) {
+                                 return new DriverAcceptedRequestViewCell(pendingRequest);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<DriverAcceptedRequestViewCell>());
     }
 
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
         return Observable.from(confirmedRequests)
-                         .map(ConfirmedRequestViewCell::new)
+                         .map(new Func1<ConfirmedRequest, ConfirmedRequestViewCell>() {
+                             @Override
+                             public ConfirmedRequestViewCell call(ConfirmedRequest confirmedRequest) {
+                                 return new ConfirmedRequestViewCell(confirmedRequest);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<ConfirmedRequestViewCell>());
     }
 }

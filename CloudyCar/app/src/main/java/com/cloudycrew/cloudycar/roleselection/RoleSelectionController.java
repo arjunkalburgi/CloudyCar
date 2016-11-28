@@ -6,6 +6,9 @@ import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.functions.Action0;
+import rx.functions.Action1;
+
 /**
  * Created by George on 2016-11-23.
  */
@@ -27,14 +30,29 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
         }
     }
 
-    public void addCarDescription(String carDescription) {
-        User currentUser = userController.getCurrentUser();
-        currentUser.setCarDescription(carDescription);
+    public void addCarDescription(final String carDescription) {
+        final User updatedUser = getUpdatedUser(carDescription);
 
-        ObservableUtils.fromAction(userController::updateCurrentUser, currentUser)
+        ObservableUtils.create(new Action0() {
+                           @Override
+                           public void call() {
+                               userController.updateCurrentUser(updatedUser);
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(nothing -> dispatchOnCarDescriptionAdded());
+                       .subscribe(new Action1<Void>() {
+                           @Override
+                           public void call(Void nothing) {
+                               dispatchOnCarDescriptionAdded();
+                           }
+                       });
+    }
+
+    private User getUpdatedUser(String carDescription) {
+        User currentUser = userController.getCurrentUser();
+        currentUser.setCarDescription(carDescription);
+        return currentUser;
     }
 
     private void dispatchOnCarDescriptionAdded() {

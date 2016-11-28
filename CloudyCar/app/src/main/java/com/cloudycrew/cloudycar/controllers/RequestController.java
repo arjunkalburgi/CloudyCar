@@ -5,12 +5,17 @@ import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
+import java.util.List;
+
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-10-23.
@@ -40,11 +45,21 @@ public class RequestController {
      * Refresh requests. On success, the new requests are added to the request store.
      */
     public void refreshRequests() {
-        Observable.just(null)
+        Observable.<Void>just(null)
                   .observeOn(schedulerProvider.ioScheduler())
-                  .map(nothing -> requestService.getRequests())
+                  .map(new Func1<Void, List<Request>>() {
+                      @Override
+                      public List<Request> call(Void aVoid) {
+                          return requestService.getRequests();
+                      }
+                  })
                   .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::setAll);
+                  .subscribe(new Action1<List<Request>>() {
+                      @Override
+                      public void call(List<Request> requests) {
+                          requestStore.setAll(requests);
+                      }
+                  });
     }
 
     /**

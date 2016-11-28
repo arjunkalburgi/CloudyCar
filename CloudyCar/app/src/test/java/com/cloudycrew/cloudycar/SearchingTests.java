@@ -8,6 +8,7 @@ import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.search.ISearchService;
 import com.cloudycrew.cloudycar.search.SearchContext;
@@ -57,7 +58,7 @@ public class SearchingTests {
         request1 = new PendingRequest(user.getUsername(), route1, price, requestDescription);
         request2 = new PendingRequest(user.getUsername(), route2, price, requestDescription);
 
-        when(requestStore.getRequests()).thenReturn(Arrays.asList(request1, request2));
+        when(requestStore.getRequests()).thenReturn(Arrays.<Request>asList(request1, request2));
     }
 
     @Test
