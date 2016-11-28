@@ -115,6 +115,7 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         @Override
         public void onConfirm(String username) {
             requestDetailsController.confirmRequest(username);
+            requestDetailsController.markRequestAsRead();
             goBackToSummary();
         }
     };
