@@ -12,6 +12,9 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import rx.Observable;
+import rx.functions.Action0;
+
 /**
  * Created by George on 2016-11-05.
  */
@@ -46,7 +49,12 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
      * Accept request.
      */
     public void acceptRequest() {
-        ObservableUtils.fromAction(requestController::acceptRequest, requestId)
+        ObservableUtils.create(new Action0() {
+                           @Override
+                           public void call() {
+                               requestController.acceptRequest(requestId);
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe();
@@ -57,8 +65,13 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
      *
      * @param driverUsername the driver username
      */
-    public void confirmRequest(String driverUsername) {
-        ObservableUtils.fromAction(requestController::confirmRequest, requestId, driverUsername)
+    public void confirmRequest(final String driverUsername) {
+        ObservableUtils.create(new Action0() {
+                           @Override
+                           public void call() {
+                                requestController.confirmRequest(requestId, driverUsername);
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe();
@@ -68,7 +81,12 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
      * Complete request.
      */
     public void completeRequest() {
-        ObservableUtils.fromAction(requestController::completeRequest, requestId)
+        ObservableUtils.create(new Action0() {
+                           @Override
+                           public void call() {
+                               requestController.completeRequest(requestId);
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
                        .subscribe();
@@ -90,15 +108,18 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
         requestStore.removeObserver(requestStoreObserver);
     }
 
-    private IObserver<IRequestStore> requestStoreObserver = store -> {
-        Request request = store.getRequest(requestId);
+    private IObserver<IRequestStore> requestStoreObserver = new IObserver<IRequestStore>() {
+        @Override
+        public void notifyUpdate(IRequestStore store) {
+            Request request = store.getRequest(requestId);
 
-        if (request instanceof PendingRequest) {
-            dispatchDisplayPendingRequest((PendingRequest) request);
-        } else if (request instanceof ConfirmedRequest) {
-            dispatchDisplayConfirmedRequest((ConfirmedRequest) request);
-        } else if (request instanceof CompletedRequest) {
-            dispatchDisplayCompletedRequest((CompletedRequest) request);
+            if (request instanceof PendingRequest) {
+                dispatchDisplayPendingRequest((PendingRequest) request);
+            } else if (request instanceof ConfirmedRequest) {
+                dispatchDisplayConfirmedRequest((ConfirmedRequest) request);
+            } else if (request instanceof CompletedRequest) {
+                dispatchDisplayCompletedRequest((CompletedRequest) request);
+            }
         }
     };
 

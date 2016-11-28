@@ -196,7 +196,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequestViewCell>());
     }
 
     private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
@@ -209,7 +209,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<AcceptedRequestViewCell>());
     }
 
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
@@ -222,6 +222,6 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<ConfirmedRequestViewCell>());
     }
 }

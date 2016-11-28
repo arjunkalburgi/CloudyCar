@@ -56,7 +56,7 @@ public class RoleSelectionActivity extends BaseActivity implements IRoleSelectio
     @Override
     public void displayAddCarDescription() {
         final View inputView = LayoutInflater.from(this).inflate(R.layout.car_info_input_dialog, null);
-        Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
+        final Toast toast = Toast.makeText(getApplicationContext(), "You cannot be a driver without car information", Toast.LENGTH_LONG);
 
         new AlertDialog.Builder(this)
                 .setTitle("Set Car information")

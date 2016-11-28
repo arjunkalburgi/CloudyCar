@@ -54,6 +54,6 @@ public class SearchService implements ISearchService {
                         .cast(PendingRequest.class)
                         .toList()
                         .toBlocking()
-                        .firstOrDefault(new ArrayList<>());
+                        .firstOrDefault(new ArrayList<PendingRequest>());
     }
 }

@@ -7,6 +7,7 @@ import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
 import rx.functions.Action1;
+import rx.functions.Func0;
 
 /**
  * Created by George on 2016-11-05.
@@ -25,11 +26,16 @@ public class UserProfileController extends ViewController<IUserProfileView> {
      * Asynchronously loads a user
      * @param username - username of the user to load
      */
-    public void loadUser(String username) {
+    public void loadUser(final String username) {
         dispatchDisplayLoading();
         User localUser = userController.getCurrentUser();
         if( !username.equals(localUser.getUsername()) ) {
-            ObservableUtils.fromFunction(userController::getUser, username)
+            ObservableUtils.create(new Func0<User>() {
+                                @Override
+                                public User call() {
+                                    return userController.getUser(username);
+                                }
+                            })
                             .subscribeOn(schedulerProvider.ioScheduler())
                             .observeOn(schedulerProvider.mainThreadScheduler())
                             .subscribe(new Action1<User>() {

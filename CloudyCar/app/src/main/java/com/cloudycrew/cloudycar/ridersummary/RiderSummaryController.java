@@ -74,7 +74,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<ConfirmedRequest>());
     }
 
     private List<PendingRequest> getPendingRequestsThatHaveNotBeenAccepted() {
@@ -88,7 +88,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequest>());
     }
 
     private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
@@ -102,7 +102,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequest>());
     }
 
     private void dispatchShowLoading() {

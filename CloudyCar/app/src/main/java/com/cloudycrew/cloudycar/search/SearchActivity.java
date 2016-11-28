@@ -128,6 +128,6 @@ public class SearchActivity extends BaseActivity implements ISearchView {
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequestViewCell>());
     }
 }

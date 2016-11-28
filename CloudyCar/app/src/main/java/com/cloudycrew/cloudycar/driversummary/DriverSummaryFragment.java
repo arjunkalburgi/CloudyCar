@@ -15,6 +15,7 @@ import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.cloudycrew.cloudycar.search.LocationSearchActivity;
 import com.cloudycrew.cloudycar.search.SearchActivity;
@@ -163,10 +164,13 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
         viewCellAdapter.notifyDataSetChanged();
     }
 
-    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
-        launchRequestDetailsActivity(request.getId());
-    };
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = new BaseRequestViewCell.OnRequestClickedListener() {
+        @Override
+        public void onRequestClicked(Request request) {
+            launchRequestDetailsActivity(request.getId());
 
+        }
+    };
 
     private List<DriverAcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
@@ -178,7 +182,7 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<DriverAcceptedRequestViewCell>());
     }
 
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
@@ -191,6 +195,6 @@ public class DriverSummaryFragment extends BaseFragment implements IDriverSummar
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<ConfirmedRequestViewCell>());
     }
 }

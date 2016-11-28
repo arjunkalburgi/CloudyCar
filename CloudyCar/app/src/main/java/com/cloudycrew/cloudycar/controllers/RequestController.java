@@ -14,6 +14,7 @@ import com.cloudycrew.cloudycar.users.IUserPreferences;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -53,7 +54,12 @@ public class RequestController {
                       }
                   })
                   .observeOn(schedulerProvider.mainThreadScheduler())
-                  .subscribe(requestStore::setAll);
+                  .subscribe(new Action1<List<Request>>() {
+                      @Override
+                      public void call(List<Request> requests) {
+                          requestStore.setAll(requests);
+                      }
+                  });
     }
 
     /**

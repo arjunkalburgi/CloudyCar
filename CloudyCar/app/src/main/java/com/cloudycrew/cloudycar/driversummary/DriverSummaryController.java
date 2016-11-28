@@ -73,7 +73,7 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<ConfirmedRequest>());
     }
 
     private List<PendingRequest> getRequestsAcceptedByDriver() {
@@ -86,7 +86,7 @@ public class DriverSummaryController extends ViewController<IDriverSummaryView> 
                          })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequest>());
     }
 
     private void dispatchShowLoading() {

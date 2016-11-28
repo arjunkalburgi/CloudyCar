@@ -23,7 +23,7 @@ public abstract class BaseRequestViewCell<VH extends BaseRequestViewHolder, T ex
         bindOnClickListener(viewHolder, listeners.getListener(OnRequestClickedListener.class));
     }
 
-    private void bindOnClickListener(VH viewHolder, OnRequestClickedListener onRequestClickedListener) {
+    private void bindOnClickListener(VH viewHolder, final OnRequestClickedListener onRequestClickedListener) {
         if (onRequestClickedListener != null) {
             viewHolder.setOnClickListener(new View.OnClickListener() {
                 @Override
