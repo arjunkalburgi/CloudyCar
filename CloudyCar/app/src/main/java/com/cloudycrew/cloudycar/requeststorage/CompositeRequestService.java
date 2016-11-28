@@ -56,6 +56,7 @@ public class CompositeRequestService implements IRequestService {
                                 }
                             })
                             .subscribeOn(schedulerProvider.ioScheduler())
+                            .onErrorResumeNext(Observable.<Void>empty())
                             .subscribe();
                 }
             }
