@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.search;
 
+import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
@@ -18,13 +19,11 @@ import rx.functions.Func1;
 
 public class SearchService implements ISearchService {
     private IUserPreferences userPreferences;
-    private IRequestStore requestStore;
-    private IRequestService requestService;
+    private RequestController requestController;
 
-    public SearchService(IUserPreferences userPreferences, IRequestStore requestStore, IRequestService requestService) {
+    public SearchService(IUserPreferences userPreferences, RequestController requestController) {
         this.userPreferences = userPreferences;
-        this.requestStore = requestStore;
-        this.requestService = requestService;
+        this.requestController = requestController;
     }
 
     private boolean doesRequestBelongToCurrentUser(Request request) {
@@ -38,9 +37,7 @@ public class SearchService implements ISearchService {
      */
     @Override
     public List<PendingRequest> search(SearchContext searchContext) {
-        List<Request> requests = requestService.search(searchContext);
-        requestStore.addAll(requests);
-
+        List<Request> requests = requestController.searchRequests(searchContext);
         return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
     }
 

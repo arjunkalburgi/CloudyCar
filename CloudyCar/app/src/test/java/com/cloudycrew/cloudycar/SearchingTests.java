@@ -4,6 +4,7 @@ package com.cloudycrew.cloudycar;
  * Created by George on 2016-10-12.
  */
 
+import com.cloudycrew.cloudycar.controllers.RequestController;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
@@ -35,9 +36,7 @@ public class SearchingTests {
     @Mock
     private IUserPreferences userPreferences;
     @Mock
-    private IRequestStore requestStore;
-    @Mock
-    private IRequestService requestService;
+    private RequestController requestController;
 
     private PendingRequest request1;
 
@@ -82,13 +81,13 @@ public class SearchingTests {
         searchContext = new SearchContext();
 
         when(userPreferences.getUserName()).thenReturn(riderUsername1);
-        searchService = new SearchService(userPreferences, requestStore, requestService);
+        searchService = new SearchService(userPreferences, requestController);
     }
 
     @Test
     public void test_ifSearchOnlyContainsRequestsForTheCurrentUser_thenReturnsAnEmptyList() {
         List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1);
-        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
+        when(requestController.searchRequests(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
         List<PendingRequest> expectedResults = new ArrayList<>();
         List<PendingRequest> actualResults = searchService.search(searchContext);
@@ -99,7 +98,7 @@ public class SearchingTests {
     @Test
     public void test_ifSearchContainsRequestsForOtherUsers_thenReturnsThoseRequests() {
         List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1, request2);
-        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
+        when(requestController.searchRequests(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
         List<PendingRequest> expectedResults = Arrays.asList(request2);
         List<PendingRequest> actualResults = searchService.search(searchContext);
@@ -110,7 +109,7 @@ public class SearchingTests {
     @Test
     public void test_ifSearchContainsAcceptedRequestsForOtherUsers_thenReturnsThoseRequests() {
         List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1, request2, acceptedRequest2);
-        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
+        when(requestController.searchRequests(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
         List<PendingRequest> expectedResults = Arrays.asList(request2, acceptedRequest2);
         List<PendingRequest> actualResults = searchService.search(searchContext);
@@ -123,7 +122,7 @@ public class SearchingTests {
         List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1,
                 request2, acceptedRequest2, confirmedRequest2, completedRequest2, cancelledRequest2);
 
-        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
+        when(requestController.searchRequests(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
         List<PendingRequest> expectedResults = Arrays.asList(request2, acceptedRequest2);
         List<PendingRequest> actualResults = searchService.search(searchContext);

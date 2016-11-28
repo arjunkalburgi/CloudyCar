@@ -9,6 +9,7 @@ import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
+import com.cloudycrew.cloudycar.search.SearchContext;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.Date;
@@ -67,6 +68,14 @@ public class RequestController {
                           requestStore.setAll(requests);
                       }
                   });
+    }
+
+    public List<Request> searchRequests(SearchContext searchContext) {
+        List<Request> matchingRequests = requestService.search(searchContext);
+        attachReadDetailsToRequests(matchingRequests);
+
+        requestStore.addAll(matchingRequests);
+        return matchingRequests;
     }
 
     /**

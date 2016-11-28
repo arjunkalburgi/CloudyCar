@@ -102,7 +102,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private ISearchService getSearchService() {
-        return new SearchService(getUserPreferences(), getRequestStore(), getRequestService());
+        return new SearchService(getUserPreferences(), getRequestController());
     }
 
     private IRequestService getCloudRequestService() {
