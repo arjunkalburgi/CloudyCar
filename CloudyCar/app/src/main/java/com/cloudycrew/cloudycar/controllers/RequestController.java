@@ -11,6 +11,7 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -24,18 +25,18 @@ public class RequestController {
     private IRequestService requestService;
     private IRequestStore requestStore;
     private ISchedulerProvider schedulerProvider;
-    private IUserPreferences userPreferences;
+    private UserController userController;
 
     /**
      * Instantiates a new Request controller.
      *
-     * @param userPreferences   the user preferences
+     * @param userController   the user controller
      * @param requestStore      the request store
      * @param requestService    the request service
      * @param schedulerProvider the scheduler provider
      */
-    public RequestController(IUserPreferences userPreferences, IRequestStore requestStore, IRequestService requestService, ISchedulerProvider schedulerProvider) {
-        this.userPreferences = userPreferences;
+    public RequestController(UserController userController, IRequestStore requestStore, IRequestService requestService, ISchedulerProvider schedulerProvider) {
+        this.userController = userController;
         this.requestStore = requestStore;
         this.requestService = requestService;
         this.schedulerProvider = schedulerProvider;
@@ -51,6 +52,12 @@ public class RequestController {
                       @Override
                       public List<Request> call(Void aVoid) {
                           return requestService.getRequests();
+                      }
+                  })
+                  .doOnNext(new Action1<List<Request>>() {
+                      @Override
+                      public void call(List<Request> requests) {
+                          attachReadDetailsToRequests(requests);
                       }
                   })
                   .observeOn(schedulerProvider.mainThreadScheduler())
@@ -71,7 +78,7 @@ public class RequestController {
      * @return pendingRequest the created request
      */
     public PendingRequest createRequest(Route route, double price, String description) {
-        PendingRequest pendingRequest = new PendingRequest(userPreferences.getUserName(), route, price, description);
+        PendingRequest pendingRequest = new PendingRequest(getCurrentUsername(), route, price, description);
 
         requestService.createRequest(pendingRequest);
         requestStore.addRequest(pendingRequest);
@@ -106,7 +113,7 @@ public class RequestController {
         PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
 
         if (pendingRequest != null) {
-            PendingRequest acceptedPendingRequest = pendingRequest.accept(userPreferences.getUserName());
+            PendingRequest acceptedPendingRequest = pendingRequest.accept(getCurrentUsername());
 
             requestService.updateRequest(acceptedPendingRequest);
             requestStore.updateRequest(acceptedPendingRequest);
@@ -146,5 +153,30 @@ public class RequestController {
             requestService.updateRequest(completedRequest);
             requestStore.updateRequest(completedRequest);
         }
+    }
+
+    private void attachReadDetailsToRequests(List<Request> requests) {
+        for (Request request: requests) {
+            attachReadDetailsToRequest(request);
+        }
+    }
+
+    private void attachReadDetailsToRequest(Request request) {
+        if (hasRequestBeenRead(request)) {
+            request.setHasBeenReadByUser(true);
+        } else {
+            request.setHasBeenReadByUser(false);
+        }
+    }
+
+    private boolean hasRequestBeenRead(Request request) {
+        Date lastUserReadTime = userController.getLastReadTime(request.getId());
+
+        return lastUserReadTime != null &&
+                lastUserReadTime.compareTo(request.getLastUpdated()) >= 0;
+    }
+
+    private String getCurrentUsername() {
+        return userController.getCurrentUser().getUsername();
     }
 }

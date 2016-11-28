@@ -138,7 +138,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private RequestController getRequestController() {
-        return new RequestController(getUserPreferences(), getRequestStore(), getRequestService(), getSchedulerProvider());
+        return new RequestController(getUserController(), getRequestStore(), getRequestService(), getSchedulerProvider());
     }
 
     private IUserService getUserService() {

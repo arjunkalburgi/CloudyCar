@@ -99,7 +99,7 @@ public abstract class Request implements Identifiable {
         this.lastUpdated = lastUpdated;
     }
 
-    public boolean isHasBeenReadByUser() {
+    public boolean hasBeenReadByUser() {
         return hasBeenReadByUser;
     }
 
