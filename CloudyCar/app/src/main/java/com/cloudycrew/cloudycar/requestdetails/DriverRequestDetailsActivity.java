@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.requestdetails;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -71,6 +73,7 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
                 @Override
                 public void onClick(View v) {
                     requestDetailsController.acceptRequest();
+                    goBackToSummary();
                 }
             });
             updateButton.setVisibility(View.VISIBLE);
@@ -153,5 +156,11 @@ public class DriverRequestDetailsActivity extends BaseRequestDetailsActivity imp
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+    }
+
+    public void goBackToSummary() {
+        Intent intent = new Intent(this, SummaryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

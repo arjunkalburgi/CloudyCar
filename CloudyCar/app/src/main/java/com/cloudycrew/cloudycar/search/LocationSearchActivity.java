@@ -7,20 +7,22 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.CardView;
 import android.widget.Toast;
 
-import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
+import com.cloudycrew.cloudycar.models.Location;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,11 +41,16 @@ import butterknife.OnClick;
 import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
+/**
+ * This activity controls the behavior of the map view that a driver can user to choose a geolocation
+ * to filter by.
+ */
 public class LocationSearchActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    public static final int CAMERA_ZOOM_PADDING = 150;
-    @BindView(R.id.map_search_card)
-    protected CardView searchCard;
+    @BindView(R.id.map_search_fab)
+    FloatingActionButton mapSearchFab;
 
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
+    public static final int CAMERA_ZOOM_PADDING = 150;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private Marker currentMarker;
@@ -51,15 +58,15 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     private MarkerOptions markerOptions;
     private int radius;
     private LatLng selectedLocation;
+    private LatLng myLocation;
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
-    private PlaceAutocompleteFragment autocompleteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_search);
         ButterKnife.bind(this);
-
+        mapSearchFab.hide();
         radius = this.getIntent().getExtras().getInt("radius");
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -69,24 +76,30 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
                     .build();
         }
         mGoogleApiClient.connect();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
-                LocationSearchActivity.this.onPlaceSelected(mMap,place.getLatLng());
-            }
-
-            @Override
-            public void onError(Status status) {
-
-            }
-        });
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+    /**
+     * Defines the behavior of the autocomplete search box when the user selects a location from their
+     * search.
+     * @param requestCode Identifies the autocompletesearchbox intent
+     * @param resultCode Describes how the user interacted with the autocompletesearchbox
+     * @param data The intent the user interacted with
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                LocationSearchActivity.this.onPlaceSelected(mMap, place.getLatLng());
+            }
+
+        }
+    }
+
     public void onPlaceSelected(GoogleMap mMap, LatLng latLng) {
         reDrawMarkerAndRadius(mMap, latLng);
         selectedLocation = latLng;
@@ -103,12 +116,27 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         currentMarker = mMap.addMarker(markerOptions.position(latLng));
     }
 
+    /**
+     * Defines the onclick behavior of the FAB. The button will launch a new PlaceAutocomplete intent,
+     * allowing the user to search for relevant locations in their city.
+     */
+    @OnClick(R.id.map_search_fab)
+    public void startSearch() {
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                    .setBoundsBias(toBounds(myLocation, MAX_RADIUS))
+                    .build(this);
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        /**
-         * Kiuwan suggests that this should have a defualt in the switch. After closer inspection
-         * this should probably just be an if since we don't actually look for any other cases.
-         */
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS: {
                 if (grantResults.length > 0
@@ -138,26 +166,40 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp)).anchor(0.5f, 0.5f);
         mMap.setMyLocationEnabled(true);
         android.location.Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation,radius), CAMERA_ZOOM_PADDING));
+        myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation, radius), CAMERA_ZOOM_PADDING));
         onPlaceSelected(mMap, myLocation);
-
-        autocompleteFragment.setBoundsBias(toBounds(myLocation, MAX_RADIUS));
+        mapSearchFab.show();
     }
 
+    /**
+     * Defines the onclick behavior of the submit button. The button will package the information about
+     * the selected location into a Location, and return it in a Bundle to the previous intent.
+     */
     @OnClick(R.id.submit_selected_location)
     public void submitSelectedLocation() {
         Intent intent = new Intent(this, SearchParamsActivity.class);
+        GeoDecoder geoDecoder = new GeoDecoder(this);
+        String description;
+        if(getCloudyCarApplication().getConnectivityService().isInternetAvailable()){
+            description = geoDecoder.decodeLatLng(selectedLocation.longitude,selectedLocation.latitude);
+        }else{
+            description = "User selected point";
+        }
         intent.putExtra("location", new Location(
-                selectedLocation.longitude,selectedLocation.latitude, "User selected point"));
+                selectedLocation.longitude, selectedLocation.latitude, description));
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
 
+    /**
+     * Calls when the GoogleMap object is ready to use. Also defines onMapClick behavior for the
+     * newly available map.
+     * @param googleMap the new map object available for use
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setPadding(0, searchCard.getHeight() + 15, 0, 0);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {

@@ -1,12 +1,9 @@
 package com.cloudycrew.cloudycar.search;
 
-import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchConnectivityException;
-import com.cloudycrew.cloudycar.elasticsearch.IElasticSearchService;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
-import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import java.util.ArrayList;
@@ -34,6 +31,11 @@ public class SearchService implements ISearchService {
         return request.getRider().equals(userPreferences.getUserName());
     }
 
+    /**
+     * Call to start searching based on the provided searchContext
+     * @param searchContext the object containing the search parameters to use for searching
+     * @return The list of PendingRequests that meet the search criteria
+     */
     @Override
     public List<PendingRequest> search(SearchContext searchContext) {
         List<Request> requests = requestService.search(searchContext);
@@ -42,6 +44,11 @@ public class SearchService implements ISearchService {
         return getPendingRequestsThatDoNotBelongToTheCurrentUser(requests);
     }
 
+    /**
+     * Format and filter the requests returned by the requestService
+     * @param requests The list of requests returned by the requestService
+     * @return A further filtered list of PendingRequests
+     */
     private List<PendingRequest> getPendingRequestsThatDoNotBelongToTheCurrentUser(List<Request> requests) {
         return Observable.from(requests)
                          .filter(new Func1<Request, Boolean>() {

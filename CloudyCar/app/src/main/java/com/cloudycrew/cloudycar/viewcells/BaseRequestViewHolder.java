@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.viewcells;
 
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,5 +28,13 @@ public class BaseRequestViewHolder extends BaseViewHolder {
 
     public void setRequestSource(String source) {
         requestSrc.setText(source);
+    }
+
+    public void markAsRead() {
+        requestDest.setTypeface(null, Typeface.NORMAL);
+    }
+
+    public void markAsUnread() {
+        requestDest.setTypeface(null, Typeface.BOLD);
     }
 }

@@ -42,6 +42,12 @@ public class UsernameTextView extends TextView
         });
     }
 
+    /**
+     * On click handler of the UsernameTextView, creates and launches a new intent to the
+     * user profile activity
+     *
+     * @param v
+     */
     public void UsernameOnClick(View v) {
         Intent profileView = new Intent(context, UserProfileActivity.class);
         profileView.putExtra("username", this.getText().toString());

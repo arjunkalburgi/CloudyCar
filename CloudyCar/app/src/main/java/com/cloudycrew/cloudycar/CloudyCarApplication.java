@@ -1,6 +1,5 @@
 package com.cloudycrew.cloudycar;
 
-import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
@@ -107,7 +106,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private IRequestService getCloudRequestService() {
-        return new CloudRequestService(getUserPreferences(), getRequestElasticSearchService());
+        return new CloudRequestService(getRequestElasticSearchService());
     }
 
     public IConnectivityService getConnectivityService() {
@@ -138,7 +137,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private RequestController getRequestController() {
-        return new RequestController(getUserPreferences(), getRequestStore(), getRequestService(), getSchedulerProvider());
+        return new RequestController(getUserController(), getRequestStore(), getRequestService(), getSchedulerProvider());
     }
 
     private IUserService getUserService() {
@@ -166,7 +165,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     public RequestDetailsController getRequestDetailsController(String requestId) {
-        return new RequestDetailsController(requestId, getRequestController(), getUserController(),getSchedulerProvider(), getRequestStore());
+        return new RequestDetailsController(requestId, getRequestController(), getSchedulerProvider(), getRequestStore());
     }
 
     public UserProfileController getUserProfileController() {
@@ -182,7 +181,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     public CreateRequestController getCreateRequestController() {
-        return new CreateRequestController(getRequestController(), getUserController(), getSchedulerProvider());
+        return new CreateRequestController(getRequestController(), getSchedulerProvider());
     }
 
     public SignUpController getSignUpController() {

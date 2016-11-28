@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar;
 
 import com.cloudycrew.cloudycar.controllers.RequestController;
+import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
@@ -32,7 +33,7 @@ public class RequestControllerTests {
     @Mock
     private IRequestService requestService;
     @Mock
-    private IUserPreferences userPreferences;
+    private UserController userController;
 
     private ISchedulerProvider schedulerProvider;
 
@@ -78,7 +79,8 @@ public class RequestControllerTests {
         completedRequest1 = confirmedRequest1.completeRequest();
 
         schedulerProvider = new TestSchedulerProvider();
-        requestController = new RequestController(userPreferences, requestStore, requestService, schedulerProvider);
+
+        requestController = new RequestController(userController, requestStore, requestService, schedulerProvider);
     }
 
     @Test
@@ -97,7 +99,7 @@ public class RequestControllerTests {
     @Test
     public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
         when(requestStore.getRequest(request1.getId())).thenReturn(request1);
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.cancelRequest(request1.getId());
 
@@ -107,7 +109,7 @@ public class RequestControllerTests {
 
     @Test
     public void test_completeRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.completeRequest(confirmedRequest1.getId());
 
@@ -118,7 +120,7 @@ public class RequestControllerTests {
     @Test
     public void test_completeRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedCompletedRequest() {
         when(requestStore.getRequest(confirmedRequest1.getId(), ConfirmedRequest.class)).thenReturn(confirmedRequest1);
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.completeRequest(confirmedRequest1.getId());
 
@@ -128,7 +130,7 @@ public class RequestControllerTests {
 
     @Test
     public void test_confirmRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.confirmRequest(acceptedRequest1.getId(), driverUsername);
 
@@ -139,7 +141,7 @@ public class RequestControllerTests {
     @Test
     public void test_confirmRequest_ifStoreContainsRequest_thenUpdateRequestIsCalledWithTheExpectedConfirmedRequest() {
         when(requestStore.getRequest(acceptedRequest1.getId(), PendingRequest.class)).thenReturn(acceptedRequest1);
-        when(userPreferences.getUserName()).thenReturn(driverUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(driverUsername));
 
         requestController.confirmRequest(acceptedRequest1.getId(), driverUsername);
 
@@ -149,7 +151,7 @@ public class RequestControllerTests {
 
     @Test
     public void test_acceptRequest_ifStoreDoesNotContainRequest_thenNothingHappens() {
-        when(userPreferences.getUserName()).thenReturn(riderUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.acceptRequest(acceptedRequest1.getId());
 
@@ -160,7 +162,7 @@ public class RequestControllerTests {
     @Test
     public void test_acceptRequest_ifRequestExistsAndIsPending_thenStoreIsUpdatedWithTheAcceptedRequest() {
         when(requestStore.getRequest(request1.getId(), PendingRequest.class)).thenReturn(request1);
-        when(userPreferences.getUserName()).thenReturn(driverUsername);
+        when(userController.getCurrentUser()).thenReturn(new User(driverUsername));
 
         requestController.acceptRequest(request1.getId());
 

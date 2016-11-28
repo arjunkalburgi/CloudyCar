@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.Location;
@@ -33,6 +34,8 @@ public class SearchParamsActivity extends AppCompatActivity {
     protected EditText searchKeyword;
     @BindView(R.id.search_radio_price)
     protected RadioButton searchRadioPrice;
+    @BindView(R.id.location_description)
+    protected TextView locationDescription;
 
     private Location userSelectedLocation;
     private int[] radiusValues;
@@ -60,6 +63,11 @@ public class SearchParamsActivity extends AppCompatActivity {
         this.radiusValues = getResources().getIntArray(R.array.search_radius_values);
     }
 
+    /**
+     * Launch LocationSearchActivity, allowing the user to choose a location on a map. A radius is passed
+     * to the LocationSearchActivity, at first restricted to 5km. After a location has been selected,
+     * the user may increase the radius.
+     */
     @OnClick(R.id.search_choose_location)
     public void launchLocationSearch() {
         int radius = this.radiusValues[radiusSpinner.getSelectedItemPosition()];
@@ -69,16 +77,27 @@ public class SearchParamsActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Retrieve the location returned by the LocationSearchActivity completion
+     * @param requestCode the code describing the LocationSearchActivity returning
+     * @param resultCode the outcome of the LocationSearchActivity
+     * @param intent the intent returned by LocationSearchActivity's completion.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 userSelectedLocation = (Location) intent.getSerializableExtra("location");
+                locationDescription.setText(userSelectedLocation.getDescription());
                 radiusSpinner.setEnabled(true);
             }
         }
     }
 
+    /**
+     * Onclick, build a searchcontext object based on the parameters defined in the SearchParamsActivity.
+     * This object is passed to the SearchActivity, which uses it to build a search filter.
+     */
     @OnClick(R.id.search_submit)
     public void search() {
         SearchContext searchContext = new SearchContext();
@@ -97,8 +116,6 @@ public class SearchParamsActivity extends AppCompatActivity {
             searchContext.withLocation(lat, lon,
                     this.radiusValues[radiusSpinner.getSelectedItemPosition()]);
         }
-
-        Log.d("location", String.valueOf(searchContext.getRadius()));
 
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("searchcontext", searchContext);

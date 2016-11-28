@@ -34,34 +34,58 @@ public class PersistentRequestQueue {
         this.fileService = fileService;
     }
 
+    /**
+     * Enqueue a newly created request
+     * @param request - request to enqueue
+     */
     public void enqueueNewRequest(Request request) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_CREATE).add(request);
         saveQueues(queueMap);
     }
 
+    /**
+     * Enqueue a newly accepted request
+     * @param accepted - request to enqueue
+     */
     public void enqueueAccept(PendingRequest accepted) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_ACCEPT).add(accepted);
         saveQueues(queueMap);
     }
 
+    /**
+     * Enqueue a cancelled request
+     * @param cancel - cancelled request to enqueue
+     */
     public void enqueueCancellation(CancelledRequest cancel) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_CANCEL).add(cancel);
         saveQueues(queueMap);
     }
 
+    /**
+     * Enqueue a confirmed request
+     * @param confirm - confirmed request to enqueue
+     */
     public void enqueueConfirmation(ConfirmedRequest confirm) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_CONFIRM).add(confirm);
         saveQueues(queueMap);
     }
 
+    /**
+     * Get the queue of created requests
+     * @return The queue of created requests as a List
+     */
     public List<Request> getCreateQueue() {
         return new ArrayList<>(loadQueues().get(MAP_CREATE));
     }
 
+    /**
+     * Get the queue of accepted requests
+     * @return The queue of accepted requests as a List
+     */
     public List<PendingRequest> getAcceptedQueue() {
         ArrayList<Request> acceptedQueue = new ArrayList<>(loadQueues().get(MAP_ACCEPT));
         ArrayList<PendingRequest> acceptedRequests = new ArrayList<>();
@@ -71,6 +95,10 @@ public class PersistentRequestQueue {
         return acceptedRequests;
     }
 
+    /**
+     * Get the queue of cancelled requests
+     * @return The queue of cancelled requests as a List
+     */
     public List<CancelledRequest> getCancellationQueue() {
         ArrayList<Request> cancelledQueue = new ArrayList<>(loadQueues().get(MAP_CANCEL));
         ArrayList<CancelledRequest> cancelledRequests = new ArrayList<>();
@@ -80,6 +108,10 @@ public class PersistentRequestQueue {
         return cancelledRequests;
     }
 
+    /**
+     * Get the queue of confirmed requests
+     * @return The queue of confirmed requests as a List
+     */
     public List<ConfirmedRequest> getConfirmationQueue() {
         ArrayList<Request> confirmedQueue = new ArrayList<>(loadQueues().get(MAP_CONFIRM));
         ArrayList<ConfirmedRequest> confirmedRequests = new ArrayList<>();
@@ -89,24 +121,40 @@ public class PersistentRequestQueue {
         return confirmedRequests;
     }
 
+    /**
+     * Dequeue a created request
+     * @param request - request to be dequeued
+     */
     public void dequeueCreation(Request request) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_CREATE).remove(request);
         saveQueues(queueMap);
     }
 
+    /**
+     * Dequeue an accepted request
+     * @param request - request to be dequeued
+     */
     public void dequeueAccept(PendingRequest request) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_ACCEPT).remove(request);
         saveQueues(queueMap);
     }
 
+    /**
+     * Dequeue a cancelled request
+     * @param request - cancelled request to be dequeued
+     */
     public void dequeueCancellation(CancelledRequest request) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_CREATE).remove(request);
         saveQueues(queueMap);
     }
 
+    /**
+     * Dequeue a confirmed request
+     * @param request - confirmed request to dequeue
+     */
     public void dequeueConfirmation(ConfirmedRequest request) {
         Map<String, List<Request>> queueMap = loadQueues();
         queueMap.get(MAP_CREATE).remove(request);

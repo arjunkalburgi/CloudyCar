@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.elasticsearch;
 
+import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.Identifiable;
 
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 
 /**
+ * Concrete implementation of IElasticSearchService
+ *
  * Created by George on 2016-10-23.
  */
 
@@ -30,7 +33,7 @@ public class ElasticSearchService<T extends Identifiable> implements IElasticSea
 
     @Override
     public List<T> getAll() {
-        return search("{ \"size\" : 100 } ");
+        return search("{ \"size\" : " + Constants.MAX_ELASTIC_SEARCH_RESULTS +" } ");
     }
 
     @Override

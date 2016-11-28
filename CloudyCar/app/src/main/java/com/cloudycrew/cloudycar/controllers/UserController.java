@@ -90,6 +90,13 @@ public class UserController {
         userHistoryService.markRequestAsRead(requestId);
     }
 
+    /**
+     * Gets the specific last read time for a request
+     *
+     * @param requestId the being queried
+     *
+     * @return the last read time of the request
+     */
     public Date getLastReadTime(String requestId) {
         return userHistoryService.getLastReadTime(requestId);
     }

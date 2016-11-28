@@ -25,10 +25,8 @@ public class ConfirmedRequestViewCell extends BaseRequestViewCell<ConfirmedReque
 
     @Override
     public void bindViewCell(ViewHolder viewHolder) {
-        ConfirmedRequest request = getModel();
-        viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
-        viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
-        viewHolder.setAcceptedDriver("Accepted by: " + request.getDriverUsername());
+        super.bindViewCell(viewHolder);
+        viewHolder.setAcceptedDriver("Accepted by: " + getModel().getDriverUsername());
     }
 
     public static class ViewHolder extends BaseRequestViewHolder {

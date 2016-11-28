@@ -25,9 +25,7 @@ public class PendingRequestViewCell extends BaseRequestViewCell<PendingRequestVi
 
     @Override
     public void bindViewCell(PendingRequestViewCell.ViewHolder viewHolder) {
-        PendingRequest request = getModel();
-        viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
-        viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
+        super.bindViewCell(viewHolder);
     }
 
     public static class ViewHolder extends BaseRequestViewHolder {

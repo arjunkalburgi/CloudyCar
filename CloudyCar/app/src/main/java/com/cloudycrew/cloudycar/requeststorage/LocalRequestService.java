@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,17 @@ public class LocalRequestService implements IRequestService {
 
         requests.put(request.getId(), request);
         saveRequests(requests);
+    }
+
+    @Override
+    public void batchUpdateRequests(Collection<? extends Request> requests) {
+        Map<String, Request> requestMap = loadRequests();
+
+        for (Request request: requests) {
+            requestMap.put(request.getId(), request);
+        }
+
+        saveRequests(requestMap);
     }
 
     @Override
