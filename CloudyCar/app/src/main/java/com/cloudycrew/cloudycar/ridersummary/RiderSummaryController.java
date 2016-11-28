@@ -10,10 +10,13 @@ import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
 
 /**
  * Created by George on 2016-11-05.
@@ -31,7 +34,11 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
      * @param userPreferences   the user preferences
      * @param requestStore      the request store
      */
-    public RiderSummaryController(RequestController requestController, IUserPreferences userPreferences, IRequestStore requestStore, ISchedulerProvider schedulerProvider) {
+
+    public RiderSummaryController(RequestController requestController,
+                                  IUserPreferences userPreferences,
+                                  IRequestStore requestStore,
+                                  ISchedulerProvider schedulerProvider) {
         this.requestController = requestController;
         this.userPreferences = userPreferences;
         this.requestStore = requestStore;
@@ -46,10 +53,15 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
         requestController.refreshRequests();
     }
 
-    public void deleteRequest(String reqid) {
-        ObservableUtils.fromAction(requestController::cancelRequest,reqid)
-            .subscribeOn(schedulerProvider.ioScheduler())
-                .subscribe();
+    public void deleteRequest(final String reqid) {
+        ObservableUtils.create(new Action0() {
+                            @Override
+                            public void call() {
+                                requestController.cancelRequest(reqid);
+                            }
+                        })
+                        .subscribeOn(schedulerProvider.ioScheduler())
+                        .subscribe();
     }
 
     @Override
@@ -64,36 +76,86 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
         requestStore.removeObserver(requestStoreObserver);
     }
 
-    private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayPendingRequests(getPendingRequestsThatHaveNotBeenAccepted());
-        dispatchDisplayAcceptedRequests(getPendingRequestsThatHaveBeenAccepted());
-        dispatchDisplayConfirmedRequests(getConfirmedRequestsForRider());
+    private IObserver<IRequestStore> requestStoreObserver = new IObserver<IRequestStore>() {
+        @Override
+        public void notifyUpdate(IRequestStore observable) {
+            displaySortedConfirmedRequests();
+            displaySortedAcceptedRequests();
+            displaySortedPendingRequests();
+        }
     };
 
-    private List<ConfirmedRequest> getConfirmedRequestsForRider() {
-        return Observable.from(requestStore.getRequests(ConfirmedRequest.class))
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
-                         .toList()
-                         .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+    private void displaySortedConfirmedRequests() {
+        Observable.from(requestStore.getRequests(ConfirmedRequest.class))
+                  .observeOn(schedulerProvider.computationScheduler())
+                  .filter(new Func1<ConfirmedRequest, Boolean>() {
+                     @Override
+                     public Boolean call(ConfirmedRequest r) {
+                          return r.getRider().equals(userPreferences.getUserName());
+                      }
+                 })
+                  .toSortedList(new Func2<ConfirmedRequest, ConfirmedRequest, Integer>() {
+                     @Override
+                     public Integer call(ConfirmedRequest confirmedRequest, ConfirmedRequest confirmedRequest2) {
+                          return confirmedRequest2.getLastUpdated().compareTo(confirmedRequest.getLastUpdated());
+                      }
+                 })
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(new Action1<List<ConfirmedRequest>>() {
+                      @Override
+                      public void call(List<ConfirmedRequest> confirmedRequests) {
+                          dispatchDisplayConfirmedRequests(confirmedRequests);
+                      }
+                  });
     }
 
-    private List<PendingRequest> getPendingRequestsThatHaveNotBeenAccepted() {
-        return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
-                         .filter(r -> !r.hasBeenAccepted())
-                         .toList()
-                         .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+    private void displaySortedPendingRequests() {
+        Observable.from(requestStore.getRequests(PendingRequest.class))
+                  .filter(new Func1<PendingRequest, Boolean>() {
+                     @Override
+                     public Boolean call(PendingRequest r) {
+                          return r.getRider().equals(userPreferences.getUserName()) &&
+                                  !r.hasBeenAccepted();
+                      }
+                 })
+                  .toSortedList(new Func2<PendingRequest, PendingRequest, Integer>() {
+                     @Override
+                     public Integer call(PendingRequest pendingRequest, PendingRequest pendingRequest2) {
+                          return pendingRequest2.getLastUpdated().compareTo(pendingRequest.getLastUpdated());
+                      }
+                 })
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(new Action1<List<PendingRequest>>() {
+                      @Override
+                      public void call(List<PendingRequest> pendingRequests) {
+                          dispatchDisplayPendingRequests(pendingRequests);
+                      }
+                  });
     }
 
-    private List<PendingRequest> getPendingRequestsThatHaveBeenAccepted() {
-        return Observable.from(requestStore.getRequests(PendingRequest.class))
-                         .filter(r -> r.getRider().equals(userPreferences.getUserName()))
-                         .filter(PendingRequest::hasBeenAccepted)
-                         .toList()
-                         .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+    private void displaySortedAcceptedRequests() {
+        Observable.from(requestStore.getRequests(PendingRequest.class))
+                  .observeOn(schedulerProvider.computationScheduler())
+                  .filter(new Func1<PendingRequest, Boolean>() {
+                     @Override
+                     public Boolean call(PendingRequest r) {
+                          return r.getRider().equals(userPreferences.getUserName()) &&
+                                  r.hasBeenAccepted();
+                      }
+                 })
+                  .toSortedList(new Func2<PendingRequest, PendingRequest, Integer>() {
+                     @Override
+                     public Integer call(PendingRequest pendingRequest, PendingRequest pendingRequest2) {
+                          return pendingRequest2.getLastUpdated().compareTo(pendingRequest.getLastUpdated());
+                      }
+                 })
+                  .observeOn(schedulerProvider.mainThreadScheduler())
+                  .subscribe(new Action1<List<PendingRequest>>() {
+                      @Override
+                      public void call(List<PendingRequest> acceptedRequests) {
+                          dispatchDisplayAcceptedRequests(acceptedRequests);
+                      }
+                  });
     }
 
     private void dispatchShowLoading() {

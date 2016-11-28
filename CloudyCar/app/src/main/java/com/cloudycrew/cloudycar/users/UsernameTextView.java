@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.userprofile.UserProfileActivity;
 
 /**
@@ -32,7 +33,13 @@ public class UsernameTextView extends TextView
     public UsernameTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        this.setOnClickListener(this::UsernameOnClick);
+        this.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UsernameOnClick(v);
+            }
+        });
     }
 
     public void UsernameOnClick(View v) {

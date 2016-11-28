@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.requestdetails;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedDriverViewCell;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ca.antonious.viewcelladapter.ViewCellAdapter;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-05.
@@ -88,7 +91,12 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         statusTextView.setText("Confirmed");
 
         updateButton.setText(R.string.confirm_request_button_text);
-        updateButton.setOnClickListener(v -> requestDetailsController.completeRequest());
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestDetailsController.completeRequest();
+            }
+        });
         updateButton.setVisibility(View.VISIBLE);
 
         setDriver(confirmedRequest.getDriverUsername());
@@ -103,15 +111,31 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         setDriver(completedRequest.getDriverUsername());
     }
 
-    private AcceptedDriverViewCell.OnConfirmClickedListener onConfirmClickedListener = username -> {
-        requestDetailsController.confirmRequest(username);
+    private AcceptedDriverViewCell.OnConfirmClickedListener onConfirmClickedListener = new AcceptedDriverViewCell.OnConfirmClickedListener() {
+        @Override
+        public void onConfirm(String username) {
+            requestDetailsController.confirmRequest(username);
+            requestDetailsController.markRequestAsRead();
+            goBackToSummary();
+        }
     };
 
     private List<AcceptedDriverViewCell> getAcceptedDriverViewCells(List<? extends String> usernames) {
         return Observable.from(usernames)
-                         .map(AcceptedDriverViewCell::new)
+                         .map(new Func1<String, AcceptedDriverViewCell>() {
+                             @Override
+                             public AcceptedDriverViewCell call(String username) {
+                                 return new AcceptedDriverViewCell(username);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<AcceptedDriverViewCell>());
+    }
+
+    public void goBackToSummary() {
+        Intent intent = new Intent(this, SummaryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

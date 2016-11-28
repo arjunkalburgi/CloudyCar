@@ -11,6 +11,7 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import java.util.Date;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-23.
@@ -37,15 +38,23 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
         requestStore.removeObserver(requestStoreObserver);
     }
 
-    private IObserver<IRequestStore> requestStoreObserver = store -> {
-        dispatchDisplayUnreadRiderRequests(getTotalUnreadRiderRequests());
-        dispatchDisplayUnreadDriverRequests(getTotalUnreadDriverRequests());
+    private IObserver<IRequestStore> requestStoreObserver = new IObserver<IRequestStore>() {
+        @Override
+        public void notifyUpdate(IRequestStore observable) {
+            dispatchDisplayUnreadRiderRequests(getTotalUnreadRiderRequests());
+            dispatchDisplayUnreadDriverRequests(getTotalUnreadDriverRequests());
+        }
     };
 
     private int getTotalUnreadRiderRequests() {
         return Observable.from(requestStore.getRequests())
-                         .filter(r -> r.getRider().equals(getCurrentUsername()))
-                         .filter(r -> !isRequestRead(r))
+                         .filter(new Func1<Request, Boolean>() {
+                             @Override
+                             public Boolean call(Request r) {
+                                 return r.getRider().equals(getCurrentUsername()) &&
+                                         !isRequestRead(r);
+                             }
+                         })
                          .count()
                          .toBlocking()
                          .first();
@@ -53,8 +62,13 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
 
     private int getTotalUnreadDriverRequests() {
         return Observable.from(requestStore.getRequests())
-                         .filter(r -> shouldDriverRequestBeNotified(r))
-                         .filter(r -> !isRequestRead(r))
+                         .filter(new Func1<Request, Boolean>() {
+                             @Override
+                             public Boolean call(Request r) {
+                                 return shouldDriverRequestBeNotified(r) &&
+                                         !isRequestRead(r);
+                             }
+                         })
                          .count()
                          .toBlocking()
                          .first();

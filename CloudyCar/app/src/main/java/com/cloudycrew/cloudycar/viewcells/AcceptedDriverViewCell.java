@@ -40,11 +40,14 @@ public class AcceptedDriverViewCell extends GenericSingleViewCell<AcceptedDriver
         bindOnConfirmClickedListener(viewHolder, listeners.getListener(OnConfirmClickedListener.class));
     }
 
-    private void bindOnConfirmClickedListener(ViewHolder viewHolder, OnConfirmClickedListener onConfirmClickedListener) {
+    private void bindOnConfirmClickedListener(final ViewHolder viewHolder, final OnConfirmClickedListener onConfirmClickedListener) {
         if (onConfirmClickedListener != null) {
-            viewHolder.setOnConfirmClickedListener(v -> {
-                viewHolder.showLoading();
-                onConfirmClickedListener.onConfirm(getModel());
+            viewHolder.setOnConfirmClickedListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewHolder.showLoading();
+                    onConfirmClickedListener.onConfirm(getModel());
+                }
             });
         }
     }

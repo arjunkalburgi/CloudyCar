@@ -47,6 +47,7 @@ import ca.antonious.viewcelladapter.SectionWithHeaderViewCell;
 import ca.antonious.viewcelladapter.ViewCell;
 import ca.antonious.viewcelladapter.ViewCellAdapter;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-05.
@@ -110,7 +111,12 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     private void setUpSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(() -> riderSummaryController.refreshRequests());
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                riderSummaryController.refreshRequests();
+            }
+        });
     }
 
     private void setUpRecyclerView() {
@@ -153,7 +159,12 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
 
     @Override
     public void displayLoading() {
-        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
     }
 
     public void stopLoading() {
@@ -182,32 +193,51 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
         viewCellAdapter.notifyDataSetChanged();
     }
 
-    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
-        launchRequestDetailsActivity(request.getId());
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = new BaseRequestViewCell.OnRequestClickedListener() {
+        @Override
+        public void onRequestClicked(Request request) {
+            launchRequestDetailsActivity(request.getId());
+
+        }
     };
 
     private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                         .map(PendingRequestViewCell::new)
+                         .map(new Func1<PendingRequest, PendingRequestViewCell>() {
+                             @Override
+                             public PendingRequestViewCell call(PendingRequest pendingRequest) {
+                                 return new PendingRequestViewCell(pendingRequest);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequestViewCell>());
     }
 
     private List<AcceptedRequestViewCell> getAcceptedRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                         .map(AcceptedRequestViewCell::new)
+                         .map(new Func1<PendingRequest, AcceptedRequestViewCell>() {
+                             @Override
+                             public AcceptedRequestViewCell call(PendingRequest pendingRequest) {
+                                 return new AcceptedRequestViewCell(pendingRequest);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<AcceptedRequestViewCell>());
     }
 
     private List<ConfirmedRequestViewCell> getConfirmedRequestViewCells(List<? extends ConfirmedRequest> confirmedRequests) {
         return Observable.from(confirmedRequests)
-                         .map(ConfirmedRequestViewCell::new)
+                         .map(new Func1<ConfirmedRequest, ConfirmedRequestViewCell>() {
+                             @Override
+                             public ConfirmedRequestViewCell call(ConfirmedRequest confirmedRequest) {
+                                 return new ConfirmedRequestViewCell(confirmedRequest);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<ConfirmedRequestViewCell>());
     }
 
     private boolean isViewCellSwipeable(ViewCell viewCell) {
@@ -216,7 +246,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     // standard support library way of implementing "swipe to delete"
-    private void setUpItemTouchHelper(View v) {
+    private void setUpItemTouchHelper(final View v) {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 

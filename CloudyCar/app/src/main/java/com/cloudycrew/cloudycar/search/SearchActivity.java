@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.Constants;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
+import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
@@ -27,6 +29,7 @@ import butterknife.ButterKnife;
 import ca.antonious.viewcelladapter.SectionViewCell;
 import ca.antonious.viewcelladapter.ViewCellAdapter;
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-05.
@@ -64,6 +67,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected void onResume() {
         super.onResume();
         searchController.attachView(this);
+        SearchContext sc = (SearchContext) getIntent().getSerializableExtra("searchcontext");
+        searchController.search(sc);
     }
 
     @Override
@@ -108,15 +113,24 @@ public class SearchActivity extends BaseActivity implements ISearchView {
         startActivity(intent);
     }
 
-    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = request -> {
-        launchRequestDetailsActivity(request.getId());
+    private BaseRequestViewCell.OnRequestClickedListener onRequestClickedListener = new BaseRequestViewCell.OnRequestClickedListener() {
+        @Override
+        public void onRequestClicked(Request request) {
+            launchRequestDetailsActivity(request.getId());
+
+        }
     };
 
     private List<PendingRequestViewCell> getPendingRequestViewCells(List<? extends PendingRequest> pendingRequests) {
         return Observable.from(pendingRequests)
-                         .map(PendingRequestViewCell::new)
+                         .map(new Func1<PendingRequest, PendingRequestViewCell>() {
+                             @Override
+                             public PendingRequestViewCell call(PendingRequest pendingRequest) {
+                                 return new PendingRequestViewCell(pendingRequest);
+                             }
+                         })
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<PendingRequestViewCell>());
     }
 }

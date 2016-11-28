@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-12.
@@ -43,11 +44,16 @@ public class SearchService implements ISearchService {
 
     private List<PendingRequest> getPendingRequestsThatDoNotBelongToTheCurrentUser(List<Request> requests) {
         return Observable.from(requests)
-                .filter(r -> r instanceof PendingRequest)
-                .filter(r -> !doesRequestBelongToCurrentUser(r))
-                .cast(PendingRequest.class)
-                .toList()
-                .toBlocking()
-                .firstOrDefault(new ArrayList<>());
+                         .filter(new Func1<Request, Boolean>() {
+                             @Override
+                             public Boolean call(Request r) {
+                                 return r instanceof PendingRequest &&
+                                         !doesRequestBelongToCurrentUser(r);
+                             }
+                         })
+                        .cast(PendingRequest.class)
+                        .toList()
+                        .toBlocking()
+                        .firstOrDefault(new ArrayList<PendingRequest>());
     }
 }

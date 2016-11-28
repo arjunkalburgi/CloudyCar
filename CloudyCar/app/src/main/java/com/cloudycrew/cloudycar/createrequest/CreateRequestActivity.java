@@ -10,8 +10,10 @@ import com.cloudycrew.cloudycar.BaseActivity;
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.cloudycrew.cloudycar.models.Route;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
+import com.google.maps.android.SphericalUtil;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.DistanceMatrixElement;
 
@@ -78,9 +80,13 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
             double fairFare = (doubleDuration/(60*60))*20;
             result = String.format(Locale.getDefault(),"%.2f",fairFare);
         } catch (Exception e) {
+            Double uglyDistance = SphericalUtil.computeDistanceBetween(new LatLng(userRoute.getStartingPoint().getLatitude(),userRoute.getStartingPoint().getLongitude()),
+                    new LatLng(userRoute.getEndingPoint().getLatitude(),userRoute.getStartingPoint().getLongitude()));
+            userRoute.setMeters(uglyDistance.longValue());
             e.printStackTrace();
         }
-        return result.isEmpty()?"3.50":result;
+
+        return result.isEmpty()?"13.50":result;
     }
 
 
@@ -134,9 +140,12 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
      */
     @Override
     public void onRequestCreated() {
-        Intent intent = new Intent(this, SummaryActivity.class);
-        intent.putExtra("mode", "rider");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(this, RouteSelector.class));
     }
 }
