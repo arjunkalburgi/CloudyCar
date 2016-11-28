@@ -139,5 +139,7 @@ public class SummaryActivity extends BaseActivity implements
     private void setMenuCounter(int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
+        view.setVisibility(count > 0 ? view.VISIBLE : view.INVISIBLE);
+
     }
 }
