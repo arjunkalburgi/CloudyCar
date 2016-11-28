@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.search;
 
+import com.cloudycrew.cloudycar.Constants;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class ElasticSearchQueryBuilder {
         }
 
         elasticSearchQuery.put("query", getQueryObject(queryObjects));
+        elasticSearchQuery.put("size", Constants.MAX_ELASTIC_SEARCH_RESULTS);
 
         return serializeQuery(elasticSearchQuery);
     }
