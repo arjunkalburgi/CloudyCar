@@ -23,7 +23,6 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
     private IRequestStore requestStore;
     private ISchedulerProvider schedulerProvider;
     private RequestController requestController;
-    private UserController userController;
 
     /**
      * Instantiates a new Request details controller.
@@ -35,12 +34,10 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
      */
     public RequestDetailsController(String requestId,
                                     RequestController requestController,
-                                    UserController userController,
                                     ISchedulerProvider schedulerProvider,
                                     IRequestStore requestStore) {
         this.requestId = requestId;
         this.requestController = requestController;
-        this.userController = userController;
         this.schedulerProvider = schedulerProvider;
         this.requestStore = requestStore;
     }
@@ -93,7 +90,7 @@ public class RequestDetailsController extends ViewController<IRequestDetailsView
     }
 
     public void markRequestAsRead() {
-        userController.markRequestAsRead(requestId);
+        requestController.markRequestAsRead(requestId);
     }
 
     @Override

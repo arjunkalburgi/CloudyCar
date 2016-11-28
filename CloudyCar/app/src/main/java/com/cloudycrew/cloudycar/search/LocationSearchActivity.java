@@ -41,6 +41,10 @@ import butterknife.OnClick;
 import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
+/**
+ * This activity controls the behavior of the map view that a driver can user to choose a geolocation
+ * to filter by.
+ */
 public class LocationSearchActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     @BindView(R.id.map_search_fab)
     FloatingActionButton mapSearchFab;
@@ -77,6 +81,13 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Defines the behavior of the autocomplete search box when the user selects a location from their
+     * search.
+     * @param requestCode Identifies the autocompletesearchbox intent
+     * @param resultCode Describes how the user interacted with the autocompletesearchbox
+     * @param data The intent the user interacted with
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
@@ -105,6 +116,10 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         currentMarker = mMap.addMarker(markerOptions.position(latLng));
     }
 
+    /**
+     * Defines the onclick behavior of the FAB. The button will launch a new PlaceAutocomplete intent,
+     * allowing the user to search for relevant locations in their city.
+     */
     @OnClick(R.id.map_search_fab)
     public void startSearch() {
         try {
@@ -122,10 +137,6 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        /**
-         * Kiuwan suggests that this should have a defualt in the switch. After closer inspection
-         * this should probably just be an if since we don't actually look for any other cases.
-         */
         switch (requestCode) {
             case REQUEST_LOCATION_PERMISSIONS: {
                 if (grantResults.length > 0
@@ -161,6 +172,10 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         mapSearchFab.show();
     }
 
+    /**
+     * Defines the onclick behavior of the submit button. The button will package the information about
+     * the selected location into a Location, and return it in a Bundle to the previous intent.
+     */
     @OnClick(R.id.submit_selected_location)
     public void submitSelectedLocation() {
         Intent intent = new Intent(this, SearchParamsActivity.class);
@@ -177,6 +192,11 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         finish();
     }
 
+    /**
+     * Calls when the GoogleMap object is ready to use. Also defines onMapClick behavior for the
+     * newly available map.
+     * @param googleMap the new map object available for use
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

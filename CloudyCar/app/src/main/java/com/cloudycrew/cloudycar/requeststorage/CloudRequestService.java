@@ -6,6 +6,7 @@ import com.cloudycrew.cloudycar.search.ElasticSearchQueryBuilder;
 import com.cloudycrew.cloudycar.search.SearchContext;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -14,15 +15,10 @@ import java.util.List;
  */
 
 public class CloudRequestService implements IRequestService {
-    /**
-     * Kiuwan suggests removing this unused private member. We should either remove it or determine
-     * why it was stubbed out and use it if the case is still viable.
-     */
-    private IUserPreferences userPreferences;
+
     private IElasticSearchService<Request> elasticSearchService;
 
-    public CloudRequestService(IUserPreferences userPreferences, IElasticSearchService<Request> elasticSearchService) {
-        this.userPreferences = userPreferences;
+    public CloudRequestService(IElasticSearchService<Request> elasticSearchService) {
         this.elasticSearchService = elasticSearchService;
     }
 
@@ -42,6 +38,13 @@ public class CloudRequestService implements IRequestService {
     public void updateRequest(Request request) {
 
         elasticSearchService.update(request);
+    }
+
+    @Override
+    public void batchUpdateRequests(Collection<? extends Request> requests) {
+        for (Request request: requests) {
+            updateRequest(request);
+        }
     }
 
     @Override

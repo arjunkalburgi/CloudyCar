@@ -13,6 +13,11 @@ public class CancelledRequest extends Request
 
     public static final String TYPE_NAME = "cancelled";
 
+    /**
+     * Instantiates a new cancelled request
+     *
+     * @param pendingRequest - The pending request which has been cancelled
+     */
     public CancelledRequest(PendingRequest pendingRequest) {
         super(TYPE_NAME, pendingRequest.getRider(), pendingRequest.getRoute(), pendingRequest.getPrice(), pendingRequest.getDescription());
         this.id = pendingRequest.getId();

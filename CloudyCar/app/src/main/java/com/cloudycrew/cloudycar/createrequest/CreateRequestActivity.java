@@ -77,7 +77,7 @@ public class CreateRequestActivity extends BaseActivity implements ICreateReques
             long distance = element.distance.inMeters;
             userRoute.setMeters(distance);
             Double doubleDuration = new Double(duration);
-            double fairFare = (doubleDuration/(60*60))*20;
+            double fairFare = 10+(doubleDuration/(60*60))*20;
             result = String.format(Locale.getDefault(),"%.2f",fairFare);
         } catch (Exception e) {
             Double uglyDistance = SphericalUtil.computeDistanceBetween(new LatLng(userRoute.getStartingPoint().getLatitude(),userRoute.getStartingPoint().getLongitude()),

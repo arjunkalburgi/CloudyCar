@@ -63,6 +63,11 @@ public class SearchParamsActivity extends AppCompatActivity {
         this.radiusValues = getResources().getIntArray(R.array.search_radius_values);
     }
 
+    /**
+     * Launch LocationSearchActivity, allowing the user to choose a location on a map. A radius is passed
+     * to the LocationSearchActivity, at first restricted to 5km. After a location has been selected,
+     * the user may increase the radius.
+     */
     @OnClick(R.id.search_choose_location)
     public void launchLocationSearch() {
         int radius = this.radiusValues[radiusSpinner.getSelectedItemPosition()];
@@ -72,6 +77,12 @@ public class SearchParamsActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Retrieve the location returned by the LocationSearchActivity completion
+     * @param requestCode the code describing the LocationSearchActivity returning
+     * @param resultCode the outcome of the LocationSearchActivity
+     * @param intent the intent returned by LocationSearchActivity's completion.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 1) {
@@ -83,6 +94,10 @@ public class SearchParamsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Onclick, build a searchcontext object based on the parameters defined in the SearchParamsActivity.
+     * This object is passed to the SearchActivity, which uses it to build a search filter.
+     */
     @OnClick(R.id.search_submit)
     public void search() {
         SearchContext searchContext = new SearchContext();

@@ -42,8 +42,6 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected ProgressBar searchProgressBar;
     @BindView(R.id.search_results_recycler_view)
     protected RecyclerView searchRecyclerView;
-//    @BindView(R.id.search_bar)
-//    protected MaterialSearchView searchView;
 
     private ViewCellAdapter viewCellAdapter;
     private SectionViewCell searchResultsSection;

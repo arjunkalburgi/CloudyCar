@@ -13,6 +13,8 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 
 /**
+ * Concrete implementation of IElasticSearchService
+ *
  * Created by George on 2016-10-23.
  */
 

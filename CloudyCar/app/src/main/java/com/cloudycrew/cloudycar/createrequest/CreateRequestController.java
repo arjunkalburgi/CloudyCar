@@ -16,7 +16,6 @@ import rx.functions.Func0;
  */
 public class CreateRequestController extends ViewController<ICreateRequestView> {
     private RequestController requestController;
-    private UserController userController;
     private ISchedulerProvider schedulerProvider;
 
     /**
@@ -26,10 +25,8 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
      * @param schedulerProvider the scheduler provider
      */
     public CreateRequestController(RequestController requestController,
-                                   UserController userController,
                                    ISchedulerProvider schedulerProvider) {
         this.requestController = requestController;
-        this.userController = userController;
         this.schedulerProvider = schedulerProvider;
     }
 
@@ -50,7 +47,7 @@ public class CreateRequestController extends ViewController<ICreateRequestView> 
                        .doOnNext(new Action1<PendingRequest>() {
                            @Override
                            public void call(PendingRequest pendingRequest) {
-                               userController.markRequestAsRead(pendingRequest.getId());
+                               requestController.markRequestAsRead(pendingRequest.getId());
                            }
                        })
                        .subscribeOn(schedulerProvider.ioScheduler())

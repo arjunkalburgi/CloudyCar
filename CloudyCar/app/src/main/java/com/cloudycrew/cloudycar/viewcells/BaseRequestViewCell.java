@@ -18,6 +18,20 @@ public abstract class BaseRequestViewCell<VH extends BaseRequestViewHolder, T ex
     }
 
     @Override
+    public void bindViewCell(VH viewHolder) {
+        Request request = getModel();
+
+        viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
+        viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
+
+        if (request.hasBeenReadByUser()) {
+            viewHolder.markAsRead();
+        } else {
+            viewHolder.markAsUnread();
+        }
+    }
+
+    @Override
     public void bindListeners(VH viewHolder, ListenerCollection listeners) {
         super.bindListeners(viewHolder, listeners);
         bindOnClickListener(viewHolder, listeners.getListener(OnRequestClickedListener.class));
