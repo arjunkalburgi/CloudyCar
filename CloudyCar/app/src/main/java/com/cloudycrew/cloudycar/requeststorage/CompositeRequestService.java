@@ -13,6 +13,7 @@ import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.SearchContext;
 import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 import rx.Observable;
@@ -31,9 +32,12 @@ public class CompositeRequestService implements IRequestService {
     private ISchedulerProvider schedulerProvider;
     private GeoDecoder geoDecoder;
 
-    public CompositeRequestService(IRequestService cloudRequestService, IRequestService localRequestService,
-                                   IConnectivityService connectivityService, PersistentRequestQueue requestQueue,
-                                   ISchedulerProvider scheduler, GeoDecoder geoDecoder) {
+    public CompositeRequestService(IRequestService cloudRequestService,
+                                   IRequestService localRequestService,
+                                   IConnectivityService connectivityService,
+                                   PersistentRequestQueue requestQueue,
+                                   ISchedulerProvider scheduler,
+                                   GeoDecoder geoDecoder) {
         this.cloudRequestService = cloudRequestService;
         this.localRequestService = localRequestService;
         this.connectivityService = connectivityService;
@@ -62,9 +66,8 @@ public class CompositeRequestService implements IRequestService {
     public List<Request> getRequests() {
         try {
             List<Request> cloudRequests = cloudRequestService.getRequests();
-            for (Request request: cloudRequests) {
-                localRequestService.updateRequest(request);
-            }
+            localRequestService.batchUpdateRequests(cloudRequests);
+
             return cloudRequests;
         } catch (ElasticSearchConnectivityException e) {
             return localRequestService.getRequests();
@@ -99,6 +102,13 @@ public class CompositeRequestService implements IRequestService {
             }
         }
         localRequestService.updateRequest(request);
+    }
+
+    @Override
+    public void batchUpdateRequests(Collection<? extends Request> requests) {
+        for (Request request: requests) {
+            updateRequest(request);
+        }
     }
 
     @Override

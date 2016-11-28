@@ -27,9 +27,7 @@ public class AcceptedRequestViewCell extends BaseRequestViewCell<AcceptedRequest
 
     @Override
     public void bindViewCell(ViewHolder viewHolder) {
-        PendingRequest request = getModel();
-        viewHolder.setRequestDestination(request.getRoute().getEndingPoint().getDescription());
-        viewHolder.setRequestSource("from " + request.getRoute().getStartingPoint().getDescription());
+        super.bindViewCell(viewHolder);
         viewHolder.setAcceptedByDescription(getAcceptedByDescription());
     }
 

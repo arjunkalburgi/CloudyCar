@@ -98,20 +98,20 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifRiderHasRequestsThatHaveNeverBeenRead_thenDisplaysTotalUnread() {
-        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price, requestDescription);
+        PendingRequest pendingRequest1 = new PendingRequest(riderUsername, route, price, requestDescription)
+                .accept(driverUsername);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
-                .accept(driverUsername)
-                .confirmRequest(driverUsername);
+        PendingRequest pendingRequest2 = new PendingRequest(riderUsername, route, price, requestDescription)
+                .accept(driverUsername);
 
-        pendingRequest.setLastUpdated(new Date(1));
-        confirmedRequest.setLastUpdated(new Date(1));
+        pendingRequest1.setLastUpdated(new Date(1));
+        pendingRequest2.setLastUpdated(new Date(1));
 
-        List<Request> requests = Arrays.asList(pendingRequest, confirmedRequest);
+        List<Request> requests = Arrays.<Request>asList(pendingRequest1, pendingRequest2);
 
         when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
-        when(userController.getLastReadTime(pendingRequest.getId())).thenReturn(new Date(2));
-        when(userController.getLastReadTime(confirmedRequest.getId())).thenReturn(null);
+        when(userController.getLastReadTime(pendingRequest1.getId())).thenReturn(new Date(2));
+        when(userController.getLastReadTime(pendingRequest2.getId())).thenReturn(null);
 
         requestStore.setAll(requests);
         summaryMenuController.attachView(summaryMenuView);
@@ -121,20 +121,20 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifRiderHasRequestsThatHaveBeenReadBeforeAnUpdate_thenDisplaysThoseRequestsAsUnread() {
-        PendingRequest pendingRequest = new PendingRequest(riderUsername, route, price, requestDescription);
+        PendingRequest pendingRequest1 = new PendingRequest(riderUsername, route, price, requestDescription)
+                .accept(driverUsername);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
-                .accept(driverUsername)
-                .confirmRequest(driverUsername);
+        PendingRequest pendingRequest2 = new PendingRequest(riderUsername, route, price, requestDescription)
+                .accept(driverUsername);
 
-        pendingRequest.setLastUpdated(new Date(3));
-        confirmedRequest.setLastUpdated(new Date(3));
+        pendingRequest1.setLastUpdated(new Date(3));
+        pendingRequest2.setLastUpdated(new Date(3));
 
-        List<Request> requests = Arrays.asList(pendingRequest, confirmedRequest);
+        List<Request> requests = Arrays.<Request>asList(pendingRequest1, pendingRequest2);
 
         when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
-        when(userController.getLastReadTime(pendingRequest.getId())).thenReturn(new Date(2));
-        when(userController.getLastReadTime(confirmedRequest.getId())).thenReturn(new Date(5));
+        when(userController.getLastReadTime(pendingRequest1.getId())).thenReturn(new Date(2));
+        when(userController.getLastReadTime(pendingRequest2.getId())).thenReturn(new Date(5));
 
         requestStore.setAll(requests);
         summaryMenuController.attachView(summaryMenuView);
@@ -144,20 +144,20 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_onlyCountUnreadRiderRequestsForRequestsARiderIsInvolvedWith() {
-        PendingRequest pendingRequest = new PendingRequest(driverUsername, route, price, requestDescription);
+        PendingRequest pendingRequest1 = new PendingRequest(driverUsername, route, price, requestDescription)
+                .accept(riderUsername);
 
-        ConfirmedRequest confirmedRequest = new PendingRequest(riderUsername, route, price, requestDescription)
-                .accept(driverUsername)
-                .confirmRequest(driverUsername);
+        PendingRequest pendingRequest2 = new PendingRequest(riderUsername, route, price, requestDescription)
+                .accept(driverUsername);
 
-        pendingRequest.setLastUpdated(new Date(3));
-        confirmedRequest.setLastUpdated(new Date(3));
+        pendingRequest1.setLastUpdated(new Date(3));
+        pendingRequest2.setLastUpdated(new Date(3));
 
-        List<Request> requests = Arrays.asList(pendingRequest, confirmedRequest);
+        List<Request> requests = Arrays.<Request>asList(pendingRequest1, pendingRequest2);
 
         when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
-        when(userController.getLastReadTime(pendingRequest.getId())).thenReturn(null);
-        when(userController.getLastReadTime(confirmedRequest.getId())).thenReturn(null);
+        when(userController.getLastReadTime(pendingRequest1.getId())).thenReturn(null);
+        when(userController.getLastReadTime(pendingRequest2.getId())).thenReturn(null);
 
         requestStore.setAll(requests);
         summaryMenuController.attachView(summaryMenuView);
