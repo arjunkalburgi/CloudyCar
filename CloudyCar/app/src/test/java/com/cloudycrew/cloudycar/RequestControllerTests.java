@@ -5,6 +5,7 @@ import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -48,10 +49,10 @@ public class RequestControllerTests {
     private String requestDescription;
 
     private PendingRequest request1;
-    private PendingRequest request2;
     private PendingRequest acceptedRequest1;
     private ConfirmedRequest confirmedRequest1;
     private CompletedRequest completedRequest1;
+    private CancelledRequest cancelledRequest1;
 
     @Before
     public void set_up() {
@@ -71,12 +72,11 @@ public class RequestControllerTests {
         double price = 3.50;
 
         request1 = new PendingRequest(riderUsername, route, price, requestDescription);
-        request2 = new PendingRequest(riderUsername, route, price, requestDescription);
 
         acceptedRequest1 = request1.accept(driverUsername);
-
         confirmedRequest1 = acceptedRequest1.confirmRequest(driverUsername);
         completedRequest1 = confirmedRequest1.completeRequest();
+        cancelledRequest1 = request1.cancel();
 
         schedulerProvider = new TestSchedulerProvider();
 
@@ -97,14 +97,14 @@ public class RequestControllerTests {
     }
 
     @Test
-    public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
-        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+    public void test_cancelRequest_thenUpdateIsCalledWithTheCanceledRequest() {
+        when(requestStore.getRequest(request1.getId(), PendingRequest.class)).thenReturn(request1);
         when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.cancelRequest(request1.getId());
 
-        verify(requestStore).deleteRequest(request1.getId());
-        verify(requestService).deleteRequest(request1.getId());
+        verify(requestStore).updateRequest(cancelledRequest1);
+        verify(requestService).updateRequest(cancelledRequest1);
     }
 
     @Test
