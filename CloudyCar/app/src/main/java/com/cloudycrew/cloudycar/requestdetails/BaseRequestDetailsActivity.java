@@ -48,6 +48,7 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         resolveDependencies();
+        requestDetailsController.markRequestAsRead();
     }
 
     @Override
@@ -90,7 +91,6 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
         requestDetailsController.detachView();
-        requestDetailsController.markRequestAsRead();
         super.onBackPressed();
     }
 }
