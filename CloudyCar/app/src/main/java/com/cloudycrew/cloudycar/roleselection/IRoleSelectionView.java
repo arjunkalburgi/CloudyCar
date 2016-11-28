@@ -5,7 +5,18 @@ package com.cloudycrew.cloudycar.roleselection;
  */
 
 public interface IRoleSelectionView {
+    /**
+     * Callback for displaying the add car notification
+     */
     void displayAddCarDescription();
+
+    /**
+     * Callback for displaying driver summary
+     */
     void displayDriverSummary();
+
+    /**
+     * Callback for after a car description is added
+     */
     void onCarDescriptionAdded();
 }

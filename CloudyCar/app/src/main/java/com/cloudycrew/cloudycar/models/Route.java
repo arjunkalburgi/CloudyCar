@@ -59,14 +59,29 @@ public class Route implements Serializable{
         return result;
     }
 
+    /**
+     * Get the length in meters of the route
+     *
+     * @return length of the route in meters
+     */
     public long getMeters() {
         return meters;
     }
 
+    /**
+     * Get the length in kilometers of the route
+     *
+     * @return length of the route in kilometer
+     */
     public double getKilometers() {
         return meters / 1000f;
     }
 
+    /**
+     * Set the length of the route in meters
+     *
+     * @param meters the length to set
+     */
     public void setMeters(long meters) {
         this.meters = meters;
     }

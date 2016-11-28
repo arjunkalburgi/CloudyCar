@@ -1,6 +1,8 @@
 package com.cloudycrew.cloudycar.models.phonenumbers;
 
 /**
+ * Class for representing and validating phone numbers to the system
+ *
  * Created by George on 2016-10-13.
  */
 public class PhoneNumber {
@@ -72,6 +74,9 @@ public class PhoneNumber {
                 phoneNumber.substring(6));
     }
 
+    /**
+     * Exception to be thrown when a phone number fails to validate.
+     */
     public static class InvalidPhoneNumberException extends RuntimeException {
 
     }

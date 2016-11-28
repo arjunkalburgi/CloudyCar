@@ -117,6 +117,10 @@ public class CompositeRequestService implements IRequestService {
     }
 
     /**
+     *
+     * Method for syncing the localRequestService and the cloudRequest service with the changes
+     * that are queued in the PersistentRequestQueue
+     *
      * To sync the local state we want to
      * A) Flush the cancellation, creation, and confirmation queues
      *    These requests belong to the user so only they are able to do perform these transitions

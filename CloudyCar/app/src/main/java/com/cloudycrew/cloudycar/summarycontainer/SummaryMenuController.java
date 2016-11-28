@@ -21,6 +21,12 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
     private IRequestStore requestStore;
     private UserController userController;
 
+    /**
+     * Instantiates a SummaryMenuController
+     *
+     * @param userController a usercontroller
+     * @param requestStore a requeststore
+     */
     public SummaryMenuController(UserController userController, IRequestStore requestStore) {
         this.userController = userController;
         this.requestStore = requestStore;
