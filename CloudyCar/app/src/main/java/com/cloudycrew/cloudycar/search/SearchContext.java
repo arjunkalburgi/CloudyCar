@@ -8,6 +8,10 @@ import static com.cloudycrew.cloudycar.utils.StringUtils.isNullOrEmpty;
  * Created by George on 2016-11-26.
  */
 
+/**
+ * Used to store information that will be used to construct an elasticsearch query. Acts strictly as
+ * a model, with no modifications made to data stored within in.
+ */
 public class SearchContext implements Serializable {
     private String keyword;
     private double lat = -1;
