@@ -181,7 +181,14 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
         });
     }
 
-
+    /**
+     * Callback function for if the user attempts to do something requiring more permissions than
+     * currently allowed to the app. This will ask the user to allow location permissions.
+     *
+     * @param requestCode - The request code of the permissions being requested
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
