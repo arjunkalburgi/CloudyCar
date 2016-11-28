@@ -79,7 +79,7 @@ public class RequestController {
      */
     public PendingRequest createRequest(Route route, double price, String description) {
         PendingRequest pendingRequest = new PendingRequest(getCurrentUsername(), route, price, description);
-
+        
         requestService.createRequest(pendingRequest);
         requestStore.addRequest(pendingRequest);
 
@@ -99,7 +99,7 @@ public class RequestController {
             CancelledRequest cancelledRequest = pendingRequest.cancel();
 
             requestService.updateRequest(cancelledRequest);
-            requestStore.updateRequest(cancelledRequest);
+            updateRequestLocally(cancelledRequest);
         }
     }
 
@@ -116,7 +116,7 @@ public class RequestController {
             PendingRequest acceptedPendingRequest = pendingRequest.accept(getCurrentUsername());
 
             requestService.updateRequest(acceptedPendingRequest);
-            requestStore.updateRequest(acceptedPendingRequest);
+            updateRequestLocally(acceptedPendingRequest);
         }
     }
 
@@ -134,7 +134,7 @@ public class RequestController {
             ConfirmedRequest confirmedRequest = pendingRequest.confirmRequest(driverUsername);
 
             requestService.updateRequest(confirmedRequest);
-            requestStore.updateRequest(confirmedRequest);
+            updateRequestLocally(confirmedRequest);
         }
     }
 
@@ -151,13 +151,19 @@ public class RequestController {
             CompletedRequest completedRequest = confirmedRequest.completeRequest();
 
             requestService.updateRequest(completedRequest);
-            requestStore.updateRequest(completedRequest);
+            updateRequestLocally(completedRequest);
         }
     }
 
     public void markRequestAsRead(String requestId) {
         Request request = requestStore.getRequest(requestId);
 
+        request.setLastReadTime(new Date());
+        requestStore.updateRequest(request);
+        userController.markRequestAsRead(request.getId());
+    }
+
+    private void updateRequestLocally(Request request) {
         request.setLastReadTime(new Date());
         requestStore.updateRequest(request);
         userController.markRequestAsRead(request.getId());
