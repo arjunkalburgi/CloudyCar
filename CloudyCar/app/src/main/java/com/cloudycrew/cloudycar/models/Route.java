@@ -63,6 +63,10 @@ public class Route implements Serializable{
         return meters;
     }
 
+    public double getKilometers() {
+        return meters / 1000f;
+    }
+
     public void setMeters(long meters) {
         this.meters = meters;
     }
