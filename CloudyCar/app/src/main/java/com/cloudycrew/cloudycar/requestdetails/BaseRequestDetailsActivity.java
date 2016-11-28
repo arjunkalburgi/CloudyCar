@@ -89,6 +89,7 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
+        requestDetailsController.detachView();
         requestDetailsController.markRequestAsRead();
         super.onBackPressed();
     }
