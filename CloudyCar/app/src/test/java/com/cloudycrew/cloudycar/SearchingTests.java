@@ -6,12 +6,16 @@ package com.cloudycrew.cloudycar;
 
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
-import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
+import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
-import com.cloudycrew.cloudycar.search.ISearchService;
 import com.cloudycrew.cloudycar.search.SearchContext;
+import com.cloudycrew.cloudycar.search.SearchService;
+import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,74 +33,101 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class SearchingTests {
     @Mock
+    private IUserPreferences userPreferences;
+    @Mock
     private IRequestStore requestStore;
     @Mock
-    private ISearchService searchService;
+    private IRequestService requestService;
 
     private PendingRequest request1;
+
     private PendingRequest request2;
-    private String testDescription;
+    private PendingRequest acceptedRequest2;
+    private ConfirmedRequest confirmedRequest2;
+    private CompletedRequest completedRequest2;
+    private CancelledRequest cancelledRequest2;
+
+    private String locationDescription;
     private String requestDescription;
+
+    private String riderUsername1;
+    private String riderUsername2;
+    private String driverUsername;
+
+    private SearchContext searchContext;
+    private SearchService searchService;
 
     @Before
     public void set_up() {
-        testDescription = "test description";
+        locationDescription = "test description";
         requestDescription = "description";
 
-        Location startingLocation1 = new Location(48.1472373, 11.5673969,testDescription);
-        Location endingLocation1 = new Location(48.1258551, 11.5121003,testDescription);
+        riderUsername1 = "rider1";
+        riderUsername2 = "rider2";
+        driverUsername = "driver";
 
-        Route route1 = new Route(startingLocation1, endingLocation1);
-
-        Location startingLocation2 = new Location(53.5225, 113.6242,testDescription);
-        Location endingLocation2 = new Location(53.5232, 113.5263,testDescription);
-
-        Route route2 = new Route(startingLocation2, endingLocation2);
-
-        User user= new User("SomeUser");
+        Location startLocation = new Location(48.1472373, 11.5673969, locationDescription);
+        Location endLocation = new Location(48.1258551, 11.5121003, locationDescription);
+        Route route = new Route(startLocation, endLocation);
         double price = 2.5;
 
-        request1 = new PendingRequest(user.getUsername(), route1, price, requestDescription);
-        request2 = new PendingRequest(user.getUsername(), route2, price, requestDescription);
+        request1 = new PendingRequest(riderUsername1, route, price, requestDescription);
 
-        when(requestStore.getRequests()).thenReturn(Arrays.<Request>asList(request1, request2));
+        request2 = new PendingRequest(riderUsername2, route, price, requestDescription);
+        acceptedRequest2 = request2.accept(driverUsername);
+        confirmedRequest2 = acceptedRequest2.confirmRequest(driverUsername);
+        completedRequest2 = confirmedRequest2.completeRequest();
+        cancelledRequest2 = request2.cancel();
+
+        searchContext = new SearchContext();
+
+        when(userPreferences.getUserName()).thenReturn(riderUsername1);
+        searchService = new SearchService(userPreferences, requestStore, requestService);
     }
 
     @Test
-    public void test_searchByGeoLocation_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        SearchContext searchContext = new SearchContext().withLocation(0 , 0, 5);
+    public void test_ifSearchOnlyContainsRequestsForTheCurrentUser_thenReturnsAnEmptyList() {
+        List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1);
+        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
-        List<PendingRequest> searchResults = searchService.search(searchContext);
+        List<PendingRequest> expectedResults = new ArrayList<>();
+        List<PendingRequest> actualResults = searchService.search(searchContext);
 
-        assertTrue(searchResults.isEmpty());
+        assertEquals(expectedResults, actualResults);
     }
 
     @Test
-    public void test_searchByGeoLocation_ifThereAreMatchingResults_thenReturnsResults() {
-        SearchContext searchContext = new SearchContext().withLocation(0 , 0, 5);
+    public void test_ifSearchContainsRequestsForOtherUsers_thenReturnsThoseRequests() {
+        List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1, request2);
+        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
-        List<PendingRequest> expectedSearchResults = Arrays.asList(request1);
-        List<PendingRequest> searchResults = searchService.search(searchContext);
+        List<PendingRequest> expectedResults = Arrays.asList(request2);
+        List<PendingRequest> actualResults = searchService.search(searchContext);
 
-        assertEquals(expectedSearchResults, searchResults);
+        assertEquals(expectedResults, actualResults);
     }
 
     @Test
-    public void test_searchByKeyword_ifThereAreNoMatchingResults_thenReturnsEmptyList() {
-        SearchContext searchContext = new SearchContext().withKeyword("expensive");
+    public void test_ifSearchContainsAcceptedRequestsForOtherUsers_thenReturnsThoseRequests() {
+        List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1, request2, acceptedRequest2);
+        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
-        List<PendingRequest> searchResults = searchService.search(searchContext);
+        List<PendingRequest> expectedResults = Arrays.asList(request2, acceptedRequest2);
+        List<PendingRequest> actualResults = searchService.search(searchContext);
 
-        assertTrue(searchResults.isEmpty());
+        assertEquals(expectedResults, actualResults);
     }
 
     @Test
-    public void test_searchByKeyword_ifThereAreMatchingResults_thenReturnsResults() {
-        SearchContext searchContext = new SearchContext().withKeyword("cheap");
+    public void test_searchDoesNotReturnConfirmedCompletedOrCanceledRequests() {
+        List<Request> requestsMatchingSearch = Arrays.<Request>asList(request1,
+                request2, acceptedRequest2, confirmedRequest2, completedRequest2, cancelledRequest2);
 
-        List<PendingRequest> expectedSearchResults = Arrays.asList(request2);
-        List<PendingRequest> actualSearchResults = searchService.search(searchContext);
+        when(requestService.search(any(SearchContext.class))).thenReturn(requestsMatchingSearch);
 
-        assertEquals(expectedSearchResults, actualSearchResults);
+        List<PendingRequest> expectedResults = Arrays.asList(request2, acceptedRequest2);
+        List<PendingRequest> actualResults = searchService.search(searchContext);
+
+        assertEquals(expectedResults, actualResults);
     }
 }
