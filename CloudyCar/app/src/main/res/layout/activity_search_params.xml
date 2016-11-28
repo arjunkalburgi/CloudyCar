@@ -83,26 +83,40 @@
             android:id="@+id/search_choose_location"
             android:layout_below="@id/search_price_wrapper" />
 
+
+
         <TextView
             android:id="@+id/search_within_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_price_wrapper"
-            android:layout_toEndOf="@id/search_choose_location"
             android:gravity="center_vertical"
-            android:layout_alignBottom="@id/search_choose_location"
-            android:layout_marginStart="12dp"
             android:textSize="18sp"
-            android:text="@string/search_within_text" />
+            android:text="@string/search_within_text"
+            android:layout_below="@+id/search_choose_location"
+            android:layout_alignParentStart="true"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp" />
+
+        <TextView
+            android:text="Choose a location..."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/location_description"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/search_choose_location"
+            android:layout_below="@+id/search_price_wrapper"
+            android:layout_alignBottom="@+id/search_choose_location"
+            android:gravity="left|center_vertical"
+            android:ellipsize="end"
+            android:paddingLeft="5dp" />
 
         <Spinner
             android:id="@+id/search_radius_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_price_wrapper"
-            android:layout_toEndOf="@id/search_within_text"
             android:gravity="center_vertical"
-            android:layout_alignBottom="@id/search_choose_location" />
+            android:layout_alignBottom="@+id/search_within_text"
+            android:layout_toEndOf="@+id/search_within_text" />
 
     </RelativeLayout>
 

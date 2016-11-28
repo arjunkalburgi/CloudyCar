@@ -12,7 +12,9 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.cloudycrew.cloudycar.BaseActivity;
+import com.cloudycrew.cloudycar.GeoDecoder;
 import com.cloudycrew.cloudycar.R;
+import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
 import com.cloudycrew.cloudycar.models.Location;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -162,8 +164,15 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     @OnClick(R.id.submit_selected_location)
     public void submitSelectedLocation() {
         Intent intent = new Intent(this, SearchParamsActivity.class);
+        GeoDecoder geoDecoder = new GeoDecoder(this);
+        String description;
+        if(getCloudyCarApplication().getConnectivityService().isInternetAvailable()){
+            description = geoDecoder.decodeLatLng(selectedLocation.longitude,selectedLocation.latitude);
+        }else{
+            description = "User selected point";
+        }
         intent.putExtra("location", new Location(
-                selectedLocation.longitude, selectedLocation.latitude, "User selected point"));
+                selectedLocation.longitude, selectedLocation.latitude, description));
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
