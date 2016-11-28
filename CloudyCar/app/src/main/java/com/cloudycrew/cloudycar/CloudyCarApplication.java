@@ -1,6 +1,5 @@
 package com.cloudycrew.cloudycar;
 
-import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.cloudycrew.cloudycar.connectivity.AndroidConnectivityService;
@@ -107,7 +106,7 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private IRequestService getCloudRequestService() {
-        return new CloudRequestService(getUserPreferences(), getRequestElasticSearchService());
+        return new CloudRequestService(getRequestElasticSearchService());
     }
 
     public IConnectivityService getConnectivityService() {
