@@ -42,7 +42,7 @@ import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
 /**
- * This activity controls the behavior of the map view that a driver can user to choose a geoloction
+ * This activity controls the behavior of the map view that a driver can user to choose a geolocation
  * to filter by.
  */
 public class LocationSearchActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {

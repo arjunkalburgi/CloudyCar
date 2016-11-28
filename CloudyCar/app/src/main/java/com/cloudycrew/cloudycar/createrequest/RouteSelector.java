@@ -227,6 +227,10 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
 
     }
 
+    /**
+     * Defines the onclick behavior of the FAB. The button will launch a new PlaceAutocomplete intent,
+     * allowing the user to search for relevant locations in their city.
+     */
     @OnClick(R.id.map_search_fab)
     public void startSearch() {
         try {
