@@ -8,10 +8,12 @@ import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
+import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
@@ -32,6 +34,7 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
      * @param userPreferences   the user preferences
      * @param requestStore      the request store
      */
+
     public RiderSummaryController(RequestController requestController,
                                   IUserPreferences userPreferences,
                                   IRequestStore requestStore,
@@ -48,6 +51,17 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
     public void refreshRequests() {
         dispatchShowLoading();
         requestController.refreshRequests();
+    }
+
+    public void deleteRequest(final String reqid) {
+        ObservableUtils.create(new Action0() {
+                            @Override
+                            public void call() {
+                                requestController.cancelRequest(reqid);
+                            }
+                        })
+                        .subscribeOn(schedulerProvider.ioScheduler())
+                        .subscribe();
     }
 
     @Override
