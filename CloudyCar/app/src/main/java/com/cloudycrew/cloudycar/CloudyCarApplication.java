@@ -158,11 +158,11 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     public DriverSummaryController getDriverSummaryController() {
-        return new DriverSummaryController(getRequestController(), getUserPreferences(), getRequestStore());
+        return new DriverSummaryController(getRequestController(), getUserPreferences(), getRequestStore(), getSchedulerProvider());
     }
 
     public RiderSummaryController getRiderSummaryController() {
-        return new RiderSummaryController(getRequestController(), getUserPreferences(), getRequestStore());
+        return new RiderSummaryController(getRequestController(), getUserPreferences(), getRequestStore(), getSchedulerProvider());
     }
 
     public RequestDetailsController getRequestDetailsController(String requestId) {

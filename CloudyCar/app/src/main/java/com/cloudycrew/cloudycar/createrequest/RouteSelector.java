@@ -121,6 +121,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
         bundle.putSerializable("route",route);
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     /**
