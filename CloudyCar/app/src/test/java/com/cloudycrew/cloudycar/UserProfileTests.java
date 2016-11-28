@@ -57,7 +57,7 @@ public class UserProfileTests {
 
     @Test(expected=DuplicateUserException.class)
     public void test_addNewUser_withAUsedUserName_throwingDuplicateUserException() {
-        when(muhservice.search(anyObject())).thenReturn(Arrays.asList(completeUser));
+        when(muhservice.search(any(String.class))).thenReturn(Arrays.asList(completeUser));
         userService.createUser(completeUser);
     }
 

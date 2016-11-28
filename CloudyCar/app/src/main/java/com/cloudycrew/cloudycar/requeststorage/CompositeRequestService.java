@@ -11,10 +11,12 @@ import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.search.SearchContext;
+import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
 
 
 /**
@@ -39,12 +41,19 @@ public class CompositeRequestService implements IRequestService {
         this.schedulerProvider = scheduler;
         this.geoDecoder = geoDecoder;
 
-        this.connectivityService.setOnConnectivityChangedListener(isConnected -> {
-            if (isConnected) {
-                Observable.just(null)
-                          .doOnNext(nothing -> syncLocalState())
-                          .subscribeOn(schedulerProvider.ioScheduler())
-                          .subscribe();
+        this.connectivityService.setOnConnectivityChangedListener(new IConnectivityService.OnConnectivityChangedListener() {
+            @Override
+            public void onConnectivityChanged(boolean isConnected) {
+                if (isConnected) {
+                    ObservableUtils.create(new Action0() {
+                                @Override
+                                public void call() {
+                                    syncLocalState();
+                                }
+                            })
+                            .subscribeOn(schedulerProvider.ioScheduler())
+                            .subscribe();
+                }
             }
         });
     }

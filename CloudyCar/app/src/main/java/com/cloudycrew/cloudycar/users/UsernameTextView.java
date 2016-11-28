@@ -32,7 +32,12 @@ public class UsernameTextView extends TextView
     public UsernameTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        this.setOnClickListener(this::UsernameOnClick);
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UsernameOnClick(v);
+            }
+        });
     }
 
     public void UsernameOnClick(View v) {

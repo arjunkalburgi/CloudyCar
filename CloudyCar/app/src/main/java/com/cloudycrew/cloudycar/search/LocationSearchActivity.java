@@ -168,7 +168,12 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMapClickListener(latLng -> onPlaceSelected(mMap, latLng));
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                onPlaceSelected(mMap, latLng);
+            }
+        });
     }
 
     @Override

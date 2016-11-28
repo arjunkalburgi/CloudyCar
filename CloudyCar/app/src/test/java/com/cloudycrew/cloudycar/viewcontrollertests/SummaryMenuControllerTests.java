@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.viewcontrollertests;
 
+import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
@@ -66,7 +67,7 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifRiderHasNoRequests_thenDisplayZeroUnreadRiderRequests() {
-        requestStore.setAll(new ArrayList<>());
+        requestStore.setAll(new ArrayList<Request>());
         summaryMenuController.attachView(summaryMenuView);
 
         verify(summaryMenuView).displayTotalUnreadRiderRequests(0);
@@ -166,7 +167,7 @@ public class SummaryMenuControllerTests {
 
     @Test
     public void test_ifDriverHasNoRequests_thenDisplayZeroUnreadDriverRequests() {
-        requestStore.setAll(new ArrayList<>());
+        requestStore.setAll(new ArrayList<Request>());
         summaryMenuController.attachView(summaryMenuView);
 
         verify(summaryMenuView).displayTotalUnreadDriverRequests(0);
@@ -203,7 +204,7 @@ public class SummaryMenuControllerTests {
 
         acceptedRequest.setLastUpdated(new Date(5));
 
-        List<Request> requests = Arrays.asList(acceptedRequest);
+        List<Request> requests = Arrays.<Request>asList(acceptedRequest);
 
         when(userController.getCurrentUser()).thenReturn(new User(driverUsername));
         when(userController.getLastReadTime(acceptedRequest.getId())).thenReturn(new Date(2));
@@ -223,7 +224,7 @@ public class SummaryMenuControllerTests {
 
         acceptedRequest.setLastUpdated(new Date(5));
 
-        List<Request> requests = Arrays.asList(acceptedRequest);
+        List<Request> requests = Arrays.<Request>asList(acceptedRequest);
 
         when(userController.getCurrentUser()).thenReturn(new User(driverUsername));
         when(userController.getLastReadTime(acceptedRequest.getId())).thenReturn(new Date(2));
@@ -242,7 +243,7 @@ public class SummaryMenuControllerTests {
 
         confirmedRequest.setLastUpdated(new Date(1));
 
-        List<Request> requests = Arrays.asList(confirmedRequest);
+        List<Request> requests = Arrays.<Request>asList(confirmedRequest);
 
         when(userController.getCurrentUser()).thenReturn(new User(driverUsername));
         when(userController.getLastReadTime(confirmedRequest.getId())).thenReturn(null);
@@ -261,7 +262,7 @@ public class SummaryMenuControllerTests {
 
         confirmedRequest.setLastUpdated(new Date(1));
 
-        List<Request> requests = Arrays.asList(confirmedRequest);
+        List<Request> requests = Arrays.<Request>asList(confirmedRequest);
 
         when(userController.getCurrentUser()).thenReturn(new User(driverUsername));
         when(userController.getLastReadTime(confirmedRequest.getId())).thenReturn(null);

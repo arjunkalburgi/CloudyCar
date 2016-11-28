@@ -115,6 +115,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
         bundle.putSerializable("route",route);
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -163,7 +164,13 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
                 }
             }
         });
-        mMap.setOnMapClickListener(latLng -> onPlaceSelected(mMap,latLng));
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                onPlaceSelected(mMap,latLng);
+            }
+        });
     }
 
 
