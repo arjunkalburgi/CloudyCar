@@ -1,9 +1,11 @@
 package com.cloudycrew.cloudycar.search;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,24 +57,25 @@ public class SearchParamsActivity extends AppCompatActivity {
         });
 
         radiusSpinner.setEnabled(false);
+        this.radiusValues = getResources().getIntArray(R.array.search_radius_values);
     }
 
     @OnClick(R.id.search_choose_location)
     public void launchLocationSearch() {
-        radiusValues = getResources().getIntArray(R.array.search_radius_values);
-        int radius = radiusValues[radiusSpinner.getSelectedItemPosition()];
+        int radius = this.radiusValues[radiusSpinner.getSelectedItemPosition()];
 
         Intent intent = new Intent(this, LocationSearchActivity.class);
         intent.putExtra("radius", radius);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (getIntent().hasExtra("location")) {
-            userSelectedLocation = (Location) getIntent().getExtras().get("location");
-            radiusSpinner.setEnabled(true);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                userSelectedLocation = (Location) intent.getSerializableExtra("location");
+                radiusSpinner.setEnabled(true);
+            }
         }
     }
 
@@ -92,8 +95,10 @@ public class SearchParamsActivity extends AppCompatActivity {
             double lat = userSelectedLocation.getLatitude();
             double lon = userSelectedLocation.getLongitude();
             searchContext.withLocation(lat, lon,
-                    radiusValues[radiusSpinner.getSelectedItemPosition()]);
+                    this.radiusValues[radiusSpinner.getSelectedItemPosition()]);
         }
+
+        Log.d("location", String.valueOf(searchContext.getRadius()));
 
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("searchcontext", searchContext);

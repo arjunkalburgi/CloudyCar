@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.search;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -145,12 +146,11 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     }
 
     @OnClick(R.id.submit_selected_location)
-    public void submitSelectedLocation(){
-        Intent intent = new Intent(this,SearchParamsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("location",new Location(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
-        intent.putExtras(bundle);
-        startActivity(intent);
+    public void submitSelectedLocation() {
+        Intent intent = new Intent(this, SearchParamsActivity.class);
+        intent.putExtra("location", new Location(
+                selectedLocation.longitude,selectedLocation.latitude, "User selected point"));
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 

@@ -79,7 +79,7 @@ public class ElasticSearchQueryBuilder {
         geoPointObject.put("lat", searchContext.getLat());
         geoPointObject.put("lon", searchContext.getLon());
         geoDistanceObject.put("route.start.point", geoPointObject);
-        geoDistanceObject.put("distance", searchContext.getRadius() + "km");
+        geoDistanceObject.put("distance", searchContext.getRadius() + "m");
         filterTypeObject.put("geo_distance", geoDistanceObject);
 
         return filterTypeObject;
