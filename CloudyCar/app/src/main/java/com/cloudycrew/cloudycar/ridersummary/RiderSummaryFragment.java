@@ -245,7 +245,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                 viewCell instanceof AcceptedRequestViewCell;
     }
 
-    // standard support library way of implementing "swipe to delete"
+    // From https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete
     private void setUpItemTouchHelper(final View v) {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -255,6 +255,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             Drawable xMark;
             int xMarkMargin;
             boolean initiated;
+            //From: http://www.androidhive.info/2015/09/android-material-design-snackbar-example/
             Snackbar snackbar = Snackbar
                     .make(v, "Request cancelled", Snackbar.LENGTH_LONG)
                     .setAction("Undo", new View.OnClickListener() {
