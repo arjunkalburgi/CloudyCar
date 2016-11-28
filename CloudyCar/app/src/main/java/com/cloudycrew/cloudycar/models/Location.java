@@ -79,6 +79,11 @@ public class Location implements Serializable {
         return description;
     }
 
+    /**
+     * Set the description
+     *
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
