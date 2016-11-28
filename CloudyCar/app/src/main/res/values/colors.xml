@@ -15,4 +15,5 @@
     <color name="grey_700">#616161</color>
     <color name="grey_400">#bdbdbd</color>
     <color name="dividerGrey">#E8E8E8</color>
+    <color name="deleteRed">#EF4444</color>
 </resources>

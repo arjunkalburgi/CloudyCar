@@ -248,7 +248,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     // standard support library way of implementing "swipe to delete"
     private void setUpItemTouchHelper(final View v) {
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
             // we want to cache these and not allocate anything repeatedly in the onChildDraw method
             Drawable background;
@@ -276,7 +276,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             ArrayList<ViewCell> pendingRemovals = new ArrayList<ViewCell>();
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(getResources().getColor(R.color.deleteRed));
                 xMark = ContextCompat.getDrawable(getActivity(), R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) getActivity().getResources().getDimension(R.dimen.ic_clear_margin);
@@ -326,7 +326,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                 }
 
                 // draw red background
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                background.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + (int) dX, itemView.getBottom());
                 background.draw(c);
 
                 // draw x mark
@@ -334,8 +334,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                 int intrinsicWidth = xMark.getIntrinsicWidth();
                 int intrinsicHeight = xMark.getIntrinsicWidth();
 
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
+                int xMarkLeft = itemView.getLeft() + xMarkMargin;
+                int xMarkRight = itemView.getLeft() + xMarkMargin + intrinsicWidth;
                 int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
@@ -359,7 +359,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(getResources().getColor(R.color.deleteRed));
                 initiated = true;
             }
 
