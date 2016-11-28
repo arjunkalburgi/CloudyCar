@@ -44,8 +44,6 @@ public class RequestControllerTests {
     private String riderUsername;
     private String driverUsername;
 
-    private User rider;
-    private User driver;
     private String testDescription;
     private String requestDescription;
 
@@ -61,9 +59,6 @@ public class RequestControllerTests {
         driverUsername = "driverdood";
         testDescription = "test description";
         requestDescription = "description";
-
-        rider = new User(riderUsername);
-        driver = new User(driverUsername);
 
         Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
         Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
