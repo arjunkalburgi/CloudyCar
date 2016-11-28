@@ -4,6 +4,7 @@ import com.cloudycrew.cloudycar.ViewController;
 import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
+import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
@@ -51,7 +52,7 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
                          .filter(new Func1<Request, Boolean>() {
                              @Override
                              public Boolean call(Request r) {
-                                 return r.getRider().equals(getCurrentUsername()) &&
+                                 return shouldRiderRequestBeNotified(r) &&
                                          !isRequestRead(r);
                              }
                          })
@@ -72,6 +73,15 @@ public class SummaryMenuController extends ViewController<ISummaryMenuView> {
                          .count()
                          .toBlocking()
                          .first();
+    }
+
+    private boolean shouldRiderRequestBeNotified(Request request) {
+        if (request instanceof PendingRequest) {
+            PendingRequest pendingRequest = (PendingRequest) request;
+            return pendingRequest.hasBeenAccepted() &&
+                    pendingRequest.getRider().equals(getCurrentUsername());
+        }
+        return false;
     }
 
     private boolean shouldDriverRequestBeNotified(Request request) {
