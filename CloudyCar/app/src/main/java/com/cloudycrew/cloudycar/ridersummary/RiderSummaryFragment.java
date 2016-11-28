@@ -32,6 +32,7 @@ import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.BaseRequestViewCell;
+import com.cloudycrew.cloudycar.viewcells.BaseRequestViewHolder;
 import com.cloudycrew.cloudycar.viewcells.ConfirmedRequestViewCell;
 import com.cloudycrew.cloudycar.viewcells.HeaderViewCell;
 import com.cloudycrew.cloudycar.viewcells.PendingRequestViewCell;
@@ -65,6 +66,8 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     private SectionWithHeaderViewCell confirmedRequestsSection;
     private SectionWithHeaderViewCell acceptedRequestsSection;
     private SectionWithHeaderViewCell pendingRequestsSection;
+
+    private List<ViewCell> pendingRemovals = new ArrayList<ViewCell>();
 
     private RiderSummaryController riderSummaryController;
 
@@ -246,6 +249,32 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
     }
 
     // From https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete
+    private void undoPendingDeletes() {
+        for (ViewCell pendingRemoval : pendingRemovals) {
+            if (pendingRemoval instanceof PendingRequestViewCell) {
+                pendingRequestsSection.add(pendingRemoval);
+            } else if (pendingRemoval instanceof AcceptedRequestViewCell) {
+                acceptedRequestsSection.add(pendingRemoval);
+            }
+        }
+
+        pendingRemovals.clear();
+        viewCellAdapter.notifyDataSetChanged();
+    }
+
+    private void executePendingDeletes() {
+        for (ViewCell pendingRemoval : pendingRemovals) {
+            if (pendingRemoval instanceof  BaseRequestViewCell) {
+                Request request = (PendingRequest)((BaseRequestViewCell) pendingRemoval).getModel();
+                riderSummaryController.deleteRequest(request.getId());
+            }
+            pendingRequestsSection.add(pendingRemoval);
+        }
+
+        pendingRemovals.clear();
+    }
+
+    // standard support library way of implementing "swipe to delete"
     private void setUpItemTouchHelper(final View v) {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -261,21 +290,15 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
                     .setAction("Undo", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            for (ViewCell pendingRemoval : pendingRemovals) {
-                                pendingRequestsSection.add(pendingRemoval);
-                            }
-                            pendingRemovals.clear();
-                            viewCellAdapter.notifyDataSetChanged();
+                            undoPendingDeletes();
                         }
                     })
                     .setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event){
-                            pendingRemovals.clear();
+                            executePendingDeletes();
                         }
                     });
-
-            ArrayList<ViewCell> pendingRemovals = new ArrayList<ViewCell>();
 
             private void init() {
                 background = new ColorDrawable(getResources().getColor(R.color.deleteRed));
@@ -308,7 +331,7 @@ public class RiderSummaryFragment extends BaseFragment implements IRiderSummaryV
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 ViewCell viewCell = viewCellAdapter.get(viewHolder.getAdapterPosition());
-                if (viewCell instanceof PendingRequestViewCell) {
+                if (isViewCellSwipeable(viewCell)) {
                     snackbar.show();
                     viewCellAdapter.remove(viewHolder.getAdapterPosition());
                     viewCellAdapter.notifyDataSetChanged();
