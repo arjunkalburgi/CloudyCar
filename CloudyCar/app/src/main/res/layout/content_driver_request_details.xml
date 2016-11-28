@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_request_details"
+    android:id="@+id/content_driver_request_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.cloudycrew.cloudycar.requestdetails.DriverRequestDetailsActivity"
-    tools:showIn="@layout/activity_driver_request_details"
+    tools:context="com.cloudycrew.cloudycar.requestdetails.RiderRequestDetailsActivity"
     android:background="@color/backgroundGrey">
 
-    <TextView
-        android:id="@+id/ride_details_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ride_details"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/colorPrimary"/>
-
-    <include
-        android:id="@+id/ride_details_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ride_details_header"
-        layout="@layout/request_summary_card" />
-    <fragment
-        android:id="@+id/routeDisplayFragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
+        android:id="@+id/content_request_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/request_details_update_button"
-        android:layout_below="@+id/ride_details_card"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp" />
-    <Button
-        android:id="@+id/request_details_update_button"
+        android:padding="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:showIn="@layout/activity_driver_request_details"
+        android:background="@color/backgroundGrey"
+        android:layout_weight="0.5">
+
+        <TextView
+            android:id="@+id/ride_details_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ride_details"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/colorPrimary"/>
+
+        <include
+            android:id="@+id/ride_details_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ride_details_header"
+            layout="@layout/request_summary_card" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:text="@string/accept_request"
-        android:theme="@style/Button" />
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
 
+        <fragment
+            android:id="@+id/routeDisplayFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/request_details_update_button"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp" />
+        <Button
+            android:id="@+id/request_details_update_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:text="@string/accept_request"
+            android:theme="@style/Button" />
 
+    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
