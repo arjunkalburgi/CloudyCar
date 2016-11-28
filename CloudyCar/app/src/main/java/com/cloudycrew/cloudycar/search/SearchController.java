@@ -7,6 +7,10 @@ import com.cloudycrew.cloudycar.utils.ObservableUtils;
 
 import java.util.List;
 
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func0;
+
 /**
  * Created by George on 2016-11-05.
  */
@@ -30,13 +34,23 @@ public class SearchController extends ViewController<ISearchView> {
      *
      * @param searchContext the context of the Search
      */
-    public void search(SearchContext searchContext) {
+    public void search(final SearchContext searchContext) {
         dispatchShowLoading();
 
-        ObservableUtils.fromFunction(searchService::search, searchContext)
+        ObservableUtils.create(new Func0<List<PendingRequest>>() {
+                           @Override
+                           public List<PendingRequest> call() {
+                               return searchService.search(searchContext);
+                           }
+                       })
                        .subscribeOn(schedulerProvider.ioScheduler())
                        .observeOn(schedulerProvider.mainThreadScheduler())
-                       .subscribe(this::dispatchShowSearchResults);
+                       .subscribe(new Action1<List<PendingRequest>>() {
+                           @Override
+                           public void call(List<PendingRequest> pendingRequests) {
+                               dispatchShowSearchResults(pendingRequests);
+                           }
+                       });
     }
 
     private void dispatchShowLoading() {

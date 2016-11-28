@@ -53,6 +53,7 @@ import io.searchbox.client.JestClient;
 public class CloudyCarApplication extends MultiDexApplication {
     private IRequestStore requestStore;
     private IRequestService requestService;
+    private JestClient jestClient;
 
     private IRequestStore getRequestStore() {
         if (requestStore == null) {
@@ -70,14 +71,17 @@ public class CloudyCarApplication extends MultiDexApplication {
     }
 
     private JestClient getJestClient() {
-        DroidClientConfig config = new DroidClientConfig.Builder(Constants.ELASTIC_SEARCH_BASE_URL)
-                .gson(RequestUtils.getGson())
-                .build();
+        if (jestClient == null) {
+            DroidClientConfig config = new DroidClientConfig.Builder(Constants.ELASTIC_SEARCH_BASE_URL)
+                    .gson(RequestUtils.getGson())
+                    .build();
 
 
-        JestClientFactory factory = new JestClientFactory();
-        factory.setDroidClientConfig(config);
-        return factory.getObject();
+            JestClientFactory factory = new JestClientFactory();
+            factory.setDroidClientConfig(config);
+            jestClient = factory.getObject();
+        }
+        return jestClient;
     }
 
     private IElasticSearchService<Request> getRequestElasticSearchService() {

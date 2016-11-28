@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.requeststorage;
 
+import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.observables.IObserver;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by George on 2016-11-07.
@@ -34,10 +37,15 @@ public class RequestStore implements IRequestStore {
         return getRequest(id, Request.class);
     }
 
-    public <T extends Request> T getRequest(String requestId, Class<T> requestClass) {
+    public <T extends Request> T getRequest(final String requestId, final Class<T> requestClass) {
         return Observable.from(requestMap.values())
-                         .filter(r -> r.getId().equals(requestId))
-                         .filter(r -> requestClass.isAssignableFrom(r.getClass()))
+                         .filter(new Func1<Request, Boolean>() {
+                             @Override
+                             public Boolean call(Request r) {
+                                 return r.getId().equals(requestId) &&
+                                         requestClass.isAssignableFrom(r.getClass());
+                             }
+                         })
                          .cast(requestClass)
                          .toBlocking()
                          .firstOrDefault(null);
@@ -48,13 +56,18 @@ public class RequestStore implements IRequestStore {
         return getRequests(Request.class);
     }
 
-    public <T extends Request> List<T> getRequests(Class<T> requestClass) {
+    public <T extends Request> List<T> getRequests(final Class<T> requestClass) {
         return Observable.from(requestMap.values())
-                         .filter(r -> requestClass.isAssignableFrom(r.getClass()))
+                         .filter(new Func1<Request, Boolean>() {
+                             @Override
+                             public Boolean call(Request r) {
+                                 return requestClass.isAssignableFrom(r.getClass());
+                             }
+                         })
                          .cast(requestClass)
                          .toList()
                          .toBlocking()
-                         .firstOrDefault(new ArrayList<>());
+                         .firstOrDefault(new ArrayList<T>());
     }
 
     @Override
@@ -106,7 +119,12 @@ public class RequestStore implements IRequestStore {
     protected void notifyObservers() {
         Observable.from(observers)
                   .observeOn(schedulerProvider.mainThreadScheduler())
-                  .forEach(o -> o.notifyUpdate(this));
+                  .forEach(new Action1<IObserver<? super IRequestStore>>() {
+                      @Override
+                      public void call(IObserver<? super IRequestStore> observer) {
+                          observer.notifyUpdate(RequestStore.this);
+                      }
+                  });
     }
 
     @Override

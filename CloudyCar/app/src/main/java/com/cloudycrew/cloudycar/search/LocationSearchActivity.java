@@ -158,7 +158,12 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setPadding(0, searchCard.getHeight() + 15, 0, 0);
-        mMap.setOnMapClickListener(latLng -> onPlaceSelected(mMap, latLng));
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                onPlaceSelected(mMap, latLng);
+            }
+        });
     }
 
     @Override
