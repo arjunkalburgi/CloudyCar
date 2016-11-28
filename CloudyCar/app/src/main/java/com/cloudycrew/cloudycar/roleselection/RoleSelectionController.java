@@ -17,11 +17,20 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
     private UserController userController;
     private ISchedulerProvider schedulerProvider;
 
+    /**
+     * Instantiate the RoleSelectionController
+     *
+     * @param userController the usercontroller
+     * @param schedulerProvider the schedulerprovider for async tasks
+     */
     public RoleSelectionController(UserController userController, ISchedulerProvider schedulerProvider) {
         this.userController = userController;
         this.schedulerProvider = schedulerProvider;
     }
 
+    /**
+     * Handler for user selecting driver role
+     */
     public void selectDriverRole() {
         if (userController.getCurrentUser().hasCarDescription()) {
             dispatchDisplayDriverSummary();
@@ -30,6 +39,11 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
         }
     }
 
+    /**
+     * Adds a car description to the user
+     *
+     * @param carDescription the description of the car
+     */
     public void addCarDescription(final String carDescription) {
         final User updatedUser = getUpdatedUser(carDescription);
 
@@ -48,7 +62,7 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
                            }
                        });
     }
-
+    
     private User getUpdatedUser(String carDescription) {
         User currentUser = userController.getCurrentUser();
         currentUser.setCarDescription(carDescription);
