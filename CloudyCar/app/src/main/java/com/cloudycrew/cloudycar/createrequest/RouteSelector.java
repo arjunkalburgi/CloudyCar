@@ -80,23 +80,29 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == AUTOCOMPLETE_REQUEST_CODE){
-            Place place = PlaceAutocomplete.getPlace(this, data);
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
-            RouteSelector.this.onPlaceSelected(mMap,place.getLatLng());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                RouteSelector.this.onPlaceSelected(mMap, place.getLatLng());
+            }
         }
     }
+
     private void onPlaceSelected(GoogleMap mMap, LatLng latLng) {
-                if(currentEnd!=null){currentEnd.remove();}
-                currentEnd = mMap.addMarker(new MarkerOptions()
-                        .title(endName)
-                        .position(latLng)
-                        .draggable(true)
-                );
-                currentEnd.showInfoWindow();
-                end = latLng;
+        if (currentEnd != null) {
+            currentEnd.remove();
+        }
+        currentEnd = mMap.addMarker(new MarkerOptions()
+                .title(endName)
+                .position(latLng)
+                .draggable(true)
+        );
+        currentEnd.showInfoWindow();
+        end = latLng;
     }
 
     /**
@@ -105,14 +111,14 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
      */
     @OnClick(R.id.submit_route_from_map)
     protected void submitOnClick() {
-        if(end == null){
-            Toast.makeText(this,"Choose a destination!",Toast.LENGTH_SHORT).show();
+        if (end == null) {
+            Toast.makeText(this, "Choose a destination!", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(this,CreateRequestActivity.class);
+        Intent intent = new Intent(this, CreateRequestActivity.class);
         Bundle bundle = new Bundle();
         Route route = getRoute();
-        bundle.putSerializable("route",route);
+        bundle.putSerializable("route", route);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -120,6 +126,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
 
     /**
      * Packages the start and end location into a Route
+     *
      * @return The route chosen by the rider
      */
     @NonNull
@@ -127,18 +134,19 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
         String startDescription = "Your start point";
         String endDescription = "Your end point";
         IConnectivityService connectivityService = getCloudyCarApplication().getConnectivityService();
-        if(connectivityService.isInternetAvailable()) {
+        if (connectivityService.isInternetAvailable()) {
             startDescription = geoDecoder.decodeLatLng(start.longitude, start.latitude);
             endDescription = geoDecoder.decodeLatLng(end.longitude, end.latitude);
         }
-        Location startLocation = new Location(start.longitude,start.latitude, startDescription);
-        Location endLocation = new Location(end.longitude,end.latitude, endDescription);
+        Location startLocation = new Location(start.longitude, start.latitude, startDescription);
+        Location endLocation = new Location(end.longitude, end.latitude, endDescription);
         return new Route(startLocation, endLocation);
     }
 
     /**
      * Configure the map to allow the user to click to place an end point, and drag and drop
      * existing markers
+     *
      * @param googleMap The map object being drawn
      */
     @Override
@@ -157,9 +165,9 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                if(marker.getTitle().equals(startName)){
+                if (marker.getTitle().equals(startName)) {
                     start = marker.getPosition();
-                }else if(marker.getTitle().equals(endName)){
+                } else if (marker.getTitle().equals(endName)) {
                     end = marker.getPosition();
                 }
             }
@@ -168,7 +176,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                onPlaceSelected(mMap,latLng);
+                onPlaceSelected(mMap, latLng);
             }
         });
     }
@@ -193,6 +201,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
     /**
      * The GoogleMaps API has connected, so now LocationServices can be used to access user location
      * and place the initial start marker
+     *
      * @param bundle
      */
     @Override
@@ -211,7 +220,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
                 .position(myLocation)
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.currect_location_24dp))
-                .anchor(.5f,.5f)
+                .anchor(.5f, .5f)
         ).showInfoWindow();
         start = myLocation;
         mapSearchFab.show();
@@ -219,7 +228,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
     }
 
     @OnClick(R.id.map_search_fab)
-    public void startSearch(){
+    public void startSearch() {
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                     .setBoundsBias(toBounds(myLocation, MAX_RADIUS))

@@ -74,12 +74,15 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == AUTOCOMPLETE_REQUEST_CODE){
-            Place place = PlaceAutocomplete.getPlace(this, data);
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
-            LocationSearchActivity.this.onPlaceSelected(mMap,place.getLatLng());
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                LocationSearchActivity.this.onPlaceSelected(mMap, place.getLatLng());
+            }
 
         }
     }
@@ -101,11 +104,11 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     }
 
     @OnClick(R.id.map_search_fab)
-    public void startSearch(){
+    public void startSearch() {
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                .setBoundsBias(toBounds(myLocation, MAX_RADIUS))
-                                .build(this);
+                    .setBoundsBias(toBounds(myLocation, MAX_RADIUS))
+                    .build(this);
             startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
@@ -151,7 +154,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         mMap.setMyLocationEnabled(true);
         android.location.Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation,radius), CAMERA_ZOOM_PADDING));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(toBounds(myLocation, radius), CAMERA_ZOOM_PADDING));
         onPlaceSelected(mMap, myLocation);
         mapSearchFab.show();
     }
@@ -160,7 +163,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     public void submitSelectedLocation() {
         Intent intent = new Intent(this, SearchParamsActivity.class);
         intent.putExtra("location", new Location(
-                selectedLocation.longitude,selectedLocation.latitude, "User selected point"));
+                selectedLocation.longitude, selectedLocation.latitude, "User selected point"));
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
