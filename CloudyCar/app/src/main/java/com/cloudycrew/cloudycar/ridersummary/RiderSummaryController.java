@@ -13,6 +13,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 /**
  * Created by George on 2016-11-05.
@@ -72,7 +73,12 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
                                  return r.getRider().equals(userPreferences.getUserName());
                              }
                          })
-                         .toList()
+                         .toSortedList(new Func2<ConfirmedRequest, ConfirmedRequest, Integer>() {
+                             @Override
+                             public Integer call(ConfirmedRequest confirmedRequest, ConfirmedRequest confirmedRequest2) {
+                                 return confirmedRequest2.getLastUpdated().compareTo(confirmedRequest.getLastUpdated());
+                             }
+                         })
                          .toBlocking()
                          .firstOrDefault(new ArrayList<ConfirmedRequest>());
     }
@@ -86,7 +92,12 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
                                          !r.hasBeenAccepted();
                              }
                          })
-                         .toList()
+                         .toSortedList(new Func2<PendingRequest, PendingRequest, Integer>() {
+                             @Override
+                             public Integer call(PendingRequest pendingRequest, PendingRequest pendingRequest2) {
+                                 return pendingRequest2.getLastUpdated().compareTo(pendingRequest.getLastUpdated());
+                             }
+                         })
                          .toBlocking()
                          .firstOrDefault(new ArrayList<PendingRequest>());
     }
@@ -100,7 +111,12 @@ public class RiderSummaryController extends ViewController<IRiderSummaryView> {
                                          r.hasBeenAccepted();
                              }
                          })
-                         .toList()
+                         .toSortedList(new Func2<PendingRequest, PendingRequest, Integer>() {
+                             @Override
+                             public Integer call(PendingRequest pendingRequest, PendingRequest pendingRequest2) {
+                                 return pendingRequest2.getLastUpdated().compareTo(pendingRequest.getLastUpdated());
+                             }
+                         })
                          .toBlocking()
                          .firstOrDefault(new ArrayList<PendingRequest>());
     }
