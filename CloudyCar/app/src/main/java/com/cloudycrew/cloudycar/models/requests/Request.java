@@ -17,8 +17,9 @@ public abstract class Request implements Identifiable {
     private double price;
     private double pricePerKm;
     private Date lastUpdated;
-    private transient boolean hasBeenReadByUser;
     private String description;
+
+    private transient Date lastReadTime;
 
     /**
      * The Id.
@@ -100,11 +101,12 @@ public abstract class Request implements Identifiable {
     }
 
     public boolean hasBeenReadByUser() {
-        return hasBeenReadByUser;
+        return lastReadTime != null &&
+                lastReadTime.compareTo(getLastUpdated()) >= 0;
     }
 
-    public void setHasBeenReadByUser(boolean hasBeenReadByUser) {
-        this.hasBeenReadByUser = hasBeenReadByUser;
+    public void setLastReadTime(Date lastReadTime) {
+        this.lastReadTime = lastReadTime;
     }
 
     public String getDescription() {

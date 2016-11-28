@@ -78,8 +78,6 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
         descriptionTextView.setText(request.getDescription());
         priceTextView.setText(String.format(Locale.getDefault(), "$%.2f", request.getPrice()));
         riderTextView.setText(request.getRider());
-
-        requestDetailsController.markRequestAsRead();
     }
 
     protected void setDriver(String driver) {
@@ -87,5 +85,11 @@ public abstract class BaseRequestDetailsActivity extends BaseActivity implements
         driverTextView.setVisibility(View.VISIBLE);
         driverLabelTextView.setVisibility(View.VISIBLE);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        requestDetailsController.markRequestAsRead();
+        super.onBackPressed();
     }
 }

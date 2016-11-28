@@ -155,25 +155,18 @@ public class RequestController {
         }
     }
 
+    public void markRequestAsRead(String requestId) {
+        Request request = requestStore.getRequest(requestId);
+
+        request.setLastReadTime(new Date());
+        requestStore.updateRequest(request);
+        userController.markRequestAsRead(request.getId());
+    }
+
     private void attachReadDetailsToRequests(List<Request> requests) {
         for (Request request: requests) {
-            attachReadDetailsToRequest(request);
+            request.setLastReadTime(userController.getLastReadTime(request.getId()));
         }
-    }
-
-    private void attachReadDetailsToRequest(Request request) {
-        if (hasRequestBeenRead(request)) {
-            request.setHasBeenReadByUser(true);
-        } else {
-            request.setHasBeenReadByUser(false);
-        }
-    }
-
-    private boolean hasRequestBeenRead(Request request) {
-        Date lastUserReadTime = userController.getLastReadTime(request.getId());
-
-        return lastUserReadTime != null &&
-                lastUserReadTime.compareTo(request.getLastUpdated()) >= 0;
     }
 
     private String getCurrentUsername() {
