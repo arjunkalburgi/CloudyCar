@@ -98,8 +98,6 @@ public class SearchParamsActivity extends AppCompatActivity {
                     this.radiusValues[radiusSpinner.getSelectedItemPosition()]);
         }
 
-        Log.d("location", String.valueOf(searchContext.getRadius()));
-
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("searchcontext", searchContext);
         startActivity(intent);

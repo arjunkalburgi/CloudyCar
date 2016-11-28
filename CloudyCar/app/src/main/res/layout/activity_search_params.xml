@@ -72,7 +72,8 @@
                 android:id="@+id/search_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search_current_price_selected" />
+                android:hint="@string/search_current_price_selected"
+                android:inputType="numberDecimal" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
