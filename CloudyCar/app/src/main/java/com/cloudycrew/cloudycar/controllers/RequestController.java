@@ -95,7 +95,7 @@ public class RequestController {
     public void cancelRequest(String requestId) {
         PendingRequest pendingRequest = requestStore.getRequest(requestId, PendingRequest.class);
 
-        if(pendingRequest != null) {
+        if (pendingRequest != null) {
             CancelledRequest cancelledRequest = pendingRequest.cancel();
 
             requestService.updateRequest(cancelledRequest);

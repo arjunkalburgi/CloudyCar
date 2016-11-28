@@ -5,6 +5,7 @@ import com.cloudycrew.cloudycar.controllers.UserController;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -13,14 +14,15 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.scheduling.TestSchedulerProvider;
-import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -42,16 +44,14 @@ public class RequestControllerTests {
     private String riderUsername;
     private String driverUsername;
 
-    private User rider;
-    private User driver;
     private String testDescription;
     private String requestDescription;
 
     private PendingRequest request1;
-    private PendingRequest request2;
     private PendingRequest acceptedRequest1;
     private ConfirmedRequest confirmedRequest1;
     private CompletedRequest completedRequest1;
+    private CancelledRequest cancelledRequest1;
 
     @Before
     public void set_up() {
@@ -60,23 +60,19 @@ public class RequestControllerTests {
         testDescription = "test description";
         requestDescription = "description";
 
-        rider = new User(riderUsername);
-        driver = new User(driverUsername);
-
-        Location startingLocation = new Location(48.1472373, 11.5673969,testDescription );
-        Location endingLocation = new Location(48.1258551, 11.5121003,testDescription );
+        Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
+        Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
 
         Route route = new Route(startingLocation, endingLocation);
 
         double price = 3.50;
 
         request1 = new PendingRequest(riderUsername, route, price, requestDescription);
-        request2 = new PendingRequest(riderUsername, route, price, requestDescription);
 
         acceptedRequest1 = request1.accept(driverUsername);
-
         confirmedRequest1 = acceptedRequest1.confirmRequest(driverUsername);
         completedRequest1 = confirmedRequest1.completeRequest();
+        cancelledRequest1 = request1.cancel();
 
         schedulerProvider = new TestSchedulerProvider();
 
@@ -85,26 +81,52 @@ public class RequestControllerTests {
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        Location startingLocation = new Location(48.1472373, 11.5673969,testDescription );
-        Location endingLocation = new Location(48.1258551, 11.5121003,testDescription );
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
+        Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
+        Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
         Route route = new Route(startingLocation, endingLocation);
 
-        requestController.createRequest(route, 3.5, testDescription);
+        requestController.createRequest(route, 3.5, requestDescription);
 
-        verify(requestStore).addRequest(request1);
-        verify(requestService).createRequest(request1);
+        ArgumentCaptor<Request> requestCaptor = new ArgumentCaptor<>();
+        verify(requestStore).addRequest(requestCaptor.capture());
+
+        assertRequestIsEquivalentIgnoringId(request1, requestCaptor.getValue());
     }
 
     @Test
-    public void test_cancelRequest_deleteRequestIsCalledWithCorrectRequestId() {
-        when(requestStore.getRequest(request1.getId())).thenReturn(request1);
+    public void test_createRequest_thenCreateRequestInRequestServiceIsCalledWithExpectedRequest() {
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
+
+        Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
+        Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
+        Route route = new Route(startingLocation, endingLocation);
+
+        requestController.createRequest(route, 3.5, requestDescription);
+
+        ArgumentCaptor<Request> requestCaptor = new ArgumentCaptor<>();
+        verify(requestService).createRequest(requestCaptor.capture());
+
+        assertRequestIsEquivalentIgnoringId(request1, requestCaptor.getValue());
+    }
+
+    private void assertRequestIsEquivalentIgnoringId(Request expected, Request actual) {
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getPrice(), actual.getPrice(), 0.00001);
+        assertEquals(expected.getRider(), actual.getRider());
+        assertEquals(expected.getRoute(), actual.getRoute());
+    }
+
+    @Test
+    public void test_cancelRequest_thenUpdateIsCalledWithTheCanceledRequest() {
+        when(requestStore.getRequest(request1.getId(), PendingRequest.class)).thenReturn(request1);
         when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
         requestController.cancelRequest(request1.getId());
 
-        verify(requestStore).deleteRequest(request1.getId());
-        verify(requestService).deleteRequest(request1.getId());
+        verify(requestStore).updateRequest(cancelledRequest1);
+        verify(requestService).updateRequest(cancelledRequest1);
     }
 
     @Test

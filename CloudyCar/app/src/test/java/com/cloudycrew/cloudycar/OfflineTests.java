@@ -1,13 +1,21 @@
 package com.cloudycrew.cloudycar;
 
+import com.cloudycrew.cloudycar.connectivity.IConnectivityService;
+import com.cloudycrew.cloudycar.connectivity.TestConnectivityService;
+import com.cloudycrew.cloudycar.elasticsearch.ElasticSearchConnectivityException;
 import com.cloudycrew.cloudycar.models.Location;
 import com.cloudycrew.cloudycar.models.Route;
 import com.cloudycrew.cloudycar.models.User;
+import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
+import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.requeststorage.CloudRequestService;
+import com.cloudycrew.cloudycar.requeststorage.CompositeRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.LocalRequestService;
+import com.cloudycrew.cloudycar.requeststorage.PersistentRequestQueue;
+import com.cloudycrew.cloudycar.scheduling.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +23,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -32,9 +44,13 @@ public class OfflineTests {
     @Mock
     private CloudRequestService cloudRequestService;
     @Mock
-    private IRequestService requestService;
+    private CompositeRequestService compositeRequestService;
     @Mock
-    private InternetConnectivityProvider internetConnectivityProvider;
+    private PersistentRequestQueue requestQueue;
+    @Mock
+    private TestConnectivityService connectivityService;
+    @Mock
+    private GeoDecoder geoDecoder;
 
     private User rider;
     private User driver;
@@ -46,12 +62,18 @@ public class OfflineTests {
     private PendingRequest acceptedRequest1;
     private PendingRequest newAcceptedRequest;
 
+    private CancelledRequest newCancelledRequest;
+    private ConfirmedRequest newConfirmedRequest;
+
     private String requestDescription;
+
+    private ArrayList<Request> cloudRequests;
 
     @Before
     public void set_up() {
         set_up_requests();
-
+        this.connectivityService = new TestConnectivityService();
+        compositeRequestService = new CompositeRequestService(cloudRequestService, localRequestService, connectivityService, requestQueue, new TestSchedulerProvider(), geoDecoder);
         when(localRequestService.getRequests()).thenReturn(Arrays.<Request>asList(request1, request2));
         //  when(localRequestService.getAcceptedRequests()).thenReturn(Arrays.asList(acceptedRequest1));
     }
@@ -74,51 +96,95 @@ public class OfflineTests {
 
         newRequest = new PendingRequest(rider.getUsername(), route, price, requestDescription);
 
+        newCancelledRequest = newRequest.cancel();
+
+
+
         acceptedRequest1 = request1.accept(driver.getUsername());
         newAcceptedRequest = newRequest.accept(driver.getUsername());
+        newConfirmedRequest = newAcceptedRequest.confirmRequest(driver.getUsername());
+        cloudRequests = new ArrayList<>();
+        cloudRequests.add(newAcceptedRequest);
     }
 
     @Test
-    public void test_getPendingRequests_ifTheDeviceIsOffline_getsLocalRequests() {
-        internetConnectivityProvider.setInternetAvailable(false);
+    public void test_getRequests_ifTheDeviceIsOffline_getsLocalRequests() {
+        when(localRequestService.getRequests()).thenReturn(Arrays.<Request>asList(request1, request2));
+        when(cloudRequestService.getRequests()).thenThrow(new ElasticSearchConnectivityException(new Exception()));
+        connectivityService.setInternetConnectivity(false);
 
         List<Request> expectedRequests = Arrays.<Request>asList(request1, request2);
-        List<Request> actualRequests = requestService.getRequests();
+        List<Request> actualRequests = compositeRequestService.getRequests();
 
         assertEquals(expectedRequests, actualRequests);
     }
 
     @Test
     public void test_createRequest_ifTheDeviceIsOffline_thenSendsRequestWhenDeviceRegainsConnectivity() {
-        internetConnectivityProvider.setInternetAvailable(false);
+        when(geoDecoder.decodeLatLng(anyDouble(), anyDouble())).thenReturn("Test address");
+        doThrow(new ElasticSearchConnectivityException(new IOException())).when(cloudRequestService).createRequest(any(Request.class));
+        when(requestQueue.getCreateQueue()).thenReturn(Arrays.<Request>asList(newRequest));
+        connectivityService.setInternetConnectivity(false);
 
-        requestService.createRequest(newRequest);
-        verify(cloudRequestService, never()).createRequest(newRequest);
+        compositeRequestService.createRequest(newRequest);
+        verify(requestQueue).enqueueNewRequest(newRequest);
 
-        internetConnectivityProvider.setInternetAvailable(true);
+        doNothing().when(cloudRequestService).createRequest(any(Request.class));
+        connectivityService.setInternetConnectivity(true);
 
-        verify(cloudRequestService).createRequest(newRequest);
+        verify(requestQueue).dequeueCreation(newRequest);
+        verify(cloudRequestService, times(2)).createRequest(newRequest);
     }
-
-    @Test
-    public void test_getAcceptedRequests_ifTheDeviceIsOffline_getsLocalAcceptedRequests() {
-        internetConnectivityProvider.setInternetAvailable(false);
-
-        List<PendingRequest> expectedRequests = Arrays.asList(acceptedRequest1);
-        //List<AcceptedRequest> actualRequests = requestService.getAcceptedRequests();
-
-        //assertEquals(expectedRequests, actualRequests);
-    }
-
+    
     @Test
     public void test_acceptRequest_ifTheDeviceIsOffline_thenSendsAcceptedRequestWhenDeviceRegainsConnectivity() {
-        internetConnectivityProvider.setInternetAvailable(false);
+        when(geoDecoder.decodeLatLng(anyDouble(), anyDouble())).thenReturn("Test address");
+        doThrow(new ElasticSearchConnectivityException(new IOException())).when(cloudRequestService).updateRequest(any(Request.class));
+        when(requestQueue.getAcceptedQueue()).thenReturn(Arrays.<PendingRequest>asList(newAcceptedRequest));
+        when(cloudRequestService.getRequests()).thenReturn(new ArrayList<Request>(cloudRequests));
+        connectivityService.setInternetConnectivity(false);
 
-        requestService.createRequest(newAcceptedRequest);
-        verify(cloudRequestService, never()).updateRequest(newAcceptedRequest);
+        compositeRequestService.updateRequest(newAcceptedRequest);
+        verify(requestQueue).enqueueAccept(newAcceptedRequest);
 
-        internetConnectivityProvider.setInternetAvailable(true);
+        doNothing().when(cloudRequestService).updateRequest(any(Request.class));
+        connectivityService.setInternetConnectivity(true);
 
-        verify(cloudRequestService).updateRequest(newAcceptedRequest);
+        verify(requestQueue).dequeueAccept(newAcceptedRequest);
+        verify(cloudRequestService, times(2)).updateRequest(any(Request.class));
+    }
+
+    @Test
+    public void test_cancelRequest_ifTheDeviceIsOffline_thenSendsRequestWhenDeviceRegainsConnectivity() {
+        when(geoDecoder.decodeLatLng(anyDouble(), anyDouble())).thenReturn("Test address");
+        doThrow(new ElasticSearchConnectivityException(new IOException())).when(cloudRequestService).updateRequest(any(Request.class));
+        when(requestQueue.getCancellationQueue()).thenReturn(Arrays.<CancelledRequest>asList(newCancelledRequest));
+        connectivityService.setInternetConnectivity(false);
+
+        compositeRequestService.updateRequest(newCancelledRequest);
+        verify(requestQueue).enqueueCancellation(newCancelledRequest);
+
+        doNothing().when(cloudRequestService).updateRequest(any(Request.class));
+        connectivityService.setInternetConnectivity(true);
+
+        verify(requestQueue).dequeueCancellation(newCancelledRequest);
+        verify(cloudRequestService, times(2)).updateRequest(newCancelledRequest);
+    }
+
+    @Test
+    public void test_confirmRequest_ifTheDeviceIsOffline_thenSendsConfirmedRequestWhenDeviceRegainsConnectivity() {
+        when(geoDecoder.decodeLatLng(anyDouble(), anyDouble())).thenReturn("Test address");
+        doThrow(new ElasticSearchConnectivityException(new IOException())).when(cloudRequestService).updateRequest(any(Request.class));
+        when(requestQueue.getConfirmationQueue()).thenReturn(Arrays.<ConfirmedRequest>asList(newConfirmedRequest));
+        connectivityService.setInternetConnectivity(false);
+
+        compositeRequestService.updateRequest(newConfirmedRequest);
+        verify(requestQueue).enqueueConfirmation(newConfirmedRequest);
+
+        doNothing().when(cloudRequestService).updateRequest(any(Request.class));
+        connectivityService.setInternetConnectivity(true);
+
+        verify(requestQueue).dequeueConfirmation(newConfirmedRequest);
+        verify(cloudRequestService, times(2)).updateRequest(newConfirmedRequest);
     }
 }
