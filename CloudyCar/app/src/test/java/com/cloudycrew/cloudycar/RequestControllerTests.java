@@ -14,14 +14,15 @@ import com.cloudycrew.cloudycar.requeststorage.IRequestService;
 import com.cloudycrew.cloudycar.requeststorage.IRequestStore;
 import com.cloudycrew.cloudycar.scheduling.ISchedulerProvider;
 import com.cloudycrew.cloudycar.scheduling.TestSchedulerProvider;
-import com.cloudycrew.cloudycar.users.IUserPreferences;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -64,8 +65,8 @@ public class RequestControllerTests {
         rider = new User(riderUsername);
         driver = new User(driverUsername);
 
-        Location startingLocation = new Location(48.1472373, 11.5673969,testDescription );
-        Location endingLocation = new Location(48.1258551, 11.5121003,testDescription );
+        Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
+        Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
 
         Route route = new Route(startingLocation, endingLocation);
 
@@ -85,15 +86,41 @@ public class RequestControllerTests {
 
     @Test
     public void test_createRequest_thenStoreContainsNewPendingRequest() {
-        Location startingLocation = new Location(48.1472373, 11.5673969,testDescription );
-        Location endingLocation = new Location(48.1258551, 11.5121003,testDescription );
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
 
+        Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
+        Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
         Route route = new Route(startingLocation, endingLocation);
 
-        requestController.createRequest(route, 3.5, testDescription);
+        requestController.createRequest(route, 3.5, requestDescription);
 
-        verify(requestStore).addRequest(request1);
-        verify(requestService).createRequest(request1);
+        ArgumentCaptor<Request> requestCaptor = new ArgumentCaptor<>();
+        verify(requestStore).addRequest(requestCaptor.capture());
+
+        assertRequestIsEquivalentIgnoringId(request1, requestCaptor.getValue());
+    }
+
+    @Test
+    public void test_createRequest_thenCreateRequestInRequestServiceIsCalledWithExpectedRequest() {
+        when(userController.getCurrentUser()).thenReturn(new User(riderUsername));
+
+        Location startingLocation = new Location(48.1472373, 11.5673969, testDescription);
+        Location endingLocation = new Location(48.1258551, 11.5121003, testDescription);
+        Route route = new Route(startingLocation, endingLocation);
+
+        requestController.createRequest(route, 3.5, requestDescription);
+
+        ArgumentCaptor<Request> requestCaptor = new ArgumentCaptor<>();
+        verify(requestService).createRequest(requestCaptor.capture());
+
+        assertRequestIsEquivalentIgnoringId(request1, requestCaptor.getValue());
+    }
+
+    private void assertRequestIsEquivalentIgnoringId(Request expected, Request actual) {
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getPrice(), actual.getPrice(), 0.00001);
+        assertEquals(expected.getRider(), actual.getRider());
+        assertEquals(expected.getRoute(), actual.getRoute());
     }
 
     @Test
