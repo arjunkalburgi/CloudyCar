@@ -13,9 +13,13 @@ com.cloudycrew.cloudycar.observables
 com.cloudycrew.cloudycar.requestdetails
 com.cloudycrew.cloudycar.requeststorage
 com.cloudycrew.cloudycar.ridersummary
+com.cloudycrew.cloudycar.roleselection
 com.cloudycrew.cloudycar.scheduling
 com.cloudycrew.cloudycar.search
 com.cloudycrew.cloudycar.signup
+com.cloudycrew.cloudycar.summarycontainer
 com.cloudycrew.cloudycar.userprofile
 com.cloudycrew.cloudycar.users
 com.cloudycrew.cloudycar.utils
+com.cloudycrew.cloudycar.viewcells
+com.cloudycrew.cloudycar.viewcontrollertests
