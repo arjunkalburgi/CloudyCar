@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.utils;
 
+import com.cloudycrew.cloudycar.models.requests.CancelledRequest;
 import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
@@ -19,6 +20,7 @@ public class RequestUtils {
                 .registerType(PendingRequest.TYPE_NAME, PendingRequest.class)
                 .registerType(ConfirmedRequest.TYPE_NAME, ConfirmedRequest.class)
                 .registerType(CompletedRequest.TYPE_NAME, CompletedRequest.class)
+                .registerType(CancelledRequest.TYPE_NAME, CancelledRequest.class)
                 .build();
     }
 
