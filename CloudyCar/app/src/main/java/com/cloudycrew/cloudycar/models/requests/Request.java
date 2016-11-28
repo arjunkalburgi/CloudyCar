@@ -39,7 +39,7 @@ public abstract class Request implements Identifiable {
         this.route = route;
         this.price = price;
         this.description = description;
-        this.pricePerKm = price / route.getMeters();
+        this.pricePerKm = price / route.getKilometers();
         this.lastUpdated = new Date();
     }
 

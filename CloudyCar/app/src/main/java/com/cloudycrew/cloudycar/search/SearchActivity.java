@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,6 +67,8 @@ public class SearchActivity extends BaseActivity implements ISearchView {
     protected void onResume() {
         super.onResume();
         searchController.attachView(this);
+        SearchContext sc = (SearchContext) getIntent().getSerializableExtra("searchcontext");
+        searchController.search(sc);
     }
 
     @Override

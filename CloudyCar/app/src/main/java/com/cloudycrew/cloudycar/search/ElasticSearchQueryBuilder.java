@@ -20,6 +20,10 @@ public class ElasticSearchQueryBuilder {
             queryObjects.add(getKeywordQuery(searchContext));
         }
 
+        if (searchContext.hasPrice()) {
+            queryObjects.add(getPriceQuery(searchContext));
+        }
+
         if (searchContext.hasPricePerKm()) {
             queryObjects.add(getPricePerKmQuery(searchContext));
         }
@@ -49,8 +53,19 @@ public class ElasticSearchQueryBuilder {
         Map<Object, Object> queryTypeObject = new HashMap<>();
 
         pricePerKmObject.put("gte", searchContext.getMinPricePerKm());
-        pricePerKmObject.put("lte", searchContext.getMaxPricePerKm());
         rangeObject.put("pricePerKm", pricePerKmObject);
+        queryTypeObject.put("range", rangeObject);
+
+        return queryTypeObject;
+    }
+
+    private Map<Object, Object> getPriceQuery(SearchContext searchContext) {
+        Map<Object, Object> priceObject = new HashMap<>();
+        Map<Object, Object> rangeObject = new HashMap<>();
+        Map<Object, Object> queryTypeObject = new HashMap<>();
+
+        priceObject.put("gte", searchContext.getMinPrice());
+        rangeObject.put("price", priceObject);
         queryTypeObject.put("range", rangeObject);
 
         return queryTypeObject;
@@ -64,7 +79,7 @@ public class ElasticSearchQueryBuilder {
         geoPointObject.put("lat", searchContext.getLat());
         geoPointObject.put("lon", searchContext.getLon());
         geoDistanceObject.put("route.start.point", geoPointObject);
-        geoDistanceObject.put("distance", searchContext.getRadius() + "km");
+        geoDistanceObject.put("distance", searchContext.getRadius() + "m");
         filterTypeObject.put("geo_distance", geoDistanceObject);
 
         return filterTypeObject;

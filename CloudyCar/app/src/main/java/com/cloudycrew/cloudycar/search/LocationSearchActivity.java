@@ -1,6 +1,7 @@
 package com.cloudycrew.cloudycar.search;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.cloudycrew.cloudycar.Constants.EXPECTED_CITY_RADIUS;
+import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
 public class LocationSearchActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -49,7 +50,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     private Marker currentMarker;
     private Circle currentRadius;
     private MarkerOptions markerOptions;
-    private double radius;
+    private int radius;
     private LatLng selectedLocation;
     private LatLng myLocation;
     private static final int REQUEST_LOCATION_PERMISSIONS = 1;
@@ -60,7 +61,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
         setContentView(R.layout.activity_location_search);
         ButterKnife.bind(this);
         mapSearchFab.hide();
-        radius = this.getIntent().getExtras().getDouble("radius");
+        radius = this.getIntent().getExtras().getInt("radius");
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -103,7 +104,7 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     public void startSearch(){
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                .setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS))
+                                .setBoundsBias(toBounds(myLocation, MAX_RADIUS))
                                 .build(this);
             startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
@@ -156,12 +157,11 @@ public class LocationSearchActivity extends BaseActivity implements OnMapReadyCa
     }
 
     @OnClick(R.id.submit_selected_location)
-    public void submitSelectedLocation(){
-        Intent intent = new Intent(this,SearchParamsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("location",new Location(selectedLocation.longitude,selectedLocation.latitude,"User selected point"));
-        intent.putExtras(bundle);
-        startActivity(intent);
+    public void submitSelectedLocation() {
+        Intent intent = new Intent(this, SearchParamsActivity.class);
+        intent.putExtra("location", new Location(
+                selectedLocation.longitude,selectedLocation.latitude, "User selected point"));
+        setResult(Activity.RESULT_OK, intent);
         finish();
     }
 

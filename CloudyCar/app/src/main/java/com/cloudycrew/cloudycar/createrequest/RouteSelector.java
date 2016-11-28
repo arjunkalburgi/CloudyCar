@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.cloudycrew.cloudycar.Constants.EXPECTED_CITY_RADIUS;
+import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
 /**
@@ -222,7 +222,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
     public void startSearch(){
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                    .setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS))
+                    .setBoundsBias(toBounds(myLocation, MAX_RADIUS))
                     .build(this);
             startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
