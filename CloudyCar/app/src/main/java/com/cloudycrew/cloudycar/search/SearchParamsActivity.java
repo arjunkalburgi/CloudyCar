@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.cloudycrew.cloudycar.R;
 import com.cloudycrew.cloudycar.models.Location;
@@ -33,6 +34,8 @@ public class SearchParamsActivity extends AppCompatActivity {
     protected EditText searchKeyword;
     @BindView(R.id.search_radio_price)
     protected RadioButton searchRadioPrice;
+    @BindView(R.id.location_description)
+    protected TextView locationDescription;
 
     private Location userSelectedLocation;
     private int[] radiusValues;
@@ -74,6 +77,7 @@ public class SearchParamsActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 userSelectedLocation = (Location) intent.getSerializableExtra("location");
+                locationDescription.setText(userSelectedLocation.getDescription());
                 radiusSpinner.setEnabled(true);
             }
         }
@@ -97,8 +101,6 @@ public class SearchParamsActivity extends AppCompatActivity {
             searchContext.withLocation(lat, lon,
                     this.radiusValues[radiusSpinner.getSelectedItemPosition()]);
         }
-
-        Log.d("location", String.valueOf(searchContext.getRadius()));
 
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("searchcontext", searchContext);

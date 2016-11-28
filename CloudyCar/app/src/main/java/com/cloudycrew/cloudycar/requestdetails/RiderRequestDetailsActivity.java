@@ -1,5 +1,6 @@
 package com.cloudycrew.cloudycar.requestdetails;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import com.cloudycrew.cloudycar.models.requests.CompletedRequest;
 import com.cloudycrew.cloudycar.models.requests.ConfirmedRequest;
 import com.cloudycrew.cloudycar.models.requests.PendingRequest;
 import com.cloudycrew.cloudycar.models.requests.Request;
+import com.cloudycrew.cloudycar.summarycontainer.SummaryActivity;
 import com.cloudycrew.cloudycar.viewcells.AcceptedDriverViewCell;
 
 import java.util.ArrayList;
@@ -113,6 +115,7 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
         @Override
         public void onConfirm(String username) {
             requestDetailsController.confirmRequest(username);
+            goBackToSummary();
         }
     };
 
@@ -127,5 +130,11 @@ public class RiderRequestDetailsActivity extends BaseRequestDetailsActivity {
                          .toList()
                          .toBlocking()
                          .firstOrDefault(new ArrayList<AcceptedDriverViewCell>());
+    }
+
+    public void goBackToSummary() {
+        Intent intent = new Intent(this, SummaryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

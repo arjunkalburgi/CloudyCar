@@ -59,7 +59,9 @@
         <activity
             android:name=".createrequest.RouteSelector"
             android:label="@string/title_activity_route_selector" />
-        <activity android:name=".userprofile.EditProfileActivity"></activity>
+        <activity
+            android:name=".userprofile.EditProfileActivity"
+            android:label="@string/title_activity_edit_profile" />
         <activity
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search"
@@ -68,8 +70,9 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".search.SearchParamsActivity"></activity>
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".search.SearchParamsActivity"
+            android:label="@string/title_activity_search_params" />
         <activity android:name=".search.LocationSearchActivity"/>
     </application>
 
