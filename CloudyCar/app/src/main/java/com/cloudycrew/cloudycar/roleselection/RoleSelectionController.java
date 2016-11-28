@@ -62,7 +62,7 @@ public class RoleSelectionController extends ViewController<IRoleSelectionView> 
                            }
                        });
     }
-    
+
     private User getUpdatedUser(String carDescription) {
         User currentUser = userController.getCurrentUser();
         currentUser.setCarDescription(carDescription);
