@@ -3,6 +3,7 @@ package com.cloudycrew.cloudycar.requeststorage;
 import com.cloudycrew.cloudycar.models.requests.Request;
 import com.cloudycrew.cloudycar.search.SearchContext;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,6 +30,13 @@ public interface IRequestService {
      * @param request the request
      */
     void updateRequest(Request request);
+
+    /**
+     * Update request.
+     *
+     * @param requests the batch to update
+     */
+    void batchUpdateRequests(Collection<? extends Request> requests);
 
     /**
      * Delete request.

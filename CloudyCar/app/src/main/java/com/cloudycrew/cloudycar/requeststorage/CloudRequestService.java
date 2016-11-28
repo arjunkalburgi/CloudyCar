@@ -6,6 +6,7 @@ import com.cloudycrew.cloudycar.search.ElasticSearchQueryBuilder;
 import com.cloudycrew.cloudycar.search.SearchContext;
 import com.cloudycrew.cloudycar.users.IUserPreferences;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -42,6 +43,13 @@ public class CloudRequestService implements IRequestService {
     public void updateRequest(Request request) {
 
         elasticSearchService.update(request);
+    }
+
+    @Override
+    public void batchUpdateRequests(Collection<? extends Request> requests) {
+        for (Request request: requests) {
+            updateRequest(request);
+        }
     }
 
     @Override
