@@ -3,6 +3,8 @@ package com.cloudycrew.cloudycar.email;
 import java.util.regex.Pattern;
 
 /**
+ * Model class to represent and validate e-mails for the system
+ *
  * Created by George on 2016-10-13.
  */
 
@@ -12,15 +14,30 @@ public class Email {
 
     private String email;
 
+    /**
+     * Instantiate an Email from a backing string
+     *
+     * @param email - The email string
+     */
     public Email(String email) {
         this.setEmail(email);
     }
 
+    /**
+     * Gets the backing string representation of the e-mail
+     *
+     * @return string representation of the email
+     */
     public String getEmail()
     {
         return email;
     }
 
+    /**
+     * Attempts to set and validate a new backing string
+     *
+     * @param email - the string representing the new email address
+     */
     public void setEmail(String email)
     {
         if (validate(email))
