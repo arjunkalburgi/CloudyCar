@@ -114,13 +114,12 @@ public class OfflineTests {
         compositeRequestService.createRequest(newRequest);
         verify(requestQueue).enqueueNewRequest(newRequest);
 
-        cloudRequestService = mock(CloudRequestService.class);
+        doNothing().when(cloudRequestService).createRequest(any(Request.class));
         connectivityService.setInternetConnectivity(true);
 
         verify(cloudRequestService).createRequest(newRequest);
     }
-
-
+    
     @Test
     public void test_acceptRequest_ifTheDeviceIsOffline_thenSendsAcceptedRequestWhenDeviceRegainsConnectivity() {
         when(geoDecoder.decodeLatLng(anyDouble(), anyDouble())).thenReturn("Test address");
@@ -128,6 +127,7 @@ public class OfflineTests {
 
         compositeRequestService.createRequest(newAcceptedRequest);
         verify(cloudRequestService, never()).updateRequest(newAcceptedRequest);
+
 
         connectivityService.setInternetConnectivity(true);
 
