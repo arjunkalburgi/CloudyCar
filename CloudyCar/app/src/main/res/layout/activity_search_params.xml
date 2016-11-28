@@ -107,6 +107,7 @@
             android:layout_below="@+id/search_price_wrapper"
             android:layout_alignBottom="@+id/search_choose_location"
             android:gravity="left|center_vertical"
+            android:maxLines="1"
             android:ellipsize="end"
             android:paddingLeft="5dp" />
 
