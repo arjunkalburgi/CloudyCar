@@ -29,16 +29,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.SphericalUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.cloudycrew.cloudycar.Constants.EXPECTED_CITY_RADIUS;
+import static com.cloudycrew.cloudycar.Constants.MAX_RADIUS;
 import static com.cloudycrew.cloudycar.utils.MapUtils.toBounds;
 
 /**
@@ -220,7 +218,7 @@ public class RouteSelector extends BaseActivity implements OnMapReadyCallback, G
                 .anchor(.5f,.5f)
         ).showInfoWindow();
         start = myLocation;
-        autocompleteFragment.setBoundsBias(toBounds(myLocation, EXPECTED_CITY_RADIUS));
+        autocompleteFragment.setBoundsBias(toBounds(myLocation, MAX_RADIUS));
     }
 
 
